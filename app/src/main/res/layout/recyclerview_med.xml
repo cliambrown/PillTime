@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/doseLayout">
+    android:id="@+id/layout_rvMed">
 
     <TextView
-        android:id="@+id/textViewMedName"
+        android:id="@+id/tv_rvMed_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewDoseInfo"
+        android:id="@+id/tv_rvMed_doseInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -27,10 +27,10 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMedName" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_rvMed_name" />
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/div_rvMed"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
@@ -39,6 +39,6 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDoseInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_rvMed_doseInfo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,8 +35,8 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
     @Override
     public void onBindViewHolder(@NonNull MedViewHolder holder, int position) {
         Med med = meds.get(position);
-        holder.textViewMedName.setText(med.getName());
-        holder.textViewDoseInfo.setText(med.getDoseInfo());
+        holder.tv_rvMed_name.setText(med.getName());
+        holder.tv_rvMed_doseInfo.setText(med.getDoseInfo());
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,15 +54,15 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
     }
 
     public static class MedViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewMedName;
-        TextView textViewDoseInfo;
+        TextView tv_rvMed_name;
+        TextView tv_rvMed_doseInfo;
         ConstraintLayout parentLayout;
 
         public MedViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewMedName = itemView.findViewById(R.id.textViewMedName);
-            textViewDoseInfo = itemView.findViewById(R.id.textViewDoseInfo);
-            parentLayout = itemView.findViewById(R.id.doseLayout);
+            tv_rvMed_name = itemView.findViewById(R.id.tv_rvMed_name);
+            tv_rvMed_doseInfo = itemView.findViewById(R.id.tv_rvMed_doseInfo);
+            parentLayout = itemView.findViewById(R.id.layout_rvMed);
         }
     }
 }

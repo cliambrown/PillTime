@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,11 +13,11 @@ public class Dose {
 
     private int id;
     private int medID;
-    private float count;
-    private int takenAt; // Unix time
+    private double count;
+    private long takenAt; // Unix time
     private Context context;
 
-    public Dose(int id, int medID, float count, int takenAt, Context context) {
+    public Dose(int id, int medID, double count, long takenAt, Context context) {
         this.id = id;
         this.medID = medID;
         this.count = count;
@@ -50,17 +51,17 @@ public class Dose {
         this.medID = medID;
     }
 
-    public float getCount() { return count; }
+    public double getCount() { return count; }
 
-    public void setCount(float count) {
+    public void setCount(double count) {
         this.count = count;
     }
 
-    public int getTakenAt() {
+    public long getTakenAt() {
         return takenAt;
     }
 
-    public void setTakenAt(int takenAt) {
+    public void setTakenAt(long takenAt) {
         this.takenAt = takenAt;
     }
 
@@ -74,21 +75,21 @@ public class Dose {
 
     public String getTimeString() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis((long) takenAt * 1000);
+        calendar.setTimeInMillis(takenAt * 1000L);
         DateFormat dateFormat = new SimpleDateFormat("kk:mm");
         return dateFormat.format(calendar.getTime());
     }
 
     public String getDateString() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis((long) takenAt * 1000);
+        calendar.setTimeInMillis(takenAt * 1000L);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(calendar.getTime());
     }
 
     public String getDateTimeString() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis((long) takenAt * 1000);
+        calendar.setTimeInMillis(takenAt * 1000L);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm");
         return dateFormat.format(calendar.getTime());
     }

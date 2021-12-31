@@ -7,7 +7,7 @@
     tools:context=".EditDoseActivity">
 
     <LinearLayout
-        android:id="@+id/doseCountLine"
+        android:id="@+id/ll_editDose_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/every"
+            android:id="@+id/tv_editDose_every"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -29,7 +29,7 @@
             android:text="@string/dose_taken" />
 
         <EditText
-            android:id="@+id/editTextCount"
+            android:id="@+id/et_editDose_count"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/doseTakenAtTimeLine"
+        android:id="@+id/ll_editDose_takenAtTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -52,10 +52,10 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseCountLine">
+        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_count">
 
         <TextView
-            android:id="@+id/takenAt"
+            android:id="@+id/tv_editDose_takenAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -64,7 +64,7 @@
             android:text="@string/dose_taken_at" />
 
         <EditText
-            android:id="@+id/editTextTakenAtTime"
+            android:id="@+id/et_editDose_takenAtTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/doseTakenAtDateLine"
+        android:id="@+id/ll_editDose_takenAtDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -85,10 +85,10 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseTakenAtTimeLine">
+        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtTime">
 
         <TextView
-            android:id="@+id/takenOn"
+            android:id="@+id/tv_editDose_takenOn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -97,7 +97,7 @@
             android:text="@string/on" />
 
         <EditText
-            android:id="@+id/editTextTakenAtDate"
+            android:id="@+id/et_editDose_takenAtDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -108,7 +108,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/buttonsLine"
+        android:id="@+id/ll_editDose_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -118,10 +118,10 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseTakenAtDateLine">
+        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtDate">
 
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/btn_editDose_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -7,7 +7,7 @@
     tools:context=".EditMedActivity">
 
     <EditText
-        android:id="@+id/editTextMedName"
+        android:id="@+id/et_editMed_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/maxDoseLine"
+        android:id="@+id/ll_editMed_maxDose"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -33,10 +33,10 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextMedName">
+        app:layout_constraintTop_toBottomOf="@+id/et_editMed_name">
 
         <EditText
-            android:id="@+id/editTextMaxDose"
+            android:id="@+id/et_editMed_maxDose"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -47,7 +47,7 @@
             android:minHeight="48dp" />
 
         <TextView
-            android:id="@+id/every"
+            android:id="@+id/tv_editMed_every"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -56,7 +56,7 @@
             android:text="@string/every" />
 
         <EditText
-            android:id="@+id/editTextDoseHours"
+            android:id="@+id/et_editMed_doseHours"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -67,7 +67,7 @@
             android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/hours"
+            android:id="@+id/tv_editMed_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -76,7 +76,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/buttonsLine"
+        android:id="@+id/ll_editMed_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -86,10 +86,10 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maxDoseLine">
+        app:layout_constraintTop_toBottomOf="@+id/ll_editMed_maxDose">
 
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/btn_editMed_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

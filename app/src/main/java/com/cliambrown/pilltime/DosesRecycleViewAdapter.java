@@ -1,9 +1,16 @@
 package com.cliambrown.pilltime;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +23,12 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
     List<Dose> doses;
     Context context;
+    PillTimeApplication mApp;
 
-    public DosesRecycleViewAdapter(List<Dose> doses, Context context) {
+    public DosesRecycleViewAdapter(List<Dose> doses, Context context, PillTimeApplication mApp) {
         this.doses = doses;
         this.context = context;
+        this.mApp = mApp;
     }
 
     @NonNull
@@ -34,16 +43,49 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     public void onBindViewHolder(@NonNull DoseViewHolder holder, int position) {
         Dose dose = doses.get(position);
         String doseDetails = dose.getCount() + " (" + dose.getDateTimeString() + ")";
-        holder.textViewDoseDetails.setText(doseDetails);
+        holder.tv_rvDose_details.setText(doseDetails);
+        holder.tv_rvDose_timeSince.setText((dose.getTakenAt() + ""));
 
-//        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(context, Activity.class);
-//                intent.putExtra("id", med.getId());
-//                context.startActivity(intent);
-//            }
-//        });
+        holder.btn_rvDose_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvDose_more);
+                popupMenu.inflate(R.menu.med_ctx_menu);
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.mi_med_ctx_edit:
+                                Intent intent = new Intent(context, EditDoseActivity.class);
+                                intent.putExtra("med_id", dose.getMedID());
+                                intent.putExtra("dose_id", dose.getId());
+                                context.startActivity(intent);
+                                return true;
+                            case R.id.mi_med_ctx_delete:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setMessage(R.string.dialog_delete_item)
+                                        .setTitle(R.string.delete)
+                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                mApp.removeDose(dose);
+                                                DosesRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.show();
+                        }
+                        return false;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
     }
 
     @Override
@@ -52,15 +94,17 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     }
 
     public static class DoseViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewDoseDetails;
-        TextView textViewTimeSince;
+        TextView tv_rvDose_details;
+        TextView tv_rvDose_timeSince;
+        ImageButton btn_rvDose_more;
         ConstraintLayout parentLayout;
 
         public DoseViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewDoseDetails = itemView.findViewById(R.id.textViewDoseDetails);
-            textViewTimeSince = itemView.findViewById(R.id.textViewTimeSince);
-            parentLayout = itemView.findViewById(R.id.doseLayout);
+            tv_rvDose_details = itemView.findViewById(R.id.tv_rvDose_details);
+            tv_rvDose_timeSince = itemView.findViewById(R.id.tv_rvDose_timeSince);
+            btn_rvDose_more = itemView.findViewById(R.id.btn_rvDose_more);
+            parentLayout = itemView.findViewById(R.id.layout_rvDose);
         }
     }
 }

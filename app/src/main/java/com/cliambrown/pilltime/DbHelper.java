@@ -17,38 +17,43 @@ import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
 
+    public static final String DB_NAME = "pilltime.db";
+
     public static final String MEDS_TABLE = "meds";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_MED_NAME = "med_name";
-    public static final String COLUMN_MAX_DOSE = "max_dose";
-    public static final String COLUMN_DOSE_HOURS = "dose_hours";
+    public static final String MEDS_COL_NAME = "name";
+    public static final String MEDS_COL_MAX_DOSE = "max_dose";
+    public static final String MEDS_COL_DOSE_HOURS = "dose_hours";
 
     public static final String DOSES_TABLE = "doses";
-    public static final String COLUMN_MED_ID = "med_id";
-    public static final String COLUMN_COUNT = "count";
-    public static final String COLUMN_TAKEN_AT = "taken_at";
+    public static final String DOSES_COL_MED_ID = "med_id";
+    public static final String DOSES_COL_COUNT = "count";
+    public static final String DOSES_COL_TAKEN_AT = "taken_at";
 
     private final Context context;
 
     public DbHelper(@Nullable Context context) {
-        super(context, "pilltime.db", null, 1);
+        super(context, DB_NAME, null, 1);
         this.context = context;
-//        context.deleteDatabase("pilltime.db");
+    }
+
+    public boolean deleteDB() {
+        context.deleteDatabase(DB_NAME);
+        return true;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String stmt = "CREATE TABLE IF NOT EXISTS " + MEDS_TABLE +" (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_MED_NAME + " TEXT, " +
-                COLUMN_MAX_DOSE + " INT, " +
-                COLUMN_DOSE_HOURS + " INT)";
+        String stmt = "CREATE TABLE IF NOT EXISTS " + MEDS_TABLE +
+                " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MEDS_COL_NAME + " TEXT, " +
+                MEDS_COL_MAX_DOSE + " INTEGER, " +
+                MEDS_COL_DOSE_HOURS + " INTEGER)";
         db.execSQL(stmt);
-        String stmt2 = "CREATE TABLE IF NOT EXISTS " + DOSES_TABLE + " (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_MED_ID + " INT, " +
-                COLUMN_COUNT + " REAL, " +
-                COLUMN_TAKEN_AT + " INT)";
+        String stmt2 = "CREATE TABLE IF NOT EXISTS " + DOSES_TABLE +
+                " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                DOSES_COL_MED_ID + " INTEGER, " +
+                DOSES_COL_COUNT + " REAL, " +
+                DOSES_COL_TAKEN_AT + " INTEGER)";
         db.execSQL(stmt2);
     }
 
@@ -56,43 +61,32 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
     }
 
-    public int insertMed(Med med) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MED_NAME, med.getName());
-        cv.put(COLUMN_MAX_DOSE, med.getMaxDose());
-        cv.put(COLUMN_DOSE_HOURS, med.getDoseHours());
-        long insertID = db.insert(MEDS_TABLE, null, cv);
-        Log.d("clb-debug", insertID + "");
-        return (int) insertID;
-    }
-
-    public boolean updateMed(Med med) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MED_NAME, med.getName());
-        cv.put(COLUMN_MAX_DOSE, med.getMaxDose());
-        cv.put(COLUMN_DOSE_HOURS, med.getDoseHours());
-        String[] whereArgs = new String[]{String.valueOf(med.getId())};
-        int update = db.update(MEDS_TABLE, cv, COLUMN_ID + " = ?", whereArgs);
-        return (update > 0);
-    }
-
     public List<Med> getAllMeds() {
         List<Med> returnList = new ArrayList<>();
 
         String stmt = "SELECT * FROM " + MEDS_TABLE +
                 " LEFT JOIN " + DOSES_TABLE +
-                " ON " + DOSES_TABLE + "." + COLUMN_MED_ID +
-                " = " + MEDS_TABLE + "." + COLUMN_ID;
+                " ON " + DOSES_TABLE + "." + DOSES_COL_MED_ID +
+                " = " + MEDS_TABLE + ".id" +
+                " ORDER BY " + DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " DESC, " +
+                DOSES_TABLE + ".id DESC, " +
+                MEDS_TABLE + ".id DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
+//        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
         if (cursor.moveToFirst()) {
             List<Integer> medIDs = new ArrayList<>();
             Map<String, Med> medMap = new HashMap<String, Med>();
+            int meds_col_id = 0;
+            int meds_col_name = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_NAME);
+            int meds_col_maxDose = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_MAX_DOSE);
+            int meds_col_doseHours = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_DOSE_HOURS);
+            int doses_col_id = cursor.getColumnIndex(DOSES_TABLE + ".id");
+            int doses_col_count = cursor.getColumnIndex(DOSES_TABLE + "." + DOSES_COL_COUNT);
+            int doses_col_takenAt = cursor.getColumnIndex(DOSES_TABLE + "." + DOSES_COL_TAKEN_AT);
             do {
                 Med med;
-                int medID = cursor.getInt(0);
+                int medID = cursor.getInt(meds_col_id);
                 boolean medExists = false;
                 for (int i=0; i<medIDs.size(); ++i) {
                     if (medIDs.get(i) == medID) {
@@ -102,18 +96,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 if (!medExists) {
                     medIDs.add(medID);
-                    String medName = cursor.getString(1);
-                    int maxDose = cursor.getInt(2);
-                    int doseHours = cursor.getInt(3);
+                    String medName = cursor.getString(meds_col_name);
+                    int maxDose = cursor.getInt(meds_col_maxDose);
+                    int doseHours = cursor.getInt(meds_col_doseHours);
                     med = new Med(medID, medName, maxDose, doseHours, context);
                     medMap.put(String.valueOf(medID), med);
                 } else {
                     med = medMap.get(String.valueOf(medID));
                 }
-                if (!cursor.isNull(4)) {
-                    int doseID = cursor.getInt(4);
-                    float count = cursor.getFloat(5);
-                    int takenAt = cursor.getInt(6);
+                if (!cursor.isNull(doses_col_id)) {
+                    int doseID = cursor.getInt(doses_col_id);
+                    double count = cursor.getDouble(doses_col_count);
+                    long takenAt = cursor.getLong(doses_col_takenAt);
                     Dose dose = new Dose(doseID, medID, count, takenAt, context);
                     med.addDose(dose);
                 }
@@ -130,29 +124,57 @@ public class DbHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    public int insertMed(Med med) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MEDS_COL_NAME, med.getName());
+        cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
+        cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
+        long insertID = db.insert(MEDS_TABLE, null, cv);
+        db.close();
+        return (int) insertID;
+    }
+
+    public boolean updateMed(Med med) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MEDS_COL_NAME, med.getName());
+        cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
+        cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
+        String[] whereArgs = new String[]{String.valueOf(med.getId())};
+        int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
+        db.close();
+        return (update > 0);
+    }
+
     public boolean deleteMedById(int medID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] selectionArgs = new String[]{String.valueOf(medID)};
-        db.rawQuery("DELETE FROM " + DOSES_TABLE + " WHERE " + COLUMN_MED_ID + " = ?", selectionArgs);
-        String stmt = "DELETE FROM " + MEDS_TABLE + " WHERE " + COLUMN_ID + " = ?";
-        Cursor cursor = db.rawQuery(stmt, selectionArgs);
-        boolean deleted = !cursor.moveToFirst();
-        cursor.close();
+        db.delete(DOSES_TABLE, DOSES_COL_MED_ID + " = ?", selectionArgs);
+        int deleted = db.delete(MEDS_TABLE,"id = ?", selectionArgs);
         db.close();
-        return (deleted);
+        return (deleted > 0);
     }
 
     public boolean deleteMed(Med med) {
         return deleteMedById(med.getId());
     }
 
-    public int addDose(Dose dose) {
+    public int insertDose(Dose dose) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MED_ID, dose.getMedID());
-        cv.put(COLUMN_COUNT, dose.getCount());
-        cv.put(COLUMN_TAKEN_AT, dose.getTakenAt());
+        cv.put(DOSES_COL_MED_ID, dose.getMedID());
+        cv.put(DOSES_COL_COUNT, dose.getCount());
+        cv.put(DOSES_COL_TAKEN_AT, dose.getTakenAt());
         long insertID = db.insert(DOSES_TABLE, null, cv);
+        db.close();
         return (int) insertID;
+    }
+
+    public void deleteDoseById(int doseID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] selectionArgs = new String[]{String.valueOf(doseID)};
+        db.delete(DOSES_TABLE, "id = ?", selectionArgs);
+        db.close();
     }
 }

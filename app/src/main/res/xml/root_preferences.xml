@@ -1,0 +1,29 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/notifications_header">
+
+        <SwitchPreferenceCompat
+            app:key="notify_default"
+            app:title="@string/notify_expiring_dose"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="notify_sound_default"
+            app:title="@string/notification_sound"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/theme_header">
+
+        <ListPreference
+            app:entries="@array/themes_entries"
+            app:entryValues="@array/themes_values"
+            app:key="theme"
+            app:defaultValue="@string/theme_value_system_default"
+            app:title="@string/theme_header"
+            app:summary="%s"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

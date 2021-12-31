@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mi_med_edit"
+        android:id="@+id/mi_med_ctx_edit"
         android:title="@string/edit" />
     <item
-        android:id="@+id/mi_med_delete"
+        android:id="@+id/mi_med_ctx_delete"
         android:title="@string/delete" />
 </menu>

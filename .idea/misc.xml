@@ -9,7 +9,11 @@
         <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/layout/activity_med.xml" value="0.1671875" />
         <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/layout/recyclerview_dose.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/layout/recyclerview_med.xml" value="0.264" />
+        <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/layout/settings_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/menu/med_ctx_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/menu/med_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Liam/AndroidStudioProjects/PillTime/app/src/main/res/xml/root_preferences.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

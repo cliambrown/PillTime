@@ -5,6 +5,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +21,10 @@ public class PillTimeApplication extends Application {
         PillTimeApplication.context = getApplicationContext();
         dbHelper = new DbHelper(context);
         loadMeds();
+        AppCompatDelegate.setDefaultNightMode(ThemeProvider.getThemeFromPrefs(context));
     }
 
     public PillTimeApplication() {
-//        PillTimeApplication.context = getApplicationContext();
-//        dbHelper = new DbHelper(context);
-//        loadMeds();
     }
 
     private void loadMeds() {
@@ -32,11 +32,16 @@ public class PillTimeApplication extends Application {
         Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
 
-    public static List<Med> getMeds() {
+    public void clearMeds() {
+        dbHelper.deleteDB();
+        meds = new ArrayList<Med>();
+    }
+
+    public List<Med> getMeds() {
         return meds;
     }
 
-    public static Med getMed(int medID) {
+    public Med getMed(int medID) {
         for (int i=0; i<meds.size(); ++i) {
             Med med = meds.get(i);
             if (med.getId() == medID) {
@@ -46,22 +51,36 @@ public class PillTimeApplication extends Application {
         return null;
     }
 
-    public static void addMed(Med med) {
-        meds.add(med);
+    public boolean addMed(Med med) {
+        int insertID = dbHelper.insertMed(med);
+        if (insertID >= 0) {
+            med.setId(insertID);
+        } else {
+            Toast.makeText(context, "Error saving med", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        meds.add(0, med);
+        return true;
     }
 
-    public static void setMeds(List<Med> meds) {
+    public void setMeds(List<Med> meds) {
         PillTimeApplication.meds = meds;
     }
 
-    public static void setMed(Med med) {
+    public boolean setMed(Med med) {
+        boolean updated = dbHelper.updateMed(med);
+        if (!updated) {
+            Toast.makeText(context, "Error updating med", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         int medID = med.getId();
         for (int i=0; i<meds.size(); ++i) {
             if (meds.get(i).getId() == medID) {
                 meds.set(i, med);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     public static Context getAppContext() {
@@ -69,6 +88,11 @@ public class PillTimeApplication extends Application {
     }
 
     public boolean removeMedById(int medID) {
+        boolean deleted = dbHelper.deleteMedById(medID);
+        if (!deleted) {
+            Toast.makeText(context, "Error deleting med", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         int position = -1;
         for (int i=0; i<meds.size(); ++i) {
             if (meds.get(i).getId() == medID) {
@@ -81,5 +105,40 @@ public class PillTimeApplication extends Application {
             return true;
         }
         return false;
+    }
+
+    public boolean addDose(Med med, Dose dose) {
+        int insertID = dbHelper.insertDose(dose);
+        if (insertID >= 0) {
+            dose.setId(insertID);
+            med.addDose(dose);
+        } else {
+            Toast.makeText(context, "Error saving dose", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void removeDose(Dose dose) {
+        int medID = dose.getMedID();
+        int doseID = dose.getId();
+        dbHelper.deleteDoseById(doseID);
+        Med med;
+        for (int i=0; i<meds.size(); ++i) {
+            med = meds.get(i);
+            if (med.getId() == medID) {
+                List<Dose> doses = med.getDoses();
+                int position = -1;
+                for (int j=0; j<doses.size(); ++j) {
+                    if (doses.get(j).getId() == doseID) {
+                        position = j;
+                        break;
+                    }
+                }
+                if (position > -1) {
+                    doses.remove(position);
+                }
+            }
+        }
     }
 }

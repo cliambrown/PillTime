@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 public class EditMedActivity extends AppCompatActivity {
 
-    Button saveButton;
-    EditText editTextMedName, editTextMaxDose, editTextDoseHours;
-    DbHelper dbHelper;
-    PillTimeApplication pillTimeApplication = (PillTimeApplication) this.getApplication();
+    Button btn_editMed_save;
+    EditText et_editMed_name, et_editMed_maxDose, et_editMed_doseHours;
+    PillTimeApplication mApp;
     int medID;
 
     @Override
@@ -31,67 +30,53 @@ public class EditMedActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        saveButton = findViewById(R.id.saveButton);
-        editTextMedName = findViewById(R.id.editTextMedName);
-        editTextMaxDose = findViewById(R.id.editTextMaxDose);
-        editTextDoseHours = findViewById(R.id.editTextDoseHours);
+        btn_editMed_save = findViewById(R.id.btn_editMed_save);
+        et_editMed_name = findViewById(R.id.et_editMed_name);
+        et_editMed_maxDose = findViewById(R.id.et_editMed_maxDose);
+        et_editMed_doseHours = findViewById(R.id.et_editMed_doseHours);
 
-        dbHelper = new DbHelper(EditMedActivity.this);
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
-        Med med = PillTimeApplication.getMed(medID);
+        mApp = (PillTimeApplication) this.getApplication();
+        Med med = mApp.getMed(medID);
 
         if (med != null) {
-            editTextMedName.setText(med.getName());
-            editTextMaxDose.setText(String.valueOf(med.getMaxDose()));
-            editTextDoseHours.setText(String.valueOf(med.getDoseHours()));
+            et_editMed_name.setText(med.getName());
+            et_editMed_maxDose.setText(String.valueOf(med.getMaxDose()));
+            et_editMed_doseHours.setText(String.valueOf(med.getDoseHours()));
             setTitle(getString(R.string.edit) + " " + med.getName());
         } else {
             setTitle(getString(R.string.new_med));
         }
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        btn_editMed_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Med med;
-                DbHelper dbHelper = new DbHelper(EditMedActivity.this);
                 String medName;
                 int maxDose;
                 int doseHours;
 
                 try {
-                    medName = editTextMedName.getText().toString();
-                    maxDose = Integer.parseInt(editTextMaxDose.getText().toString());
-                    doseHours = Integer.parseInt(editTextDoseHours.getText().toString());
+                    medName = et_editMed_name.getText().toString();
+                    maxDose = Integer.parseInt(et_editMed_maxDose.getText().toString());
+                    doseHours = Integer.parseInt(et_editMed_doseHours.getText().toString());
                     med = new Med(medID, medName, maxDose, doseHours, EditMedActivity.this);
                 } catch (Exception e) {
-                    Toast.makeText(EditMedActivity.this, "error saving med - invalid data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (medID > -1) {
-                    boolean update = dbHelper.updateMed(med);
-                    if (update) {
-                        PillTimeApplication.setMed(med);
-                    } else {
-                        Toast.makeText(EditMedActivity.this, "error saving med", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    boolean setted = mApp.setMed(med);
+                    if (!setted) return;
                 } else {
-                    int insertID = dbHelper.insertMed(med);
-                    if (insertID >= 0) {
-                        med.setId(insertID);
-                        Log.d("clb-debug", insertID + "");
-                        Log.d("clb-debug", med.getId() + "");
-                        PillTimeApplication.addMed(med);
-                    } else {
-                        Toast.makeText(EditMedActivity.this, "error saving med", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    boolean added = mApp.addMed(med);
+                    if (!added) return;
                 }
 
-                Toast.makeText(EditMedActivity.this, "med saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditMedActivity.this, "Med saved", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(EditMedActivity.this, MedActivity.class);
                 intent.putExtra("id", med.getId());

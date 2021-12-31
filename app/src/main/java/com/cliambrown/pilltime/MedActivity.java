@@ -10,7 +10,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,16 +20,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MedActivity extends AppCompatActivity {
 
-    TextView textViewDoseInfo;
-    FloatingActionButton addButton;
-    Menu menu;
+    TextView tv_med_doseInfo;
+    FloatingActionButton btn_med_add;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    DbHelper dbHelper;
-    PillTimeApplication pillTimeApplication = (PillTimeApplication) this.getApplication();
+    PillTimeApplication mApp;
     int medID;
 
     @Override
@@ -43,30 +40,30 @@ public class MedActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        textViewDoseInfo = findViewById(R.id.textViewDoseInfo);
-        addButton = findViewById(R.id.addButton);
+        tv_med_doseInfo = findViewById(R.id.tv_med_doseInfo);
+        btn_med_add = findViewById(R.id.btn_med_add);
 
-        dbHelper = new DbHelper(MedActivity.this);
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
-        Med med = PillTimeApplication.getMed(medID);
+        mApp = (PillTimeApplication) this.getApplication();
+        Med med = mApp.getMed(medID);
 
         if (med != null) {
             setTitle(med.getName());
-            textViewDoseInfo.setText(med.getDoseInfo());
+            tv_med_doseInfo.setText(med.getDoseInfo());
         } else {
             MedActivity.this.finish();
         }
 
-        recyclerView = findViewById(R.id.dosesList);
+        recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
         registerForContextMenu(recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DosesRecycleViewAdapter(med.getDoses(), this);
+        mAdapter = new DosesRecycleViewAdapter(med.getDoses(), this, mApp);
         recyclerView.setAdapter(mAdapter);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        btn_med_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MedActivity.this, EditDoseActivity.class);
@@ -92,24 +89,21 @@ public class MedActivity extends AppCompatActivity {
                 startActivity(intent);
                 this.finish();
                 return true;
-            case R.id.menuEdit:
+            case R.id.mi_med_edit:
                 intent = new Intent(MedActivity.this, EditMedActivity.class);
                 intent.putExtra("id", medID);
                 startActivity(intent);
-            case R.id.menuDelete:
+                return true;
+            case R.id.mi_med_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(MedActivity.this);
-                builder.setMessage(R.string.dialog_delete_med)
+                builder.setMessage(R.string.dialog_delete_item)
                         .setTitle(R.string.delete)
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                boolean deleted = dbHelper.deleteMedById(medID);
-                                if (deleted) {
-                                    PillTimeApplication pillTimeApplication = (PillTimeApplication) MedActivity.this.getApplication();
-                                    pillTimeApplication.removeMedById(medID);
-                                    Intent intent = new Intent(MedActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    MedActivity.this.finish();
-                                }
+                                MedActivity.this.mApp.removeMedById(medID);
+                                Intent intent = new Intent(MedActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                MedActivity.this.finish();
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -118,6 +112,7 @@ public class MedActivity extends AppCompatActivity {
                             }
                         });
                 builder.show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

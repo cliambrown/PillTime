@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,12 +80,25 @@ public class Med {
     }
 
     public void addDose(Dose dose) {
-        doses.add(dose);
-        Collections.sort(doses, new Comparator<Dose>() {
-            @Override
-            public int compare(Dose d1, Dose d2) {
-                return d2.getTakenAt() - d1.getTakenAt();
+        int position = -1;
+        int doseID = dose.getId();
+        long takenAt = dose.getTakenAt();
+        for (int i=0; i<doses.size(); ++i) {
+            Dose listDose = doses.get(i);
+            long listTakenAt = listDose.getTakenAt();
+            if (takenAt > listTakenAt) {
+                position = i;
+                break;
             }
-        });
+            if (takenAt == listTakenAt && doseID > listDose.getId()) {
+                position = i;
+                break;
+            }
+        }
+        if (position > -1) {
+            doses.add(position, dose);
+        } else {
+            doses.add(dose);
+        }
     }
 }
