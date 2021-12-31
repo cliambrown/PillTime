@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Pill Time</string>
+    <string name="med_name">Name</string>
+    <string name="max">Max</string>
+    <string name="every">every</string>
+    <string name="hours">hours</string>
+    <string name="num_hours"># hours</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="dialog_delete_med">Are you sure you want to delete this item? This cannot be undone.</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="dose">Dose</string>
+    <string name="dose_taken">Dose Taken</string>
+    <string name="dose_taken_at">Taken at</string>
+    <string name="new_med">New Med</string>
+    <string name="add">Add</string>
+    <string name="on">on</string>
+    <string name="new_dose">New Dose</string>
+</resources>
