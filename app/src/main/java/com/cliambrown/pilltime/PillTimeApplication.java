@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public class PillTimeApplication extends Application {
 
@@ -75,10 +76,9 @@ public class PillTimeApplication extends Application {
         }
         int medID = med.getId();
         for (int i=0; i<meds.size(); ++i) {
-            if (meds.get(i).getId() == medID) {
-                meds.set(i, med);
-                return true;
-            }
+            if (meds.get(i).getId() != medID) continue;
+            meds.set(i, med);
+            return true;
         }
         return false;
     }
@@ -95,10 +95,9 @@ public class PillTimeApplication extends Application {
         }
         int position = -1;
         for (int i=0; i<meds.size(); ++i) {
-            if (meds.get(i).getId() == medID) {
-                position = i;
-                break;
-            }
+            if (meds.get(i).getId() != medID) continue;
+            position = i;
+            break;
         }
         if (position > -1) {
             meds.remove(position);
@@ -119,25 +118,34 @@ public class PillTimeApplication extends Application {
         return true;
     }
 
+    public boolean setDose(Med med, Dose dose) {
+        boolean updated = dbHelper.updateDose(dose);
+        if (!updated) {
+            Toast.makeText(context, "Error updating dose", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        med.setDose(dose);
+        return true;
+    }
+
     public void removeDose(Dose dose) {
         int medID = dose.getMedID();
         int doseID = dose.getId();
         dbHelper.deleteDoseById(doseID);
         Med med;
+        List<Dose> doses;
         for (int i=0; i<meds.size(); ++i) {
             med = meds.get(i);
-            if (med.getId() == medID) {
-                List<Dose> doses = med.getDoses();
-                int position = -1;
-                for (int j=0; j<doses.size(); ++j) {
-                    if (doses.get(j).getId() == doseID) {
-                        position = j;
-                        break;
-                    }
-                }
-                if (position > -1) {
-                    doses.remove(position);
-                }
+            if (med.getId() != medID) continue;
+            doses = med.getDoses();
+            int position = -1;
+            for (int j=0; j<doses.size(); ++j) {
+                if (doses.get(j).getId() != doseID) continue;
+                position = j;
+                break;
+            }
+            if (position > -1) {
+                doses.remove(position);
             }
         }
     }

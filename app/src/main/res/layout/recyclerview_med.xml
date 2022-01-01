@@ -6,28 +6,48 @@
     android:layout_height="wrap_content"
     android:id="@+id/layout_rvMed">
 
-    <TextView
-        android:id="@+id/tv_rvMed_name"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/ll_rvMed_top"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_rvMed_doseInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rvMed_name" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_rvMed_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_rvMed_doseInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_rvMed_more"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="0"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+
+    </LinearLayout>
 
     <View
         android:id="@+id/div_rvMed"
@@ -39,6 +59,6 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rvMed_doseInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_rvMed_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

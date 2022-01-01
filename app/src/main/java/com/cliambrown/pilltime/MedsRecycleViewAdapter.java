@@ -1,11 +1,16 @@
 package com.cliambrown.pilltime;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,10 +23,12 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
 
     List<Med> meds;
     Context context;
+    PillTimeApplication mApp;
 
-    public MedsRecycleViewAdapter(List<Med> meds, Context context) {
+    public MedsRecycleViewAdapter(List<Med> meds, Context context, PillTimeApplication mApp) {
         this.meds = meds;
         this.context = context;
+        this.mApp = mApp;
     }
 
     @NonNull
@@ -41,9 +48,55 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MedActivity.class);
-                intent.putExtra("id", med.getId());
+                Intent intent = new Intent(context, EditDoseActivity.class);
+                intent.putExtra("med_id", med.getId());
                 context.startActivity(intent);
+            }
+        });
+
+        holder.btn_rvMed_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvMed_more);
+                popupMenu.inflate(R.menu.med_option_menu);
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Intent intent;
+                        switch (menuItem.getItemId()) {
+                            case R.id.mi_med_option_edit:
+                                intent = new Intent(context, EditMedActivity.class);
+                                intent.putExtra("id", med.getId());
+                                context.startActivity(intent);
+                                return true;
+                            case R.id.mi_med_option_history:
+                                intent = new Intent(context, MedActivity.class);
+                                intent.putExtra("id", med.getId());
+                                context.startActivity(intent);
+                                return true;
+                            case R.id.mi_med_option_delete:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setMessage(R.string.dialog_delete_item)
+                                        .setTitle(R.string.delete)
+                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                mApp.removeMedById(med.getId());
+                                                MedsRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.show();
+                        }
+                        return false;
+                    }
+                });
+
+                popupMenu.show();
             }
         });
     }
@@ -56,12 +109,14 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
     public static class MedViewHolder extends RecyclerView.ViewHolder {
         TextView tv_rvMed_name;
         TextView tv_rvMed_doseInfo;
+        ImageButton btn_rvMed_more;
         ConstraintLayout parentLayout;
 
         public MedViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_rvMed_name = itemView.findViewById(R.id.tv_rvMed_name);
             tv_rvMed_doseInfo = itemView.findViewById(R.id.tv_rvMed_doseInfo);
+            btn_rvMed_more = itemView.findViewById(R.id.btn_rvMed_more);
             parentLayout = itemView.findViewById(R.id.layout_rvMed);
         }
     }

@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class EditMedActivity extends AppCompatActivity {
+public class EditMedActivity extends MainMenuActivity {
 
     Button btn_editMed_save;
     EditText et_editMed_name, et_editMed_maxDose, et_editMed_doseHours;
@@ -84,23 +84,5 @@ public class EditMedActivity extends AppCompatActivity {
                 EditMedActivity.this.finish();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent;
-                if (medID >= 0) {
-                    intent = new Intent(EditMedActivity.this, MedActivity.class);
-                    intent.putExtra("id", medID);
-                } else {
-                    intent = new Intent(EditMedActivity.this, MainActivity.class);
-                }
-                startActivity(intent);
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

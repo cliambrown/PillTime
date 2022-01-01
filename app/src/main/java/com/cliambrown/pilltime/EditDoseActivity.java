@@ -14,12 +14,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditDoseActivity extends AppCompatActivity {
+public class EditDoseActivity extends MainMenuActivity {
 
     Button btn_editDose_save;
     EditText et_editDose_count, et_editDose_takenAtTime, et_editDose_takenAtDate;
@@ -46,22 +48,26 @@ public class EditDoseActivity extends AppCompatActivity {
         doseID = intent.getIntExtra("dose_id", -1);
         mApp = (PillTimeApplication) this.getApplication();
         Med med = mApp.getMed(medID);
-        Dose dose = null;
+        Dose dose;
 
         if (med == null) {
-            // TODO send back
+            EditDoseActivity.this.finish();
         }
 
-        if (dose == null) {
+        if (doseID > -1) {
+            dose = med.getDoseById(doseID);
+            if (dose == null) {
+                EditDoseActivity.this.finish();
+            }
+            setTitle(getString(R.string.edit) + " " + getString(R.string.dose));
+        } else {
             long now = System.currentTimeMillis() / 1000L;
             dose = new Dose(doseID, medID, med.getMaxDose(), now, EditDoseActivity.this);
             setTitle(getString(R.string.new_dose) + " — " + med.getName());
-        } else {
-            // TODO get dose
-            setTitle(getString(R.string.edit) + " " + getString(R.string.dose));
         }
 
-        et_editDose_count.setText(String.valueOf(dose.getCount()));
+        NumberFormat nf = new DecimalFormat("##.###");
+        et_editDose_count.setText(nf.format(dose.getCount()));
         et_editDose_takenAtTime.setText(dose.getTimeString());
         et_editDose_takenAtDate.setText(dose.getDateString());
 
@@ -94,14 +100,8 @@ public class EditDoseActivity extends AppCompatActivity {
                 Dose dose = new Dose(doseID, medID, count, unixTime, EditDoseActivity.this);
 
                 if (doseID > -1) {
-//                    boolean update = dbHelper.updateMed(med);
-//                    if (update) {
-//                        app.setMed(med);
-//                        Toast.makeText(EditMedActivity.this, meds.toString(), Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(EditMedActivity.this, "Error saving med", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
+                    boolean setted = mApp.setDose(med, dose);
+                    if (!setted) return;
                 } else {
                     boolean added = mApp.addDose(med, dose);
                     if (!added) return;
@@ -115,19 +115,5 @@ public class EditDoseActivity extends AppCompatActivity {
                 EditDoseActivity.this.finish();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent;
-                intent = new Intent(EditDoseActivity.this, EditMedActivity.class);
-                intent.putExtra("id", medID);
-                startActivity(intent);
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

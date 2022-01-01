@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MedActivity extends AppCompatActivity {
+public class MedActivity extends MainMenuActivity {
 
     TextView tv_med_doseInfo;
     FloatingActionButton btn_med_add;
@@ -74,46 +74,53 @@ public class MedActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.med_menu, menu);
-        return true;
+    protected void onPostResume() {
+        super.onPostResume();
+        // TODO replace with some kind of queue system? maybe in PillTimeApplication
+        mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                intent = new Intent(MedActivity.this, MainActivity.class);
-                startActivity(intent);
-                this.finish();
-                return true;
-            case R.id.mi_med_edit:
-                intent = new Intent(MedActivity.this, EditMedActivity.class);
-                intent.putExtra("id", medID);
-                startActivity(intent);
-                return true;
-            case R.id.mi_med_delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(MedActivity.this);
-                builder.setMessage(R.string.dialog_delete_item)
-                        .setTitle(R.string.delete)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                MedActivity.this.mApp.removeMedById(medID);
-                                Intent intent = new Intent(MedActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                MedActivity.this.finish();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                builder.show();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    //    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.med_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        Intent intent;
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                intent = new Intent(MedActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                this.finish();
+//                return true;
+//            case R.id.mi_med_edit:
+//                intent = new Intent(MedActivity.this, EditMedActivity.class);
+//                intent.putExtra("id", medID);
+//                startActivity(intent);
+//                return true;
+//            case R.id.mi_med_delete:
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MedActivity.this);
+//                builder.setMessage(R.string.dialog_delete_item)
+//                        .setTitle(R.string.delete)
+//                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                MedActivity.this.mApp.removeMedById(medID);
+//                                Intent intent = new Intent(MedActivity.this, MainActivity.class);
+//                                startActivity(intent);
+//                                MedActivity.this.finish();
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//                builder.show();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }

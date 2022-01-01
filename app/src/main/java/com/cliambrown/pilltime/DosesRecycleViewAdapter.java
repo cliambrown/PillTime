@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleViewAdapter.DoseViewHolder> {
@@ -42,7 +43,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     @Override
     public void onBindViewHolder(@NonNull DoseViewHolder holder, int position) {
         Dose dose = doses.get(position);
-        String doseDetails = dose.getCount() + " (" + dose.getDateTimeString() + ")";
+        NumberFormat nf = new DecimalFormat("##.###");
+        String doseDetails = "x" + nf.format(dose.getCount()) + " (" + dose.getDateTimeString() + ")";
         holder.tv_rvDose_details.setText(doseDetails);
         holder.tv_rvDose_timeSince.setText((dose.getTakenAt() + ""));
 
@@ -50,19 +52,19 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvDose_more);
-                popupMenu.inflate(R.menu.med_ctx_menu);
+                popupMenu.inflate(R.menu.dose_option_menu);
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.mi_med_ctx_edit:
+                            case R.id.mi_dose_option_edit:
                                 Intent intent = new Intent(context, EditDoseActivity.class);
                                 intent.putExtra("med_id", dose.getMedID());
                                 intent.putExtra("dose_id", dose.getId());
                                 context.startActivity(intent);
                                 return true;
-                            case R.id.mi_med_ctx_delete:
+                            case R.id.mi_dose_option_delete:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                 builder.setMessage(R.string.dialog_delete_item)
                                         .setTitle(R.string.delete)

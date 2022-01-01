@@ -62,8 +62,8 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intent);
+//                intent = new Intent(SettingsActivity.this, MainActivity.class);
+//                startActivity(intent);
                 this.finish();
                 return true;
         }

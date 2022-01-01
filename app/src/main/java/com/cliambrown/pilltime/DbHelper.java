@@ -171,6 +171,17 @@ public class DbHelper extends SQLiteOpenHelper {
         return (int) insertID;
     }
 
+    public boolean updateDose(Dose dose) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DOSES_COL_MED_ID, dose.getMedID());
+        cv.put(DOSES_COL_COUNT, dose.getCount());
+        cv.put(DOSES_COL_TAKEN_AT, dose.getTakenAt());
+        String[] selectionArgs = new String[]{String.valueOf(dose.getId())};
+        int update = db.update(DOSES_TABLE, cv, "id = ?", selectionArgs);
+        return (update > 0);
+    }
+
     public void deleteDoseById(int doseID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] selectionArgs = new String[]{String.valueOf(doseID)};

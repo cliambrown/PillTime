@@ -101,4 +101,27 @@ public class Med {
             doses.add(dose);
         }
     }
+
+    public Dose getDoseById(int doseID) {
+        Dose dose;
+        for (int i=0; i<doses.size(); ++i) {
+            dose = doses.get(i);
+            if (dose.getId() == doseID) {
+                return dose;
+            }
+        }
+        return null;
+    }
+
+    public void setDose(Dose dose) {
+        int position = -1;
+        for (int i=0; i<doses.size(); ++i) {
+            if (doses.get(i).getId() == dose.getId()) {
+                position = i;
+            };
+        }
+        if (position > -1) {
+            doses.set(position, dose);
+        }
+    }
 }
