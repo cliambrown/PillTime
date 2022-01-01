@@ -1,12 +1,11 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class Dose {
@@ -92,5 +91,14 @@ public class Dose {
         calendar.setTimeInMillis(takenAt * 1000L);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm");
         return dateFormat.format(calendar.getTime());
+    }
+
+    public String getExpiresAtString(Med med) {
+        long expiresAtUnix = takenAt + (med.getDoseHours() * 60L * 60L);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(expiresAtUnix * 1000L);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm");
+        String timeAgo = Utils.decapitalize(DateUtils.getRelativeTimeSpanString(expiresAtUnix * 1000L).toString());
+        return timeAgo + " (" + dateFormat.format(calendar.getTime()) + ")";
     }
 }

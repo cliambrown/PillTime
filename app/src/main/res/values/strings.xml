@@ -8,12 +8,15 @@
     <string name="num_hours"># hours</string>
     <string name="new_med">New Med</string>
     <string name="history">History</string>
+    <string name="current_dose">Current total dose</string>
+    <string name="latest_dose_expires">Most recent dose expires</string>
 
     <string name="dose">Dose</string>
     <string name="dose_taken">Dose Taken</string>
     <string name="dose_taken_at">Taken at</string>
     <string name="on">on</string>
     <string name="new_dose">New Dose</string>
+    <string name="expires">Expires</string>
 
     <string name="add">Add</string>
     <string name="save">Save</string>

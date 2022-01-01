@@ -1,11 +1,8 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Med {
@@ -69,10 +66,7 @@ public class Med {
     }
 
     public String getDoseInfo() {
-        return maxDose +
-                " " + context.getString(R.string.every) + " " +
-                doseHours +
-                " " + context.getString(R.string.hours);
+        return "x" + maxDose + " / " + doseHours + " h";
     }
 
     public List<Dose> getDoses() {
@@ -123,5 +117,35 @@ public class Med {
         if (position > -1) {
             doses.set(position, dose);
         }
+    }
+
+    public double getCurrentTotalDoseCount() {
+        double count = 0.0D;
+        long now = System.currentTimeMillis() / 1000L;
+        long doseTimeAgo = now - (doseHours * 60L * 60L);
+        Dose dose;
+        for (int i=0; i<doses.size(); ++i) {
+            dose = doses.get(i);
+            if (dose.getTakenAt() <= doseTimeAgo) {
+                break;
+            }
+            count += dose.getCount();
+        }
+        return count;
+    }
+
+    // Assumes doses are correctly ordered by time desc
+    public long getLastTakenAt() {
+        if (doses.size() > 0) {
+            return doses.get(0).getTakenAt();
+        }
+        return -1;
+    }
+
+    public String getLatestDoseExpiresAtString() {
+        if (doses.size() > 0) {
+            return doses.get(0).getExpiresAtString(this);
+        }
+        return null;
     }
 }

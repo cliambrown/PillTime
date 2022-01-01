@@ -16,17 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
 public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleViewAdapter.DoseViewHolder> {
 
+    Med med;
     List<Dose> doses;
     Context context;
     PillTimeApplication mApp;
 
-    public DosesRecycleViewAdapter(List<Dose> doses, Context context, PillTimeApplication mApp) {
+    public DosesRecycleViewAdapter(Med med, List<Dose> doses, Context context, PillTimeApplication mApp) {
+        this.med = med;
         this.doses = doses;
         this.context = context;
         this.mApp = mApp;
@@ -43,10 +43,10 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     @Override
     public void onBindViewHolder(@NonNull DoseViewHolder holder, int position) {
         Dose dose = doses.get(position);
-        NumberFormat nf = new DecimalFormat("##.###");
-        String doseDetails = "x" + nf.format(dose.getCount()) + " (" + dose.getDateTimeString() + ")";
+        String doseDetails = "x" + Utils.getStrFromDbl(dose.getCount()) + " (" + dose.getDateTimeString() + ")";
         holder.tv_rvDose_details.setText(doseDetails);
-        holder.tv_rvDose_timeSince.setText((dose.getTakenAt() + ""));
+        String expiresStr = context.getString(R.string.expires) + " " + dose.getExpiresAtString(med);
+        holder.tv_rvDose_timeSince.setText(expiresStr);
 
         holder.btn_rvDose_more.setOnClickListener(new View.OnClickListener() {
             @Override

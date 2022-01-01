@@ -8,8 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 
 public class PillTimeApplication extends Application {
 
@@ -28,9 +28,9 @@ public class PillTimeApplication extends Application {
     public PillTimeApplication() {
     }
 
-    private void loadMeds() {
+    public void loadMeds() {
         meds = dbHelper.getAllMeds();
-        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void clearMeds() {
@@ -111,11 +111,43 @@ public class PillTimeApplication extends Application {
         if (insertID >= 0) {
             dose.setId(insertID);
             med.addDose(dose);
+            repositionMed(med);
         } else {
             Toast.makeText(context, "Error saving dose", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
+    }
+
+    public void repositionMed(Med med) {
+        int currentPosition = -1;
+        int newPosition = -1;
+        long lastTakenAt = med.getLastTakenAt();
+        int medID = med.getId();
+        Med listMed;
+        int listMedID;
+        int medsSize = meds.size();
+        for (int i=0; i<medsSize; ++i) {
+            listMed = meds.get(i);
+            listMedID = listMed.getId();
+            if (listMedID == medID) {
+                currentPosition = i;
+                if (newPosition > -1) break;
+                continue;
+            }
+            if (newPosition > -1) continue;
+            long takenDiff = listMed.getLastTakenAt() - lastTakenAt;
+            if (takenDiff < 0 || (takenDiff == 0 && medID > listMedID)) {
+                newPosition = i;
+                if (currentPosition > -1) break;
+            }
+        }
+        if (newPosition == -1) {
+            newPosition = medsSize - 1;
+        }
+        Log.d("clb", "lastTakenAt = " + lastTakenAt);
+        Log.d("clb", currentPosition + " to " + newPosition);
+        Collections.swap(meds, currentPosition, newPosition);
     }
 
     public boolean setDose(Med med, Dose dose) {
@@ -125,6 +157,7 @@ public class PillTimeApplication extends Application {
             return false;
         }
         med.setDose(dose);
+        repositionMed(med);
         return true;
     }
 
@@ -146,7 +179,9 @@ public class PillTimeApplication extends Application {
             }
             if (position > -1) {
                 doses.remove(position);
+                repositionMed(med);
             }
+            break;
         }
     }
 }

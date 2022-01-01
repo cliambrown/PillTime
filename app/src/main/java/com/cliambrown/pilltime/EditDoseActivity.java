@@ -1,21 +1,15 @@
 package com.cliambrown.pilltime;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,8 +60,7 @@ public class EditDoseActivity extends MainMenuActivity {
             setTitle(getString(R.string.new_dose) + " — " + med.getName());
         }
 
-        NumberFormat nf = new DecimalFormat("##.###");
-        et_editDose_count.setText(nf.format(dose.getCount()));
+        et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
         et_editDose_takenAtTime.setText(dose.getTimeString());
         et_editDose_takenAtDate.setText(dose.getDateString());
 
@@ -109,9 +102,9 @@ public class EditDoseActivity extends MainMenuActivity {
 
                 Toast.makeText(EditDoseActivity.this, "Dose saved", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(EditDoseActivity.this, MedActivity.class);
-                intent.putExtra("id", medID);
-                startActivity(intent);
+//                Intent intent = new Intent(EditDoseActivity.this, MedActivity.class);
+//                intent.putExtra("id", medID);
+//                startActivity(intent);
                 EditDoseActivity.this.finish();
             }
         });

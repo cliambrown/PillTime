@@ -12,5 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="redText">@color/red_500</item>
+        <item name="android:textColorPrimary">@color/text_on_white</item>
+        <item name="textColorPrimary">@color/text_on_white</item>
     </style>
 </resources>

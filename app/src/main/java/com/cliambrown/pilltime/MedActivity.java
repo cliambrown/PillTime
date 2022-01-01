@@ -1,18 +1,11 @@
 package com.cliambrown.pilltime;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,10 +50,9 @@ public class MedActivity extends MainMenuActivity {
 
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
-        registerForContextMenu(recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DosesRecycleViewAdapter(med.getDoses(), this, mApp);
+        mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, mApp);
         recyclerView.setAdapter(mAdapter);
 
         btn_med_add.setOnClickListener(new View.OnClickListener() {
@@ -79,48 +71,4 @@ public class MedActivity extends MainMenuActivity {
         // TODO replace with some kind of queue system? maybe in PillTimeApplication
         mAdapter.notifyDataSetChanged();
     }
-
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.med_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        Intent intent;
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                intent = new Intent(MedActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                this.finish();
-//                return true;
-//            case R.id.mi_med_edit:
-//                intent = new Intent(MedActivity.this, EditMedActivity.class);
-//                intent.putExtra("id", medID);
-//                startActivity(intent);
-//                return true;
-//            case R.id.mi_med_delete:
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MedActivity.this);
-//                builder.setMessage(R.string.dialog_delete_item)
-//                        .setTitle(R.string.delete)
-//                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                MedActivity.this.mApp.removeMedById(medID);
-//                                Intent intent = new Intent(MedActivity.this, MainActivity.class);
-//                                startActivity(intent);
-//                                MedActivity.this.finish();
-//                            }
-//                        })
-//                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                builder.show();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 }

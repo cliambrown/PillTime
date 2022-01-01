@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
+import android.content.res.Resources;
+import android.text.Html;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +15,10 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -44,6 +48,34 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         Med med = meds.get(position);
         holder.tv_rvMed_name.setText(med.getName());
         holder.tv_rvMed_doseInfo.setText(med.getDoseInfo());
+        double currentCount = med.getCurrentTotalDoseCount();
+        holder.tv_rvMed_currentDoseVal.setText(Utils.getStrFromDbl(currentCount));
+        if (currentCount >= (long) med.getMaxDose()) {
+            holder.tv_rvMed_currentDoseVal.setTextColor(context.getResources().getColor(R.color.red_500));
+        } else {
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.tv_rvMed_currentDoseVal.setTextColor(color);
+        }
+        String expiresStr = "";
+        String ldExpiresStr = null;
+        if (currentCount > 0L) {
+            ldExpiresStr = med.getLatestDoseExpiresAtString();
+        }
+        if (ldExpiresStr != null) {
+            expiresStr = "Next dose expires: <b>" + ldExpiresStr + "</b>";
+            holder.tv_rvMed_latestDoseExpiresAt.setText(Html.fromHtml(expiresStr));
+            holder.tv_rvMed_latestDoseExpiresAt.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_rvMed_latestDoseExpiresAt.setText("");
+            holder.tv_rvMed_latestDoseExpiresAt.setVisibility(View.GONE);
+        }
+
+        // Set up child RecyclerView
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        holder.activeDosesRecyclerView.setLayoutManager(layoutManager);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,14 +142,20 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         TextView tv_rvMed_name;
         TextView tv_rvMed_doseInfo;
         ImageButton btn_rvMed_more;
+        TextView tv_rvMed_currentDoseVal;
+        TextView tv_rvMed_latestDoseExpiresAt;
         ConstraintLayout parentLayout;
+        public RecyclerView activeDosesRecyclerView;
 
         public MedViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_rvMed_name = itemView.findViewById(R.id.tv_rvMed_name);
             tv_rvMed_doseInfo = itemView.findViewById(R.id.tv_rvMed_doseInfo);
             btn_rvMed_more = itemView.findViewById(R.id.btn_rvMed_more);
+            tv_rvMed_currentDoseVal = itemView.findViewById(R.id.tv_rvMed_currentDoseVal);
+            tv_rvMed_latestDoseExpiresAt = itemView.findViewById(R.id.tv_rvMed_latestDoseExpiresAt);
             parentLayout = itemView.findViewById(R.id.layout_rvMed);
+            activeDosesRecyclerView = itemView.findViewById(R.id.rv_rvMed_activeDoses);
         }
     }
 }

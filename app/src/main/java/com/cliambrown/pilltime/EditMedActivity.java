@@ -1,13 +1,9 @@
 package com.cliambrown.pilltime;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,9 +74,9 @@ public class EditMedActivity extends MainMenuActivity {
 
                 Toast.makeText(EditMedActivity.this, "Med saved", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(EditMedActivity.this, MedActivity.class);
-                intent.putExtra("id", med.getId());
-                startActivity(intent);
+//                Intent intent = new Intent(EditMedActivity.this, MedActivity.class);
+//                intent.putExtra("id", med.getId());
+//                startActivity(intent);
                 EditMedActivity.this.finish();
             }
         });
