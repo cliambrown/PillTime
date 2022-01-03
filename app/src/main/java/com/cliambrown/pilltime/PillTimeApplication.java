@@ -29,13 +29,14 @@ public class PillTimeApplication extends Application {
     }
 
     public void loadMeds() {
-        meds = dbHelper.getAllMeds();
+        meds.clear();
+        meds.addAll(dbHelper.getAllMeds());
 //        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void clearMeds() {
         dbHelper.deleteDB();
-        meds = new ArrayList<Med>();
+        meds.clear();
     }
 
     public List<Med> getMeds() {
@@ -133,11 +134,10 @@ public class PillTimeApplication extends Application {
             if (listMedID == medID) {
                 currentPosition = i;
                 if (newPosition > -1) break;
-                continue;
             }
             if (newPosition > -1) continue;
             long takenDiff = listMed.getLastTakenAt() - lastTakenAt;
-            if (takenDiff < 0 || (takenDiff == 0 && medID > listMedID)) {
+            if (takenDiff < 0 || (takenDiff == 0 && medID >= listMedID)) {
                 newPosition = i;
                 if (currentPosition > -1) break;
             }
@@ -145,9 +145,9 @@ public class PillTimeApplication extends Application {
         if (newPosition == -1) {
             newPosition = medsSize - 1;
         }
-        Log.d("clb", "lastTakenAt = " + lastTakenAt);
-        Log.d("clb", currentPosition + " to " + newPosition);
-        Collections.swap(meds, currentPosition, newPosition);
+        if (newPosition != currentPosition) {
+            Collections.swap(meds, currentPosition, newPosition);
+        }
     }
 
     public boolean setDose(Med med, Dose dose) {

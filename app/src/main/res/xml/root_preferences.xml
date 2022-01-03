@@ -26,4 +26,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Database">
+
+        <Preference
+            app:key="clearDb"
+            app:title="@string/clear_db" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -1,20 +1,21 @@
 package com.cliambrown.pilltime;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-public class MedActivity extends MainMenuActivity {
+public class MedActivity extends AppCompatActivity {
 
     TextView tv_med_doseInfo;
-    FloatingActionButton btn_med_add;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -34,7 +35,6 @@ public class MedActivity extends MainMenuActivity {
         }
 
         tv_med_doseInfo = findViewById(R.id.tv_med_doseInfo);
-        btn_med_add = findViewById(R.id.btn_med_add);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
@@ -42,8 +42,8 @@ public class MedActivity extends MainMenuActivity {
         Med med = mApp.getMed(medID);
 
         if (med != null) {
-            setTitle(med.getName());
-            tv_med_doseInfo.setText(med.getDoseInfo());
+            setTitle(getString(R.string.history) + ": " + med.getName());
+            tv_med_doseInfo.setText(med.getMaxDoseInfo());
         } else {
             MedActivity.this.finish();
         }
@@ -54,15 +54,6 @@ public class MedActivity extends MainMenuActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, mApp);
         recyclerView.setAdapter(mAdapter);
-
-        btn_med_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MedActivity.this, EditDoseActivity.class);
-                intent.putExtra("med_id", medID);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -70,5 +61,37 @@ public class MedActivity extends MainMenuActivity {
         super.onPostResume();
         // TODO replace with some kind of queue system? maybe in PillTimeApplication
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.med_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                MedActivity.this.finish();
+                return true;
+            case R.id.mi_med_edit:
+                intent = new Intent(MedActivity.this, EditMedActivity.class);
+                intent.putExtra("id", medID);
+                startActivity(intent);
+                return true;
+            case R.id.mi_med_add:
+                intent = new Intent(MedActivity.this, EditDoseActivity.class);
+                intent.putExtra("med_id", medID);
+                startActivity(intent);
+                return true;
+            case R.id.mi_med_settings:
+                intent = new Intent(MedActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

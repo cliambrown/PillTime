@@ -1,20 +1,20 @@
 package com.cliambrown.pilltime;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.List;
 
-public class MainActivity extends MainMenuActivity {
-
-    FloatingActionButton btn_main_add;
+public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -32,8 +32,6 @@ public class MainActivity extends MainMenuActivity {
         mApp = (PillTimeApplication) this.getApplication();
         meds = mApp.getMeds();
 
-        btn_main_add = findViewById(R.id.btn_main_add);
-
         recyclerView = findViewById(R.id.rv_main_meds);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -50,14 +48,6 @@ public class MainActivity extends MainMenuActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
-        btn_main_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditMedActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -65,5 +55,31 @@ public class MainActivity extends MainMenuActivity {
         super.onPostResume();
         // TODO replace with some kind of queue system? maybe in PillTimeApplication
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                MainActivity.this.finish();
+                return true;
+            case R.id.mi_main_add:
+                intent = new Intent(MainActivity.this, EditMedActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.mi_main_settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

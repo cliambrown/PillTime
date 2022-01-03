@@ -2,7 +2,10 @@ package com.cliambrown.pilltime;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.util.TypedValue;
 
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
@@ -28,5 +31,12 @@ public class ThemeProvider {
             return AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
         }
         return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+    }
+
+    public static int getDefaultTextColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true);
+        return typedValue.data;
     }
 }

@@ -65,8 +65,8 @@ public class Med {
         this.doseHours = doseHours;
     }
 
-    public String getDoseInfo() {
-        return "x" + maxDose + " / " + doseHours + " h";
+    public String getMaxDoseInfo() {
+        return context.getString(R.string.max) + " " + maxDose + " / " + doseHours + " " + context.getString(R.string.hours_short);
     }
 
     public List<Dose> getDoses() {
@@ -119,6 +119,7 @@ public class Med {
         }
     }
 
+    // Assumes doses are correctly ordered by time desc
     public double getCurrentTotalDoseCount() {
         double count = 0.0D;
         long now = System.currentTimeMillis() / 1000L;
@@ -126,12 +127,24 @@ public class Med {
         Dose dose;
         for (int i=0; i<doses.size(); ++i) {
             dose = doses.get(i);
-            if (dose.getTakenAt() <= doseTimeAgo) {
-                break;
-            }
-            count += dose.getCount();
+            long takenAt = dose.getTakenAt();
+            if (takenAt <= doseTimeAgo) break;
+            if (takenAt <= now) count += dose.getCount();
         }
         return count;
+    }
+
+    public Dose getLatestDose() {
+        long now = System.currentTimeMillis() / 1000L;
+        long doseTimeAgo = now - (doseHours * 60L * 60L);
+        Dose dose;
+        for (int i=0; i<doses.size(); ++i) {
+            dose = doses.get(i);
+            long takenAt = dose.getTakenAt();
+            if (takenAt > now) continue;
+            return dose;
+        }
+        return null;
     }
 
     // Assumes doses are correctly ordered by time desc
@@ -141,11 +154,12 @@ public class Med {
         }
         return -1;
     }
+//
+//    public String getLatestDoseExpiresAtString() {
+//        if (doses.size() > 0) {
+//            return doses.get(0).getExpiresAtString(this);
+//        }
+//        return null;
+//    }
 
-    public String getLatestDoseExpiresAtString() {
-        if (doses.size() > 0) {
-            return doses.get(0).getExpiresAtString(this);
-        }
-        return null;
-    }
 }

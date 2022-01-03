@@ -3,13 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mi_main_add"
+        android:id="@+id/mi_med_edit"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/edit"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/mi_med_add"
         android:icon="@drawable/ic_baseline_add_24"
         android:title="@string/add"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/mi_main_settings"
+        android:id="@+id/mi_med_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"
         app:showAsAction="ifRoom"/>

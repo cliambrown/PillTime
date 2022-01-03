@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PillTime">
         <activity
-            android:name=".MainMenuActivity"
+            android:name=".SimpleMenuActivity"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"

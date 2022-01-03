@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class EditMedActivity extends MainMenuActivity {
+public class EditMedActivity extends SimpleMenuActivity {
 
     Button btn_editMed_save;
     EditText et_editMed_name, et_editMed_maxDose, et_editMed_doseHours;

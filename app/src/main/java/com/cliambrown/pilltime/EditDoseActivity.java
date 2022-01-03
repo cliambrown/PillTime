@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditDoseActivity extends MainMenuActivity {
+public class EditDoseActivity extends SimpleMenuActivity {
 
     Button btn_editDose_save;
     EditText et_editDose_count, et_editDose_takenAtTime, et_editDose_takenAtDate;
