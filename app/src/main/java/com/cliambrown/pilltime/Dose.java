@@ -76,17 +76,11 @@ public class Dose {
     }
 
     public String getTimeString() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(takenAt * 1000L);
-        DateFormat dateFormat = new SimpleDateFormat("kk:mm");
-        return dateFormat.format(calendar.getTime());
+        return DateUtils.formatDateTime(getContext(), (takenAt * 1000L), DateUtils.FORMAT_SHOW_TIME);
     }
 
     public String getDateString() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(takenAt * 1000L);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        return dateFormat.format(calendar.getTime());
+        return DateUtils.formatDateTime(context, (takenAt * 1000L), DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
     }
 
     public boolean isActive() {

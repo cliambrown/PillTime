@@ -63,14 +63,16 @@
             android:layout_weight="0"
             android:text="@string/dose_taken_at" />
 
-        <EditText
-            android:id="@+id/et_editDose_takenAtTime"
+        <TextView
+            android:id="@+id/tv_editDose_takenAtTime"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="0"
-            android:ems="10"
-            android:inputType="time"
-            android:minHeight="48dp" />
+            android:background="#E8E8E8"
+            android:gravity="center_horizontal|center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="20dp" />
 
     </LinearLayout>
 
@@ -96,14 +98,16 @@
             android:layout_weight="0"
             android:text="@string/on" />
 
-        <EditText
-            android:id="@+id/et_editDose_takenAtDate"
+        <TextView
+            android:id="@+id/tv_editDose_takenAtDate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="0"
-            android:ems="10"
-            android:inputType="date"
-            android:minHeight="48dp" />
+            android:background="#E8E8E8"
+            android:gravity="center_horizontal|center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="20dp" />
 
     </LinearLayout>
 
