@@ -25,8 +25,8 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="4dp"
             app:srcCompat="@drawable/ic_baseline_add_24"
-            android:background="@drawable/round_button"
-            app:tint="@color/white"
+            android:background="@drawable/round_button_pink"
+            app:tint="?attr/buttonText"
             android:contentDescription="@string/new_dose" />
 
         <LinearLayout

@@ -15,19 +15,23 @@ public class Med {
     private String name;
     private int maxDose;
     private int doseHours;
+    private String color;
     private List<Dose> doses = new ArrayList<Dose>();
     private Context context;
+    private boolean hasLoadedAllDoses;
 
     Dose latestDose;
     double currentTotalDoseCount;
     String latestDoseExpiresInStr;
 
-    public Med(int id, String name, int maxDose, int doseHours, Context context) {
+    public Med(int id, String name, int maxDose, int doseHours, String color, Context context) {
         this.id = id;
         this.name = name;
         this.maxDose = maxDose;
         this.doseHours = doseHours;
+        this.color = color;
         this.context = context;
+        this.hasLoadedAllDoses = false;
     }
 
     @Override
@@ -71,6 +75,15 @@ public class Med {
 
     public void setDoseHours(int doseHours) {
         this.doseHours = doseHours;
+    }
+
+    public String getColor() {
+        if (color == null) return "pink";
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getMaxDoseInfo() {
@@ -248,5 +261,13 @@ public class Med {
                 latestDoseExpiresInStr = "x" + Utils.getStrFromDbl(latestDoseCount) + " " + latestDoseExpiresInStr;
             }
         }
+    }
+
+    public boolean hasLoadedAllDoses() {
+        return hasLoadedAllDoses;
+    }
+
+    public void setHasLoadedAllDoses(boolean hasLoadedAllDoses) {
+        this.hasLoadedAllDoses = hasLoadedAllDoses;
     }
 }

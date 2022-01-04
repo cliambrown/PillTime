@@ -12,4 +12,23 @@
         <item>@string/theme_value_system_default</item>
         <item>@string/theme_value_auto_battery</item>
     </string-array>
+
+    <string-array name="color_options">
+        <item>orange</item>
+        <item>amber</item>
+        <item>yellow</item>
+        <item>lime</item>
+        <item>green</item>
+        <item>emerald</item>
+        <item>teal</item>
+        <item>cyan</item>
+        <item>sky</item>
+        <item>blue</item>
+        <item>indigo</item>
+        <item>violet</item>
+        <item>purple</item>
+        <item>fuchsia</item>
+        <item>pink</item>
+        <item>rose</item>
+    </string-array>
 </resources>

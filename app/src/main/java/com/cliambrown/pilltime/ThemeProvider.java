@@ -3,6 +3,7 @@ package com.cliambrown.pilltime;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.TypedValue;
 
 import androidx.annotation.ColorInt;
@@ -33,10 +34,9 @@ public class ThemeProvider {
         return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
     }
 
-    public static int getDefaultTextColor(Context context) {
+    public static int getThemeAttr(int attr, Context context) {
         TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true);
+        context.getTheme().resolveAttribute(attr, typedValue, true);
         return typedValue.data;
     }
 }

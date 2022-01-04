@@ -16,7 +16,7 @@ public class PillTimeApplication extends Application {
 
     private static Context context;
     DbHelper dbHelper;
-    private static List<Med> meds = new ArrayList<Med>();
+    private List<Med> meds = new ArrayList<Med>();
 
     public void onCreate() {
         super.onCreate();
@@ -71,7 +71,7 @@ public class PillTimeApplication extends Application {
     }
 
     public void setMeds(List<Med> meds) {
-        PillTimeApplication.meds = meds;
+        this.meds = meds;
     }
 
     public boolean setMed(Med med) {
@@ -88,6 +88,7 @@ public class PillTimeApplication extends Application {
             listMed.setName(med.getName());
             listMed.setMaxDose(med.getMaxDose());
             listMed.setDoseHours(med.getDoseHours());
+            listMed.setColor(med.getColor());
             listMed.updateDoseStatus();
             Intent intent = new Intent();
             intent.setAction("com.cliambrown.broadcast.MED_EDITED");

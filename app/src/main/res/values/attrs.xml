@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="redText" format="reference|color" />
-    <attr name="greenText" format="reference|color" />
     <attr name="textColorPrimary" format="reference|color" />
+    <attr name="lightText" format="reference|color" />
+    <attr name="buttonText" format="reference|color" />
+
+    <attr name="redText" format="reference|color" />
+    <attr name="orangeText" format="reference|color" />
+    <attr name="amberText" format="reference|color" />
+    <attr name="yellowText" format="reference|color" />
+    <attr name="limeText" format="reference|color" />
+    <attr name="greenText" format="reference|color" />
+    <attr name="emeraldText" format="reference|color" />
+    <attr name="tealText" format="reference|color" />
+    <attr name="cyanText" format="reference|color" />
+    <attr name="skyText" format="reference|color" />
+    <attr name="blueText" format="reference|color" />
+    <attr name="indigoText" format="reference|color" />
+    <attr name="violetText" format="reference|color" />
+    <attr name="purpleText" format="reference|color" />
+    <attr name="fuchsiaText" format="reference|color" />
+    <attr name="pinkText" format="reference|color" />
+    <attr name="roseText" format="reference|color" />
 </resources>

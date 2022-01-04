@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="indigo_200">#FF9fa8da</color>
-    <color name="indigo_500">#FF3f51b5</color>
-    <color name="indigo_700">#FF303f9f</color>
-    <color name="pink_500">#FFe91e63</color>
-    <color name="pink_700">#FFc2185b</color>
-    <color name="red_200">#FFEF9A9A</color>
-    <color name="red_500">#FFE53935</color>
-    <color name="green_200">#FFA5D6A7</color>
-    <color name="green_700">#FF388E3C</color>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="text_on_white">#FF6E6E6E</color>
-    <color name="text_on_black">#FFCCCCCC</color>
+    <color name="black">#FF000000</color>
+    <color name="gray_200">#FFE7E5E4</color>
+    <color name="gray_300">#FFD6D3D1</color>
+    <color name="gray_500">#FF78716C</color>
+    <color name="gray_700">#FF44403C</color>
+    <color name="red_300">#FFFCA5A5</color>
+    <color name="red_600">#FFDC2626</color>
+    <color name="orange_300">#FFFDBA74</color>
+    <color name="orange_700">#FFC2410C</color>
+    <color name="amber_400">#FFFBBF24</color>
+    <color name="amber_700">#FFB45309</color>
+    <color name="yellow_500">#FFEAB308</color>
+    <color name="yellow_700">#FFA16207</color>
+    <color name="lime_500">#FF84CC16</color>
+    <color name="lime_700">#FF4D7C0F</color>
+    <color name="green_400">#FF4ADE80</color>
+    <color name="green_700">#FF15803D</color>
+    <color name="emerald_400">#FF34D399</color>
+    <color name="emerald_700">#FF047857</color>
+    <color name="teal_400">#FF2DD4BF</color>
+    <color name="teal_700">#FF0F766E</color>
+    <color name="cyan_400">#FF22D3EE</color>
+    <color name="cyan_600">#FF0891B2</color>
+    <color name="sky_300">#FF7DD3FC</color>
+    <color name="sky_600">#FF0284C7</color>
+    <color name="blue_300">#FF93C5FD</color>
+    <color name="blue_600">#FF2563EB</color>
+    <color name="indigo_300">#FFA5B4FC</color>
+    <color name="indigo_600">#FF4F46E5</color>
+    <color name="violet_300">#FFC4B5FD</color>
+    <color name="violet_600">#FF7C3AED</color>
+
+    <color name="purple_50">#FFFAF5FF</color>
+    <color name="purple_100">#FFF3E8FF</color>
+    <color name="purple_200">#FFE9D5FF</color>
+    <color name="purple_300">#FFD8B4FE</color>
+    <color name="purple_400">#FFC084FC</color>
+    <color name="purple_500">#FFA855F7</color>
+    <color name="purple_600">#FF9333EA</color>
+    <color name="purple_700">#FF7E22CE</color>
+    <color name="purple_800">#FF6B21A8</color>
+    <color name="purple_900">#FF581C87</color>
+
+    <color name="fuchsia_300">#FFF0ABFC</color>
+    <color name="fuchsia_600">#FFC026D3</color>
+    <color name="pink_300">#FFF9A8D4</color>
+    <color name="pink_600">#FFDB2777</color>
+    <color name="rose_300">#FFFDA4AF</color>
+    <color name="rose_600">#FFE11D48</color>
 </resources>

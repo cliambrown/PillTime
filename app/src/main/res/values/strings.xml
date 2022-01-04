@@ -3,6 +3,7 @@
 
     <string name="med_name">Name</string>
     <string name="max">max</string>
+    <string name="max_dose">Max Dose</string>
     <string name="every">every</string>
     <string name="hours">hours</string>
     <string name="hours_short">h</string>
@@ -18,6 +19,8 @@
     <string name="new_dose">New Dose</string>
     <string name="expires">expires</string>
     <string name="expired">expired</string>
+    <string name="at">at</string>
+    <string name="pick_time">Select time</string>
 
     <string name="add">Add</string>
     <string name="save">Save</string>
@@ -46,9 +49,23 @@
     <string name="theme_value_dark">MODE_NIGHT_YES</string>
     <string name="theme_value_system_default">MODE_NIGHT_FOLLOW_SYSTEM</string>
     <string name="theme_value_auto_battery">MODE_NIGHT_AUTO_BATTERY</string>
-    <string name="at">at</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="pick_time">Select time</string>
 
+    <string name="color">Color</string>
+    <string name="red">Red</string>
+    <string name="orange">Orange</string>
+    <string name="amber">Amber</string>
+    <string name="yellow">Yellow</string>
+    <string name="lime">Lime</string>
+    <string name="green">Green</string>
+    <string name="emerald">Emerald</string>
+    <string name="teal">Teal</string>
+    <string name="cyan">Cyan</string>
+    <string name="sky">Sky</string>
+    <string name="blue">Blue</string>
+    <string name="indigo">Indigo</string>
+    <string name="violet">Violet</string>
+    <string name="purple">Purple</string>
+    <string name="fuchsia">Fuchsia</string>
+    <string name="pink">Pink</string>
+    <string name="rose">Rose</string>
 </resources>

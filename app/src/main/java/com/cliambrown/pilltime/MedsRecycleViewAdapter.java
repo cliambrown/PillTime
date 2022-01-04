@@ -4,7 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +20,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -166,9 +172,9 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             double currentTotalDoseCount = med.getCurrentTotalDoseCount();
             tv_rvMed_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
             if (currentTotalDoseCount >= (long) med.getMaxDose()) {
-                tv_rvMed_currentTotalDoseCount.setTextColor(context.getResources().getColor(R.color.red_500));
+                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.redText, context));
             } else {
-                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeProvider.getDefaultTextColor(context));
+                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.textColorPrimary, context));
             }
             Dose latestDose = med.getLatestDose();
             if (latestDose == null || currentTotalDoseCount == 0) {
@@ -185,9 +191,18 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             String takenInPast = " " + context.getString(R.string.taken_in_past) + " " +
                     doseHours + " " + context.getString(R.string.hours);
             tv_rvMed_name.setText(med.getName());
+            String colorName = med.getColor();
+            int attrResourceID = Utils.getResourceIdentifier(context, colorName + "Text", "attr");
+            int textColor = ThemeProvider.getThemeAttr(attrResourceID, context);
+            try {
+                int drawableID = Utils.getResourceIdentifier(context, "round_button_" + colorName, "drawable");
+                btn_rvMed_add.setBackgroundResource(drawableID);
+            } catch (Exception e) {
+                // Do nothing
+            }
+            tv_rvMed_name.setTextColor(textColor);
             tv_rvMed_maxDoseInfo.setText(med.getMaxDoseInfo());
             tv_rvMed_takenInPast.setText(takenInPast);
         }
-
     }
 }

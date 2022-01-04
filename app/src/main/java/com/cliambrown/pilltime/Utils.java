@@ -27,7 +27,7 @@ public class Utils {
 
     public static String simpleFutureTime(Context context, long unixTime) {
         long unixTimeMs = unixTime * 1000L;
-        String str = DateUtils.formatDateTime(context, unixTimeMs, DateUtils.FORMAT_SHOW_TIME);
+        String str = DateUtils.formatDateTime(context, unixTimeMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase();
         long now = System.currentTimeMillis() / 1000L;
         long timeDiffSec = unixTime - now;
         if (timeDiffSec < (24 * 60 * 60)) {
@@ -38,5 +38,9 @@ public class Utils {
             return str;
         }
         return str + " " + DateUtils.formatDateTime(context, unixTimeMs, DateUtils.FORMAT_SHOW_YEAR);
+    }
+
+    public static int getResourceIdentifier(Context context, String name, String type) {
+        return context.getResources().getIdentifier(name, type, context.getPackageName());
     }
 }

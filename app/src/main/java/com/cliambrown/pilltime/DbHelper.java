@@ -3,8 +3,10 @@ package com.cliambrown.pilltime;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -21,6 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String MEDS_COL_NAME = "name";
     public static final String MEDS_COL_MAX_DOSE = "max_dose";
     public static final String MEDS_COL_DOSE_HOURS = "dose_hours";
+    public static final String MEDS_COL_COLOR = "color";
 
     public static final String DOSES_TABLE = "doses";
     public static final String DOSES_COL_MED_ID = "med_id";
@@ -30,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private final Context context;
 
     public DbHelper(@Nullable Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DB_NAME, null, 2);
         this.context = context;
     }
 
@@ -57,6 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_COLOR + " TEXT");
     }
 
     @Override
@@ -66,25 +70,44 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<Med> getAllMeds() {
         List<Med> returnList = new ArrayList<>();
 
-        String stmt = "SELECT * FROM " + MEDS_TABLE +
-                " LEFT JOIN " + DOSES_TABLE +
-                " ON " + DOSES_TABLE + "." + DOSES_COL_MED_ID +
-                " = " + MEDS_TABLE + ".id" +
-                " ORDER BY " + DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " DESC, " +
-                DOSES_TABLE + ".id DESC, " +
-                MEDS_TABLE + ".id DESC";
+        String stmt = "SELECT " +
+                MEDS_TABLE + ".id AS " + MEDS_TABLE + "_id, " +
+                MEDS_TABLE + "." + MEDS_COL_NAME + " AS " + MEDS_TABLE + "_" + MEDS_COL_NAME + ", " +
+                MEDS_TABLE + "." + MEDS_COL_MAX_DOSE + " AS " + MEDS_TABLE + "_" + MEDS_COL_MAX_DOSE + ", " +
+                MEDS_TABLE + "." + MEDS_COL_DOSE_HOURS + " AS " + MEDS_TABLE + "_" + MEDS_COL_DOSE_HOURS + ", " +
+                MEDS_TABLE + "." + MEDS_COL_COLOR + " AS " + MEDS_TABLE + "_" + MEDS_COL_COLOR + ", " +
+                "JT.id AS " + DOSES_TABLE + "_id, " +
+                "JT." + DOSES_COL_MED_ID + " AS " + DOSES_TABLE + "_" + DOSES_COL_MED_ID + ", " +
+                "JT." + DOSES_COL_COUNT + " AS " + DOSES_TABLE + "_" + DOSES_COL_COUNT + ", " +
+                "JT." + DOSES_COL_TAKEN_AT + " AS " + DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT + " " +
+                "FROM " + MEDS_TABLE + " " +
+                "LEFT JOIN (SELECT " +
+                DOSES_TABLE + ".id, " +
+                DOSES_TABLE + "." + DOSES_COL_MED_ID + ", " +
+                DOSES_TABLE + "." + DOSES_COL_COUNT + ", " +
+                DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " " +
+                "FROM " + DOSES_TABLE + " " +
+                "ORDER BY " + DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " DESC, " +
+                DOSES_TABLE + ".id DESC " +
+                "LIMIT 20) JT ON JT.id = " + MEDS_TABLE + "_id " +
+                "ORDER BY " + DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT + " DESC, " +
+                DOSES_TABLE + "_id DESC, " +
+                MEDS_TABLE + "_id DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
+//        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
+
         if (cursor.moveToFirst()) {
             List<Integer> medIDs = new ArrayList<>();
             Map<String, Med> medMap = new HashMap<String, Med>();
-            int meds_col_id = 0;
-            int meds_col_name = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_NAME);
-            int meds_col_maxDose = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_MAX_DOSE);
-            int meds_col_doseHours = cursor.getColumnIndex(MEDS_TABLE + "." + MEDS_COL_DOSE_HOURS);
-            int doses_col_id = cursor.getColumnIndex(DOSES_TABLE + ".id");
-            int doses_col_count = cursor.getColumnIndex(DOSES_TABLE + "." + DOSES_COL_COUNT);
-            int doses_col_takenAt = cursor.getColumnIndex(DOSES_TABLE + "." + DOSES_COL_TAKEN_AT);
+            int meds_col_id = cursor.getColumnIndex(MEDS_TABLE + "_id");
+            int meds_col_name = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_NAME);
+            int meds_col_maxDose = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_MAX_DOSE);
+            int meds_col_color = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_COLOR);
+            int meds_col_doseHours = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_DOSE_HOURS);
+            int doses_col_id = cursor.getColumnIndex(DOSES_TABLE + "_id");
+            int doses_col_count = cursor.getColumnIndex(DOSES_TABLE + "_" + DOSES_COL_COUNT);
+            int doses_col_takenAt = cursor.getColumnIndex(DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT);
             do {
                 Med med;
                 int medID = cursor.getInt(meds_col_id);
@@ -100,7 +123,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     String medName = cursor.getString(meds_col_name);
                     int maxDose = cursor.getInt(meds_col_maxDose);
                     int doseHours = cursor.getInt(meds_col_doseHours);
-                    med = new Med(medID, medName, maxDose, doseHours, context);
+                    String color = cursor.getString(meds_col_color);
+                    med = new Med(medID, medName, maxDose, doseHours, color, context);
                     medMap.put(String.valueOf(medID), med);
                 } else {
                     med = medMap.get(String.valueOf(medID));
@@ -116,7 +140,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
             for (int i=0; i<medIDs.size(); ++i) {
                 int medID = medIDs.get(i);
-                returnList.add(medMap.get(String.valueOf(medID)));
+                Med med = medMap.get(String.valueOf(medID));
+                int doseCount = med.getDoses().size();
+                med.setHasLoadedAllDoses(doseCount < 20);
+                returnList.add(med);
             }
         }
 
@@ -131,6 +158,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_NAME, med.getName());
         cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
         cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
+        cv.put(MEDS_COL_COLOR, med.getColor());
         long insertID = db.insert(MEDS_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -142,6 +170,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_NAME, med.getName());
         cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
         cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
+        cv.put(MEDS_COL_COLOR, med.getColor());
         String[] whereArgs = new String[]{String.valueOf(med.getId())};
         int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
         db.close();

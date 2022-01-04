@@ -156,6 +156,10 @@ public class MedActivity extends AppCompatActivity {
         String takenInPast = " " + getString(R.string.taken_in_past) + " " +
                 doseHours + " " + getString(R.string.hours);
         tv_med_name.setText(med.getName());
+        String colorName = med.getColor();
+        int attrResourceID = Utils.getResourceIdentifier(MedActivity.this, colorName + "Text", "attr");
+        int textColor = ThemeProvider.getThemeAttr(attrResourceID, MedActivity.this);
+        tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfo());
         tv_med_takenInPast.setText(takenInPast);
     }
@@ -166,9 +170,9 @@ public class MedActivity extends AppCompatActivity {
         double currentTotalDoseCount = med.getCurrentTotalDoseCount();
         tv_med_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
         if (currentTotalDoseCount >= (long) med.getMaxDose()) {
-            tv_med_currentTotalDoseCount.setTextColor(getResources().getColor(R.color.red_500));
+            tv_med_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.redText, MedActivity.this));
         } else {
-            tv_med_currentTotalDoseCount.setTextColor(ThemeProvider.getDefaultTextColor(MedActivity.this));
+            tv_med_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.textColorPrimary, MedActivity.this));
         }
         if (mAdapter == null) return;
         for (int i=0; i<med.getDoses().size(); ++i) {

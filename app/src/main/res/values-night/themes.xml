@@ -2,19 +2,39 @@
     <!-- Base application theme. -->
     <style name="Theme.PillTime" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/indigo_200</item>
-        <item name="colorPrimaryVariant">@color/indigo_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_900</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/pink_500</item>
-        <item name="colorSecondaryVariant">@color/pink_500</item>
+        <item name="colorSecondary">@color/purple_300</item>
+        <item name="colorSecondaryVariant">@color/purple_500</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="redText">@color/red_200</item>
-        <item name="greenText">@color/green_200</item>
-        <item name="android:textColorPrimary">@color/text_on_black</item>
-        <item name="textColorPrimary">@color/text_on_black</item>
+        <item name="android:textColorPrimary">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_200</item>
+        <item name="textColorPrimary">@color/gray_200</item>
+        <item name="android:textColorHint">@color/gray_300</item>
+        <item name="lightText">@color/gray_300</item>
+        <item name="buttonText">@color/black</item>
+
+        <item name="redText">@color/red_300</item>
+        <item name="orangeText">@color/orange_300</item>
+        <item name="amberText">@color/amber_400</item>
+        <item name="yellowText">@color/yellow_500</item>
+        <item name="limeText">@color/lime_500</item>
+        <item name="greenText">@color/green_400</item>
+        <item name="emeraldText">@color/emerald_400</item>
+        <item name="tealText">@color/teal_400</item>
+        <item name="cyanText">@color/cyan_400</item>
+        <item name="skyText">@color/sky_300</item>
+        <item name="blueText">@color/blue_300</item>
+        <item name="indigoText">@color/indigo_300</item>
+        <item name="violetText">@color/violet_300</item>
+        <item name="purpleText">@color/purple_300</item>
+        <item name="fuchsiaText">@color/fuchsia_300</item>
+        <item name="pinkText">@color/pink_300</item>
+        <item name="roseText">@color/rose_300</item>
     </style>
 </resources>

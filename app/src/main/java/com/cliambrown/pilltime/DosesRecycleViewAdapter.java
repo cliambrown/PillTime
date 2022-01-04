@@ -54,14 +54,14 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         holder.tv_rvDose_count.setText(Utils.getStrFromDbl(holder.dose.getCount()));
         long takenAtMs = takenAt * 1000L;
         String takenAtStr = context.getString(R.string.at) + " " +
-                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_SHOW_TIME) + " " +
+                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
                 DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR) + " ";
         holder.tv_rvDose_takenAt.setText(takenAtStr);
 
         long expiresAtUnix = holder.dose.getTakenAt() + (med.getDoseHours() * 60L * 60L);
         long expiresAtMs = expiresAtUnix * 1000L;
         String expiresAtStr = " " + context.getString(R.string.at) + " " +
-                DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_SHOW_TIME) + " " +
+                DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
                 DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR) + " ";
         holder.tv_rvDose_expiresAt.setText(expiresAtStr);
 

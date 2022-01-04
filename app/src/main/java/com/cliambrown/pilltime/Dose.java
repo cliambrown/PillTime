@@ -75,13 +75,13 @@ public class Dose {
         this.context = context;
     }
 
-    public String getTimeString() {
-        return DateUtils.formatDateTime(getContext(), (takenAt * 1000L), DateUtils.FORMAT_SHOW_TIME);
-    }
-
-    public String getDateString() {
-        return DateUtils.formatDateTime(context, (takenAt * 1000L), DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
-    }
+//    public String getTimeString() {
+//        return DateUtils.formatDateTime(getContext(), (takenAt * 1000L), DateUtils.FORMAT_SHOW_TIME);
+//    }
+//
+//    public String getDateString() {
+//        return DateUtils.formatDateTime(context, (takenAt * 1000L), DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
+//    }
 
     public boolean isActive() {
         return isActive;
