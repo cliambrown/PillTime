@@ -1,8 +1,12 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Med {
@@ -13,6 +17,10 @@ public class Med {
     private int doseHours;
     private List<Dose> doses = new ArrayList<Dose>();
     private Context context;
+
+    Dose latestDose;
+    double currentTotalDoseCount;
+    String latestDoseExpiresInStr;
 
     public Med(int id, String name, int maxDose, int doseHours, Context context) {
         this.id = id;
@@ -107,7 +115,7 @@ public class Med {
         return null;
     }
 
-    public void setDose(Dose dose) {
+    public int setDose(Dose dose) {
         int position = -1;
         for (int i=0; i<doses.size(); ++i) {
             if (doses.get(i).getId() == dose.getId()) {
@@ -117,10 +125,59 @@ public class Med {
         if (position > -1) {
             doses.set(position, dose);
         }
+        return position;
+    }
+
+    public int repositionDose(Dose dose, int currentPosition) {
+        int newPosition = -1;
+        int doseID = dose.getId();
+        long takenAt = dose.getTakenAt();
+        doses.remove(currentPosition);
+        Dose listDose;
+        int listDoseID;
+        long takenDiff;
+        for (int i=0; i<doses.size(); ++i) {
+            listDose = doses.get(i);
+            listDoseID = listDose.getId();
+            takenDiff = listDose.getTakenAt() - takenAt;
+            if (takenDiff < 0 || (takenDiff == 0 && doseID > listDoseID)) {
+                newPosition = i;
+                break;
+            }
+        }
+        if (newPosition > -1) {
+            doses.add(newPosition, dose);
+        } else {
+            doses.add(dose);
+            newPosition = doses.size() - 1;
+        }
+        return newPosition;
+    }
+
+    public boolean sortBefore(Med compareMed) {
+        long lastTakenAt = -1;
+        int lastTakenId = -1;
+        Dose latestDose = getLatestDose();
+        if (latestDose != null) {
+            lastTakenAt = latestDose.getTakenAt();
+            lastTakenId = latestDose.getId();
+        }
+        long compareLastTakenAt = -1;
+        int compareLastTakenId = -1;
+        Dose compareLatestDose = compareMed.getLatestDose();
+        if (latestDose != null) {
+            compareLastTakenAt = compareLatestDose.getTakenAt();
+            compareLastTakenId = compareLatestDose.getId();
+        }
+        if (lastTakenAt > compareLastTakenAt) return true;
+        if (lastTakenAt < compareLastTakenAt) return false;
+        if (lastTakenId > compareLastTakenId) return true;
+        if (lastTakenId < compareLastTakenId) return false;
+        return (id > compareMed.getId());
     }
 
     // Assumes doses are correctly ordered by time desc
-    public double getCurrentTotalDoseCount() {
+    public double calculateCurrentTotalDoseCount() {
         double count = 0.0D;
         long now = System.currentTimeMillis() / 1000L;
         long doseTimeAgo = now - (doseHours * 60L * 60L);
@@ -134,9 +191,8 @@ public class Med {
         return count;
     }
 
-    public Dose getLatestDose() {
+    public Dose calculateLatestDose() {
         long now = System.currentTimeMillis() / 1000L;
-        long doseTimeAgo = now - (doseHours * 60L * 60L);
         Dose dose;
         for (int i=0; i<doses.size(); ++i) {
             dose = doses.get(i);
@@ -147,19 +203,50 @@ public class Med {
         return null;
     }
 
-    // Assumes doses are correctly ordered by time desc
-    public long getLastTakenAt() {
-        if (doses.size() > 0) {
-            return doses.get(0).getTakenAt();
-        }
-        return -1;
+    public Dose getLatestDose() {
+        return latestDose;
     }
-//
-//    public String getLatestDoseExpiresAtString() {
-//        if (doses.size() > 0) {
-//            return doses.get(0).getExpiresAtString(this);
-//        }
-//        return null;
-//    }
 
+    public void setLatestDose(Dose latestDose) {
+        this.latestDose = latestDose;
+    }
+
+    public double getCurrentTotalDoseCount() {
+        return currentTotalDoseCount;
+    }
+
+    public void setCurrentTotalDoseCount(double currentTotalDoseCount) {
+        this.currentTotalDoseCount = currentTotalDoseCount;
+    }
+
+    public String getLatestDoseExpiresInStr() {
+        return latestDoseExpiresInStr;
+    }
+
+    public void setLatestDoseExpiresInStr(String latestDoseExpiresInStr) {
+        this.latestDoseExpiresInStr = latestDoseExpiresInStr;
+    }
+
+    public void updateDoseStatus() {
+        latestDose = calculateLatestDose();
+        currentTotalDoseCount = calculateCurrentTotalDoseCount();
+
+        if (latestDose == null) {
+            latestDoseExpiresInStr = "";
+        } else {
+            double latestDoseCount = latestDose.getCount();
+            long expiresAtUnix = latestDose.getTakenAt() + (doseHours * 60L * 60L);
+            String timeAgo = DateUtils.getRelativeTimeSpanString(
+                    expiresAtUnix * 1000L,
+                    System.currentTimeMillis(),
+                    0,
+                    DateUtils.FORMAT_ABBREV_RELATIVE
+                ).toString();
+            latestDoseExpiresInStr = context.getString(R.string.expires) + " " +
+                    Utils.decapitalize(timeAgo) + " (" + Utils.simpleFutureTime(context, expiresAtUnix) + ")";
+            if (latestDoseCount < currentTotalDoseCount) {
+                latestDoseExpiresInStr = "x" + Utils.getStrFromDbl(latestDoseCount) + " " + latestDoseExpiresInStr;
+            }
+        }
+    }
 }

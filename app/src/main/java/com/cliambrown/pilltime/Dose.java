@@ -15,6 +15,9 @@ public class Dose {
     private double count;
     private long takenAt; // Unix time
     private Context context;
+    boolean isActive;
+    String takenAtTimeAgo;
+    String expiresAtTimeAgo;
 
     public Dose(int id, int medID, double count, long takenAt, Context context) {
         this.id = id;
@@ -86,19 +89,33 @@ public class Dose {
         return dateFormat.format(calendar.getTime());
     }
 
-    public String getDateTimeString() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(takenAt * 1000L);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm");
-        return dateFormat.format(calendar.getTime());
+    public boolean isActive() {
+        return isActive;
     }
 
-    public String getExpiresAtString(Med med) {
-        long expiresAtUnix = takenAt + (med.getDoseHours() * 60L * 60L);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(expiresAtUnix * 1000L);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm");
-        String timeAgo = Utils.decapitalize(DateUtils.getRelativeTimeSpanString(expiresAtUnix * 1000L).toString());
-        return timeAgo + " (" + dateFormat.format(calendar.getTime()) + ")";
+    public String getTakenAtTimeAgo() {
+        return takenAtTimeAgo;
+    }
+
+    public String getExpiresAtTimeAgo() {
+        return expiresAtTimeAgo;
+    }
+
+    public void updateDoseStatus(Med med) {
+        long expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
+        long now = System.currentTimeMillis() / 1000L;
+        isActive = (takenAt <= now && expiresAt > now);
+        takenAtTimeAgo = DateUtils.getRelativeTimeSpanString(
+                takenAt * 1000L,
+                System.currentTimeMillis(),
+                0,
+                DateUtils.FORMAT_ABBREV_RELATIVE
+            ).toString();
+        expiresAtTimeAgo = DateUtils.getRelativeTimeSpanString(
+                expiresAt * 1000L,
+                System.currentTimeMillis(),
+                0,
+                DateUtils.FORMAT_ABBREV_RELATIVE
+        ).toString();
     }
 }

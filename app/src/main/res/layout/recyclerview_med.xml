@@ -26,9 +26,11 @@
             android:layout_marginTop="4dp"
             app:srcCompat="@drawable/ic_baseline_add_24"
             android:background="@drawable/round_button"
-            app:tint="@color/white"/>
+            app:tint="@color/white"
+            android:contentDescription="@string/new_dose" />
 
         <LinearLayout
+            android:id="@+id/ll_rvMed_medInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -91,7 +93,8 @@
             android:layout_height="48dp"
             android:layout_weight="0"
             app:srcCompat="@drawable/ic_baseline_more_vert_24"
-            android:backgroundTint="#00FFFFFF"/>
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="@string/more_options" />
 
     </LinearLayout>
 

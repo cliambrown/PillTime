@@ -56,7 +56,11 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
     public List<Med> getAllMeds() {
@@ -71,7 +75,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 MEDS_TABLE + ".id DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
-//        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
         if (cursor.moveToFirst()) {
             List<Integer> medIDs = new ArrayList<>();
             Map<String, Med> medMap = new HashMap<String, Med>();

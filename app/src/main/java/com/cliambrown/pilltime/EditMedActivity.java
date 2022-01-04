@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,8 +66,8 @@ public class EditMedActivity extends SimpleMenuActivity {
                 }
 
                 if (medID > -1) {
-                    boolean setted = mApp.setMed(med);
-                    if (!setted) return;
+                    boolean edited = mApp.setMed(med);
+                    if (!edited) return;
                 } else {
                     boolean added = mApp.addMed(med);
                     if (!added) return;
@@ -74,9 +75,6 @@ public class EditMedActivity extends SimpleMenuActivity {
 
                 Toast.makeText(EditMedActivity.this, "Med saved", Toast.LENGTH_SHORT).show();
 
-//                Intent intent = new Intent(EditMedActivity.this, MedActivity.class);
-//                intent.putExtra("id", med.getId());
-//                startActivity(intent);
                 EditMedActivity.this.finish();
             }
         });

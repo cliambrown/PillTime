@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -93,8 +94,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 Dose dose = new Dose(doseID, medID, count, unixTime, EditDoseActivity.this);
 
                 if (doseID > -1) {
-                    boolean setted = mApp.setDose(med, dose);
-                    if (!setted) return;
+                    boolean edited = mApp.setDose(med, dose);
+                    if (!edited) return;
                 } else {
                     boolean added = mApp.addDose(med, dose);
                     if (!added) return;
@@ -102,11 +103,13 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
                 Toast.makeText(EditDoseActivity.this, "Dose saved", Toast.LENGTH_SHORT).show();
 
-//                Intent intent = new Intent(EditDoseActivity.this, MedActivity.class);
-//                intent.putExtra("id", medID);
-//                startActivity(intent);
                 EditDoseActivity.this.finish();
             }
         });
     }
+
+//    public void showTimePickerDialog(View v) {
+//        DialogFragment newFragment = new TimePickerFragment();
+//        newFragment.show(getSupportFragmentManager(), "timePicker");
+//    }
 }
