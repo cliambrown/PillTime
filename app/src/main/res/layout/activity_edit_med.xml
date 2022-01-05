@@ -17,9 +17,9 @@
             android:id="@+id/til_editMed_name"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             app:boxBackgroundColor="@android:color/transparent"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,92 +37,83 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
-            android:id="@+id/ll_editMed_maxDose"
+            android:id="@+id/ll_editMed_doseInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_editMed_name">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_editMed_name"
+            android:gravity="center_vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                app:boxBackgroundColor="@android:color/transparent"
-                android:background="@android:color/transparent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_editMed_maxDose"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    android:minHeight="48dp"
-                    android:hint="@string/max_dose"
-                    android:importantForAutofill="no"
-                    android:inputType="number"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tv_editMed_every"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:orientation="vertical"
+                android:layout_weight="0">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/max_dose"
+                    android:textColor="?attr/colorPrimary" />
+
+                <NumberPicker
+                    android:id="@+id/np_editMed_maxDose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_weight="0"
                 android:text="@string/every" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                app:boxBackgroundColor="@android:color/transparent"
-                android:background="@android:color/transparent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_editMed_doseHours"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    android:minHeight="48dp"
-                    android:hint="@string/num_hours"
-                    android:importantForAutofill="no"
-                    android:inputType="number"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tv_editMed_hours"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:layout_marginStart="12dp"
-                android:text="@string/hours" />
+                android:orientation="vertical"
+                android:layout_weight="0">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/num_hours"
+                    android:textColor="?attr/colorPrimary" />
+
+                <NumberPicker
+                    android:id="@+id/np_editMed_doseHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_editMed_colorLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_weight="0"
             android:text="@string/color"
             android:textColor="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_editMed_maxDose" />
+            app:layout_constraintTop_toBottomOf="@+id/ll_editMed_doseInfo" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/flow_editMed_colors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             app:flow_horizontalGap="12dp"
             app:flow_verticalGap="12dp"

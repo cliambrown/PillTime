@@ -16,8 +16,10 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -30,12 +32,13 @@ import java.util.Locale;
 
 public class EditDoseActivity extends SimpleMenuActivity {
 
-    Button btn_editDose_save;
+    ImageButton btn_editDose_minusCount, btn_editDose_plusCount;
     EditText et_editDose_count;
     TextView tv_editDose_takenAtTime;
     TextView tv_editDose_takenAtDate;
     SwitchCompat switch_editDose_notify;
     SwitchCompat switch_editDose_notifySound;
+    Button btn_editDose_save;
     PillTimeApplication mApp;
     int medID, doseID;
     Calendar selectedDatetime;
@@ -50,12 +53,14 @@ public class EditDoseActivity extends SimpleMenuActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        btn_editDose_save = findViewById(R.id.btn_editDose_save);
+        btn_editDose_minusCount = findViewById(R.id.btn_editDose_minusCount);
+        btn_editDose_plusCount = findViewById(R.id.btn_editDose_plusCount);
         et_editDose_count = findViewById(R.id.et_editDose_count);
         tv_editDose_takenAtTime = findViewById(R.id.tv_editDose_takenAtTime);
         tv_editDose_takenAtDate = findViewById(R.id.tv_editDose_takenAtDate);
         switch_editDose_notify = findViewById(R.id.switch_editDose_notify);
         switch_editDose_notifySound = findViewById(R.id.switch_editDose_notifySound);
+        btn_editDose_save = findViewById(R.id.btn_editDose_save);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("med_id", -1);
@@ -84,10 +89,32 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
         switch_editDose_notify.setChecked(dose.getNotify());
         switch_editDose_notifySound.setChecked(dose.getNotifySound());
+        switch_editDose_notifySound.setEnabled(dose.getNotify());
+
+        switch_editDose_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                switch_editDose_notifySound.setEnabled(isChecked);
+            }
+        });
 
         et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
         updateTimeField();
         updateDateField();
+
+        btn_editDose_minusCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                incrementCount(-1D);
+            }
+        });
+
+        btn_editDose_plusCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                incrementCount(1D);
+            }
+        });
 
         tv_editDose_takenAtTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +161,18 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 EditDoseActivity.this.finish();
             }
         });
+    }
+
+    private void incrementCount(double changeBy) {
+        double count = 0D;
+        try {
+            count = Double.parseDouble(et_editDose_count.getText().toString());
+        } catch (Exception e) {
+            // Do nothing
+        }
+        count = count + changeBy;
+        if (count < 0D) count = 0D;
+        et_editDose_count.setText(Utils.getStrFromDbl(count));
     }
 
     private boolean getDefaultNotify() {

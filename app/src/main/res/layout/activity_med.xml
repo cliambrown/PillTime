@@ -10,10 +10,10 @@
         android:id="@+id/ll_med_medInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,8 +34,8 @@
                 android:id="@+id/tv_med_maxDoseInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                android:singleLine="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -47,8 +47,8 @@
                 android:id="@+id/tv_med_currentTotalDoseCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:layout_marginEnd="4dp"
+                android:layout_weight="0"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -33,7 +34,9 @@ import java.util.Random;
 public class EditMedActivity extends SimpleMenuActivity {
 
     ConstraintLayout cl_editMed_parent;
-    EditText et_editMed_name, et_editMed_maxDose, et_editMed_doseHours;
+    EditText et_editMed_name;
+    NumberPicker np_editMed_maxDose;
+    NumberPicker np_editMed_doseHours;
     Flow flow_editMed_colors;
     Button btn_editMed_save;
     PillTimeApplication mApp;
@@ -41,6 +44,7 @@ public class EditMedActivity extends SimpleMenuActivity {
     String[] colors;
     String selectedColor;
     List<ImageButton> colorButtons;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,18 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         cl_editMed_parent = findViewById(R.id.cl_editMed_parent);
         et_editMed_name = findViewById(R.id.et_editMed_name);
-        et_editMed_maxDose = findViewById(R.id.et_editMed_maxDose);
-        et_editMed_doseHours = findViewById(R.id.et_editMed_doseHours);
         flow_editMed_colors = findViewById(R.id.flow_editMed_colors);
         btn_editMed_save = findViewById(R.id.btn_editMed_save);
+
+        np_editMed_maxDose = findViewById(R.id.np_editMed_maxDose);
+        np_editMed_maxDose.setMinValue(0);
+        np_editMed_maxDose.setMaxValue(100);
+        np_editMed_maxDose.setWrapSelectorWheel(false);
+
+        np_editMed_doseHours = findViewById(R.id.np_editMed_doseHours);
+        np_editMed_doseHours.setMinValue(0);
+        np_editMed_doseHours.setMaxValue(100);
+        np_editMed_doseHours.setWrapSelectorWheel(false);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
@@ -68,8 +80,8 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         if (med != null) {
             et_editMed_name.setText(med.getName());
-            et_editMed_maxDose.setText(String.valueOf(med.getMaxDose()));
-            et_editMed_doseHours.setText(String.valueOf(med.getDoseHours()));
+            np_editMed_maxDose.setValue(med.getMaxDose());
+            np_editMed_doseHours.setValue(med.getDoseHours());
             setTitle(getString(R.string.edit) + " " + med.getName());
             selectedColor = med.getColor();
         } else {
@@ -127,8 +139,8 @@ public class EditMedActivity extends SimpleMenuActivity {
 
                 try {
                     medName = et_editMed_name.getText().toString();
-                    maxDose = Integer.parseInt(et_editMed_maxDose.getText().toString());
-                    doseHours = Integer.parseInt(et_editMed_doseHours.getText().toString());
+                    maxDose = np_editMed_maxDose.getValue();
+                    doseHours = np_editMed_doseHours.getValue();
                     med = new Med(medID, medName, maxDose, doseHours, selectedColor, EditMedActivity.this);
                 } catch (Exception e) {
                     Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();

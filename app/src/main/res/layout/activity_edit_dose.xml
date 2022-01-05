@@ -6,48 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".EditDoseActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_editDose_count"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:id="@+id/ll_editDose_count"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:boxBackgroundColor="@android:color/transparent"
-        android:background="@android:color/transparent"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_editDose_count"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/btn_editDose_minusCount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:minHeight="48dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:hint="@string/amount_taken"
-            android:importantForAutofill="no"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="6dp"
+            app:srcCompat="@drawable/ic_baseline_remove_circle_outline_24"
+            android:backgroundTint="@android:color/transparent"
+            app:tint="?attr/colorPrimary" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_editDose_count"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="0"
+            app:boxBackgroundColor="@android:color/transparent"
+            android:background="@android:color/transparent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_editDose_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:hint="@string/amount_taken"
+                android:importantForAutofill="no"
+                android:textAlignment="center" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/btn_editDose_plusCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:minHeight="48dp"
+            android:layout_marginTop="6dp"
+            app:srcCompat="@drawable/ic_baseline_add_circle_outline_24"
+            android:backgroundTint="@android:color/transparent"
+            app:tint="?attr/colorPrimary" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_editDose_takenAtLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_weight="0"
         android:text="@string/dose_taken_at"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_editDose_count" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_count" />
 
     <LinearLayout
         android:id="@+id/ll_editDose_takenAtDateTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:gravity="start"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,9 +131,9 @@
         android:id="@+id/switch_editDose_notify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/notify_expiring_dose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,9 +143,9 @@
         android:id="@+id/switch_editDose_notifySound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/notification_sound"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
