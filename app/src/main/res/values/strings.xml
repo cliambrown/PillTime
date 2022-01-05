@@ -38,8 +38,8 @@
     <string name="clear_db">Clear DB</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="notifications_header">Notification Defaults</string>
-    <string name="notify_expiring_dose">Notify when dose expires</string>
-    <string name="notification_sound">Make a sound with expiring dose notification</string>
+    <string name="notify_expiring_dose">Show a notification when dose expires</string>
+    <string name="notification_sound">Make a sound with the notification</string>
 
     <string name="theme_header">Theme</string>
     <string name="theme_entry_light">Light</string>

@@ -3,6 +3,7 @@ package com.cliambrown.pilltime;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -26,11 +27,13 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String DOSES_COL_MED_ID = "med_id";
     public static final String DOSES_COL_COUNT = "count";
     public static final String DOSES_COL_TAKEN_AT = "taken_at";
+    public static final String DOSES_COL_NOTIFY = "notify";
+    public static final String DOSES_COL_NOTIFY_SOUND = "notify_sound";
 
     private final Context context;
 
     public DbHelper(@Nullable Context context) {
-        super(context, DB_NAME, null, 2);
+        super(context, DB_NAME, null, 3);
         this.context = context;
     }
 
@@ -53,13 +56,21 @@ public class DbHelper extends SQLiteOpenHelper {
                 " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DOSES_COL_MED_ID + " INTEGER, " +
                 DOSES_COL_COUNT + " REAL, " +
-                DOSES_COL_TAKEN_AT + " INTEGER)";
+                DOSES_COL_TAKEN_AT + " INTEGER, " +
+                DOSES_COL_NOTIFY + " INTEGER DEFAULT 0, " +
+                DOSES_COL_NOTIFY_SOUND + " INTEGER DEFAULT 0)";
         db.execSQL(stmt2);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_COLOR + " TEXT");
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_COLOR + " TEXT");
+        }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE " + DOSES_TABLE + " ADD COLUMN " + DOSES_COL_NOTIFY + " INTEGER DEFAULT 0");
+            db.execSQL("ALTER TABLE " + DOSES_TABLE + " ADD COLUMN " + DOSES_COL_NOTIFY_SOUND + " INTEGER DEFAULT 0");
+        }
     }
 
     @Override
@@ -146,6 +157,8 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(DOSES_COL_MED_ID, dose.getMedID());
         cv.put(DOSES_COL_COUNT, dose.getCount());
         cv.put(DOSES_COL_TAKEN_AT, dose.getTakenAt());
+        cv.put(DOSES_COL_NOTIFY, dose.getNotify());
+        cv.put(DOSES_COL_NOTIFY_SOUND, dose.getNotifySound());
         long insertID = db.insert(DOSES_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -157,6 +170,8 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(DOSES_COL_MED_ID, dose.getMedID());
         cv.put(DOSES_COL_COUNT, dose.getCount());
         cv.put(DOSES_COL_TAKEN_AT, dose.getTakenAt());
+        cv.put(DOSES_COL_NOTIFY, dose.getNotify());
+        cv.put(DOSES_COL_NOTIFY_SOUND, dose.getNotifySound());
         String[] selectionArgs = new String[]{String.valueOf(dose.getId())};
         int update = db.update(DOSES_TABLE, cv, "id = ?", selectionArgs);
         return (update > 0);
@@ -186,15 +201,20 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = new String[]{String.valueOf(med.getId())};
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, selectionArgs);
+//        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
         if (cursor.moveToFirst()) {
             int col_id = cursor.getColumnIndex("id");
             int col_count = cursor.getColumnIndex(DOSES_COL_COUNT);
             int col_takenAt = cursor.getColumnIndex(DOSES_COL_TAKEN_AT);
+            int col_notify = cursor.getColumnIndex(DOSES_COL_NOTIFY);
+            int col_notifySound = cursor.getColumnIndex(DOSES_COL_NOTIFY_SOUND);
             do {
                 int doseID = cursor.getInt(col_id);
                 double count = cursor.getDouble(col_count);
                 long takenAt = cursor.getLong(col_takenAt);
-                Dose dose = new Dose(doseID, med.getId(), count, takenAt, context);
+                boolean notify = (cursor.getInt(col_notify) == 1);
+                boolean notifySound = (cursor.getInt(col_notifySound) == 1);
+                Dose dose = new Dose(doseID, med.getId(), count, takenAt, notify, notifySound, context);
                 returnList.add(dose);
             } while (cursor.moveToNext());
         }
@@ -202,34 +222,4 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
         return returnList;
     }
-
-//    public List<Dose> loadMoreDoses(int medID, List<Integer> doseIDs) {
-//        List<Dose> returnList = new ArrayList<Dose>();
-//        String inClause = doseIDs.toString();
-//        inClause = inClause.replace("[","(");
-//        inClause = inClause.replace("]",")");
-//        String stmt = "SELECT * FROM " + DOSES_TABLE + " " +
-//                "WHERE " + DOSES_COL_MED_ID + " = ? AND " +
-//                "id NOT IN " + inClause + " " +
-//                "ORDER BY " + DOSES_COL_TAKEN_AT + " DESC, " +
-//                "id DESC";
-//        String[] selectionArgs = new String[]{String.valueOf(medID)};
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.rawQuery(stmt, selectionArgs);
-//        if (cursor.moveToFirst()) {
-//            int doses_col_id = cursor.getColumnIndex("id");
-//            int doses_col_count = cursor.getColumnIndex(DOSES_COL_COUNT);
-//            int doses_col_takenAt = cursor.getColumnIndex(DOSES_COL_TAKEN_AT);
-//            do {
-//                int doseID = cursor.getInt(doses_col_id);
-//                double count = cursor.getDouble(doses_col_count);
-//                long takenAt = cursor.getLong(doses_col_takenAt);
-//                Dose dose = new Dose(doseID, medID, count, takenAt, context);
-//                returnList.add(dose);
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//        db.close();
-//        return returnList;
-//    }
 }

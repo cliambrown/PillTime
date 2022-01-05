@@ -2,14 +2,18 @@ package com.cliambrown.pilltime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -30,6 +34,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
     EditText et_editDose_count;
     TextView tv_editDose_takenAtTime;
     TextView tv_editDose_takenAtDate;
+    SwitchCompat switch_editDose_notify;
+    SwitchCompat switch_editDose_notifySound;
     PillTimeApplication mApp;
     int medID, doseID;
     Calendar selectedDatetime;
@@ -48,6 +54,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
         et_editDose_count = findViewById(R.id.et_editDose_count);
         tv_editDose_takenAtTime = findViewById(R.id.tv_editDose_takenAtTime);
         tv_editDose_takenAtDate = findViewById(R.id.tv_editDose_takenAtDate);
+        switch_editDose_notify = findViewById(R.id.switch_editDose_notify);
+        switch_editDose_notifySound = findViewById(R.id.switch_editDose_notifySound);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("med_id", -1);
@@ -70,9 +78,12 @@ public class EditDoseActivity extends SimpleMenuActivity {
             selectedDatetime.setTimeInMillis(dose.getTakenAt() * 1000L);
         } else {
             long now = System.currentTimeMillis() / 1000L;
-            dose = new Dose(doseID, medID, med.getMaxDose(), now, EditDoseActivity.this);
+            dose = new Dose(doseID, medID, med.getMaxDose(), now, getDefaultNotify(), getDefaultNotifySound(), EditDoseActivity.this);
             setTitle(getString(R.string.new_dose) + " — " + med.getName());
         }
+
+        switch_editDose_notify.setChecked(dose.getNotify());
+        switch_editDose_notifySound.setChecked(dose.getNotifySound());
 
         et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
         updateTimeField();
@@ -95,16 +106,20 @@ public class EditDoseActivity extends SimpleMenuActivity {
             public void onClick(View view) {
 
                 double count;
+                boolean notify = getDefaultNotify();
+                boolean notifySound = getDefaultNotifySound();
 
                 try {
                     count = Double.parseDouble(et_editDose_count.getText().toString());
+                    notify = switch_editDose_notify.isChecked();
+                    notifySound = switch_editDose_notifySound.isChecked();
                 } catch (Exception e) {
                     Toast.makeText(EditDoseActivity.this, "Error saving dose: invalid data", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 long unixTime = selectedDatetime.getTimeInMillis() / 1000L;
-                Dose dose = new Dose(doseID, medID, count, unixTime, EditDoseActivity.this);
+                Dose dose = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
 
                 if (doseID > -1) {
                     boolean edited = mApp.setDose(med, dose);
@@ -119,6 +134,16 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 EditDoseActivity.this.finish();
             }
         });
+    }
+
+    private boolean getDefaultNotify() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(EditDoseActivity.this);
+        return prefs.getBoolean("notify_default", false);
+    }
+
+    private boolean getDefaultNotifySound() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(EditDoseActivity.this);
+        return prefs.getBoolean("notify_sound_default", false);
     }
 
     private void updateTimeField() {
