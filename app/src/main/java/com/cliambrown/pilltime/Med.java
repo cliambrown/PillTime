@@ -94,7 +94,7 @@ public class Med {
         return doses;
     }
 
-    public void addDose(Dose dose) {
+    public int addDose(Dose dose) {
         int position = -1;
         int doseID = dose.getId();
         long takenAt = dose.getTakenAt();
@@ -113,8 +113,14 @@ public class Med {
         if (position > -1) {
             doses.add(position, dose);
         } else {
+            position = doses.size();
             doses.add(dose);
         }
+        return position;
+    }
+
+    public void addDoseToEnd(Dose dose) {
+        doses.add(dose);
     }
 
     public Dose getDoseById(int doseID) {
@@ -178,7 +184,7 @@ public class Med {
         long compareLastTakenAt = -1;
         int compareLastTakenId = -1;
         Dose compareLatestDose = compareMed.getLatestDose();
-        if (latestDose != null) {
+        if (compareLatestDose != null) {
             compareLastTakenAt = compareLatestDose.getTakenAt();
             compareLastTakenId = compareLatestDose.getId();
         }

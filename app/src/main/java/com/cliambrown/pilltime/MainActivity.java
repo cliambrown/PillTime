@@ -17,6 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.List;
 import java.util.Timer;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MedsRecycleViewAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    LinearLayout ll_main_no_meds;
+    Button btn_main_no_meds;
 
     PillTimeApplication mApp;
     Timer timer;
@@ -38,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ll_main_no_meds = findViewById(R.id.ll_main_no_meds);
+        btn_main_no_meds = findViewById(R.id.btn_main_no_meds);
+
         mApp = (PillTimeApplication) this.getApplication();
         meds = mApp.getMeds();
+        onUpdateMeds();
 
         recyclerView = findViewById(R.id.rv_main_meds);
         recyclerView.setHasFixedSize(true);
@@ -54,12 +63,14 @@ public class MainActivity extends AppCompatActivity {
             public void onRefresh() {
                 mApp.loadMeds();
                 mAdapter.notifyDataSetChanged();
+                onUpdateMeds();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
         BroadcastReceiver br = new MainBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
+        filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
         filter.addAction("com.cliambrown.broadcast.MED_ADDED");
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
         filter.addAction("com.cliambrown.broadcast.MED_REMOVED");
@@ -68,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
         this.registerReceiver(br, filter);
+
+        btn_main_no_meds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EditMedActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public class MainBroadcastReceiver extends BroadcastReceiver {
@@ -76,11 +95,16 @@ public class MainActivity extends AppCompatActivity {
             if (mAdapter == null) return;
             String action = intent.getAction();
             if (action == null) return;
+            if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
+                mAdapter.notifyDataSetChanged();
+                onUpdateMeds();
+            }
             int medID = intent.getIntExtra("medID", -1);
             if (action.equals("com.cliambrown.broadcast.MED_ADDED")) {
                 for (int i=0; i<meds.size(); ++i) {
                     if (meds.get(i).getId() == medID) {
                         mAdapter.notifyItemInserted(i);
+                        onUpdateMeds();
                         return;
                     }
                 }
@@ -99,9 +123,10 @@ public class MainActivity extends AppCompatActivity {
                 for (int i=0; i<meds.size(); ++i) {
                     if (meds.get(i).getId() == medID) {
                         mAdapter.notifyItemRemoved(i);
-                        return;
+                        break;
                     }
                 }
+                onUpdateMeds();
                 return;
             }
             if (action.equals("com.cliambrown.broadcast.MED_MOVED")) {
@@ -111,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if (action.equals("com.cliambrown.broadcast.DOSE_ADDED") ||
+                    action.equals("com.cliambrown.broadcast.DOSES_ADDED") ||
                     action.equals("com.cliambrown.broadcast.DOSE_EDITED") ||
                     action.equals("com.cliambrown.broadcast.DOSE_REMOVED")
             ) {
@@ -122,6 +148,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return;
             }
+        }
+    }
+
+    public void onUpdateMeds() {
+        if (ll_main_no_meds == null) return;
+        if (meds.size() > 0) {
+            ll_main_no_meds.setVisibility(View.GONE);
+        } else {
+            ll_main_no_meds.setVisibility(View.VISIBLE);
         }
     }
 

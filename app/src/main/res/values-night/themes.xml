@@ -17,6 +17,7 @@
         <item name="textColorPrimary">@color/gray_200</item>
         <item name="android:textColorHint">@color/gray_300</item>
         <item name="lightText">@color/gray_300</item>
+        <item name="lighterText">@color/gray_500</item>
         <item name="buttonText">@color/black</item>
 
         <item name="redText">@color/red_300</item>

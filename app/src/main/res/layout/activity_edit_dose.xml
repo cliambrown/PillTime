@@ -6,43 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".EditDoseActivity">
 
-    <LinearLayout
-        android:id="@+id/ll_editDose_count"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_editDose_count"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:gravity="start"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:boxBackgroundColor="@android:color/transparent"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_editDose_every"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="0"
-            android:text="@string/dose_taken" />
-
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_editDose_count"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:ems="10"
-            android:hint="@string/dose"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:hint="@string/amount_taken"
+            android:importantForAutofill="no"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_editDose_takenAtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="0"
+        android:text="@string/dose_taken_at"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_editDose_count" />
 
     <LinearLayout
-        android:id="@+id/ll_editDose_takenAtTime"
+        android:id="@+id/ll_editDose_takenAtDateTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -52,51 +52,20 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_count">
-
-        <TextView
-            android:id="@+id/tv_editDose_takenAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="0"
-            android:text="@string/dose_taken_at" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editDose_takenAtLabel">
 
         <TextView
             android:id="@+id/tv_editDose_takenAtTime"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="0"
+            android:layout_marginEnd="12dp"
             android:background="#E8E8E8"
+            android:textColor="@color/gray_700"
             android:gravity="center_horizontal|center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:textSize="20dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_editDose_takenAtDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="start"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtTime">
-
-        <TextView
-            android:id="@+id/tv_editDose_takenOn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="0"
-            android:text="@string/on" />
 
         <TextView
             android:id="@+id/tv_editDose_takenAtDate"
@@ -104,6 +73,7 @@
             android:layout_height="48dp"
             android:layout_weight="0"
             android:background="#E8E8E8"
+            android:textColor="@color/gray_700"
             android:gravity="center_horizontal|center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -111,27 +81,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_editDose_buttons"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btn_editDose_save"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="start"
-        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtDate">
-
-        <Button
-            android:id="@+id/btn_editDose_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/save" />
-
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="?attr/buttonText"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@
 
     <string name="dose">Dose</string>
     <string name="dose_taken">Dose Taken</string>
+    <string name="amount_taken">Amount Taken</string>
     <string name="dose_taken_at">Taken at</string>
     <string name="on">on</string>
     <string name="new_dose">New Dose</string>
@@ -68,4 +69,11 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Pink</string>
     <string name="rose">Rose</string>
+
+    <string name="no_meds">No meds found.</string>
+    <string name="add_med">Add a Med</string>
+    <string name="no_doses">No doses taken.</string>
+    <string name="add_dose">Add a dose</string>
+    <string name="show_more">Show More</string>
+    <string name="taken">taken</string>
 </resources>

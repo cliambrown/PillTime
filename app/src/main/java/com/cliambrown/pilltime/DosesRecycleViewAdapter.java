@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -35,10 +36,16 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         this.mApp = mApp;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        return (position == doses.size()) ? R.layout.recyclerview_load_more_doses : R.layout.recyclerview_dose;
+    }
+
     @NonNull
     @Override
     public DoseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_dose, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
         DoseViewHolder holder = new DoseViewHolder(view);
         holder.context = parent.getContext();
         return holder;
@@ -47,21 +54,33 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     @Override
     public void onBindViewHolder(@NonNull DoseViewHolder holder, int position) {
 
-        holder.dose = doses.get(position);
         holder.med = med;
+
+        if (position == doses.size()) {
+            holder.updateLoadMore();
+            holder.btn_med_loadMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mApp.loadMoreDoses(med);
+                }
+            });
+            return;
+        }
+
+        holder.dose = doses.get(position);
         long takenAt = holder.dose.getTakenAt();
 
         holder.tv_rvDose_count.setText(Utils.getStrFromDbl(holder.dose.getCount()));
         long takenAtMs = takenAt * 1000L;
-        String takenAtStr = context.getString(R.string.at) + " " +
-                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
-                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR) + " ";
+        String takenAtStr = DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
+                context.getString(R.string.on) + " " +
+                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
         holder.tv_rvDose_takenAt.setText(takenAtStr);
 
         long expiresAtUnix = holder.dose.getTakenAt() + (med.getDoseHours() * 60L * 60L);
         long expiresAtMs = expiresAtUnix * 1000L;
-        String expiresAtStr = " " + context.getString(R.string.at) + " " +
-                DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
+        String expiresAtStr = DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
+                context.getString(R.string.on) + " " +
                 DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR) + " ";
         holder.tv_rvDose_expiresAt.setText(expiresAtStr);
 
@@ -115,14 +134,23 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             onBindViewHolder(holder, position);
             return;
         }
-        if (payloads.get(0) == "update_times") {
+        String payloadStr;
+        try {
+            payloadStr = String.valueOf(payloads.get(0));
+        } catch (Exception e) {
+            return;
+        }
+        if (payloadStr.equals("update_show_more_btn")) {
+            holder.updateLoadMore();
+        }
+        if (payloadStr.equals("update_times")) {
             holder.updateTimes();
         }
     }
 
     @Override
     public int getItemCount() {
-        return doses.size();
+        return doses.size() + 1;
     }
 
     public static class DoseViewHolder extends RecyclerView.ViewHolder {
@@ -134,6 +162,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         TextView tv_rvDose_expiresAt;
         TextView tv_rvDose_expiresAtTimeAgo;
         ImageButton btn_rvDose_more;
+        Button btn_med_loadMore;
         Dose dose;
         Med med;
         Context context;
@@ -148,21 +177,35 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             tv_rvDose_expiresAt = itemView.findViewById(R.id.tv_rvDose_expiresAt);
             tv_rvDose_expiresAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_expiresAtTimeAgo);
             btn_rvDose_more = itemView.findViewById(R.id.btn_rvDose_more);
+            btn_med_loadMore = itemView.findViewById(R.id.btn_med_loadMore);
         }
 
         public void updateTimes() {
             if (dose == null) return;
             if (med == null) return;
             dose.updateDoseStatus(med);
+            int textColor;
             if (dose.isActive()) {
-                iv_rvDose_active.setVisibility(View.VISIBLE);
+//                iv_rvDose_active.setVisibility(View.VISIBLE);
+                textColor = ThemeProvider.getThemeAttr(R.attr.greenText, context);
                 tv_rvDose_expires.setText(context.getString(R.string.expires));
             } else {
-                iv_rvDose_active.setVisibility(View.GONE);
+//                iv_rvDose_active.setVisibility(View.GONE);
+                textColor = ThemeProvider.getThemeAttr(R.attr.lighterText, context);
                 tv_rvDose_expires.setText(context.getString(R.string.expired));
             }
+            iv_rvDose_active.setColorFilter(textColor);
             tv_rvDose_takenAtTimeAgo.setText(dose.getTakenAtTimeAgo());
             tv_rvDose_expiresAtTimeAgo.setText(dose.getExpiresAtTimeAgo());
+        }
+
+        public void updateLoadMore() {
+            if (btn_med_loadMore == null || med == null) return;
+            if (med.hasLoadedAllDoses()) {
+                btn_med_loadMore.setVisibility(View.GONE);
+            } else {
+                btn_med_loadMore.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

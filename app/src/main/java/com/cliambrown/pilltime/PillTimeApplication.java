@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,12 +33,26 @@ public class PillTimeApplication extends Application {
     public void loadMeds() {
         meds.clear();
         meds.addAll(dbHelper.getAllMeds());
+        for (Med med : meds) {
+            List<Dose> doses = dbHelper.loadDoses(med);
+            med.setHasLoadedAllDoses(doses.size() < 21);
+            int doseCount = 0;
+            for (Dose dose : doses) {
+                med.addDoseToEnd(dose);
+                ++doseCount;
+                if (doseCount >= 20) break;
+            }
+            med.updateDoseStatus();
+        }
 //        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void clearMeds() {
         dbHelper.deleteDB();
         meds.clear();
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DB_CLEARED");
+        sendBroadcast(intent);
     }
 
     public List<Med> getMeds() {
@@ -238,5 +253,23 @@ public class PillTimeApplication extends Application {
             }
             break;
         }
+    }
+
+    public void loadMoreDoses(Med med) {
+        List<Dose> doses = dbHelper.loadDoses(med);
+        med.setHasLoadedAllDoses(doses.size() < 21);
+        List<Integer> doseIDs = new ArrayList<Integer>();
+        for (Dose dose : doses) {
+            med.addDose(dose);
+            doseIDs.add(dose.getId());
+            if (doseIDs.size() >= 20) break;
+        }
+        med.updateDoseStatus();
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSES_ADDED");
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseIDs", (Serializable) doseIDs);
+        sendBroadcast(intent);
+        repositionMed(med);
     }
 }

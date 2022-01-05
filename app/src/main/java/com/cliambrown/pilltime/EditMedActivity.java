@@ -90,8 +90,7 @@ public class EditMedActivity extends SimpleMenuActivity {
         int btnText = ThemeProvider.getThemeAttr(R.attr.buttonText, this);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(dp48, dp48);
 
-        for (int i=0; i<colors.length; ++i) {
-            String colorName = colors[i];
+        for (String colorName : colors) {
             imageButton = new ImageButton(this);
             imageButton.setId(View.generateViewId());
             imageButton.setLayoutParams(params);
@@ -99,13 +98,14 @@ public class EditMedActivity extends SimpleMenuActivity {
             setColorBtnState(imageButton, selectedColor.equals(colorName));
             drawableID = Utils.getResourceIdentifier(this, "round_button_" + colorName, "drawable");
             imageButton.setBackgroundResource(drawableID);
+            imageButton.setFocusable(true);
             colorButtons.add(imageButton);
 
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int j=0; j<colorButtons.size(); ++j) {
-                        setColorBtnState(colorButtons.get(j), false);
+                    for (ImageButton listButton : colorButtons) {
+                        setColorBtnState(listButton, false);
                     }
                     setColorBtnState((ImageButton) view, true);
                     selectedColor = colorName;

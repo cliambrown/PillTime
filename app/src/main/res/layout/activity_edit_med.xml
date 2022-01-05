@@ -29,6 +29,8 @@
                 android:id="@+id/et_editMed_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
                 android:minHeight="48dp"
                 android:hint="@string/med_name"
                 android:importantForAutofill="no"/>
@@ -58,6 +60,8 @@
                     android:id="@+id/et_editMed_maxDose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:minHeight="48dp"
                     android:hint="@string/max_dose"
                     android:importantForAutofill="no"
@@ -84,6 +88,8 @@
                     android:id="@+id/et_editMed_doseHours"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:minHeight="48dp"
                     android:hint="@string/num_hours"
                     android:importantForAutofill="no"
@@ -134,7 +140,8 @@
             android:layout_marginBottom="16dp"
             android:text="@string/save"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?attr/buttonText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

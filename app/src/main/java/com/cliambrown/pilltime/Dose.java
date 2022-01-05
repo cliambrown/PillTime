@@ -7,6 +7,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Dose {
 
@@ -75,14 +76,6 @@ public class Dose {
         this.context = context;
     }
 
-//    public String getTimeString() {
-//        return DateUtils.formatDateTime(getContext(), (takenAt * 1000L), DateUtils.FORMAT_SHOW_TIME);
-//    }
-//
-//    public String getDateString() {
-//        return DateUtils.formatDateTime(context, (takenAt * 1000L), DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
-//    }
-
     public boolean isActive() {
         return isActive;
     }
@@ -104,12 +97,12 @@ public class Dose {
                 System.currentTimeMillis(),
                 0,
                 DateUtils.FORMAT_ABBREV_RELATIVE
-            ).toString();
+            ).toString().toLowerCase(Locale.ROOT);
         expiresAtTimeAgo = DateUtils.getRelativeTimeSpanString(
                 expiresAt * 1000L,
                 System.currentTimeMillis(),
                 0,
                 DateUtils.FORMAT_ABBREV_RELATIVE
-        ).toString();
+        ).toString().toLowerCase(Locale.ROOT);
     }
 }

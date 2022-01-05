@@ -18,8 +18,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,6 +33,8 @@ public class MedActivity extends AppCompatActivity {
     TextView tv_med_maxDoseInfo;
     TextView tv_med_currentTotalDoseCount;
     TextView tv_med_takenInPast;
+    LinearLayout ll_med_no_doses;
+    Button btn_med_no_doses;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -54,6 +59,8 @@ public class MedActivity extends AppCompatActivity {
         tv_med_maxDoseInfo = findViewById(R.id.tv_med_maxDoseInfo);
         tv_med_currentTotalDoseCount = findViewById(R.id.tv_med_currentTotalDoseCount);
         tv_med_takenInPast = findViewById(R.id.tv_med_takenInPast);
+        ll_med_no_doses = findViewById(R.id.ll_med_no_doses);
+        btn_med_no_doses = findViewById(R.id.btn_med_no_doses);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
@@ -66,6 +73,7 @@ public class MedActivity extends AppCompatActivity {
 
         updateInfo();
         updateTimes();
+        onUpdateDoses();
 
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
@@ -80,18 +88,30 @@ public class MedActivity extends AppCompatActivity {
             public void onRefresh() {
                 mApp.loadMeds();
                 mAdapter.notifyDataSetChanged();
+                onUpdateDoses();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
         BroadcastReceiver br = new MedActivity.MedBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
+        filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
+        filter.addAction("com.cliambrown.broadcast.DOSES_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
         this.registerReceiver(br, filter);
+
+        btn_med_no_doses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MedActivity.this, EditDoseActivity.class);
+                intent.putExtra("med_id", medID);
+                startActivity(intent);
+            }
+        });
     }
 
     public class MedBroadcastReceiver extends BroadcastReceiver {
@@ -99,6 +119,9 @@ public class MedActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action == null) return;
+            if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
+                MedActivity.this.finish();
+            }
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
             if (action.equals("com.cliambrown.broadcast.MED_EDITED")) {
@@ -116,6 +139,27 @@ public class MedActivity extends AppCompatActivity {
             }
 
             List<Dose> doses = med.getDoses();
+
+            if (action.equals("com.cliambrown.broadcast.DOSES_ADDED")) {
+                List<Integer> doseIDs = new ArrayList<Integer>();
+                try {
+                    doseIDs = (List<Integer>) intent.getSerializableExtra("doseIDs");
+                } catch (Exception e) {
+                    // do nothing
+                }
+                for (int doseID : doseIDs) {
+                    for (int i=0; i<doses.size(); ++i) {
+                        if (doses.get(i).getId() == doseID) {
+                            mAdapter.notifyItemInserted(i);
+                            break;
+                        }
+                    }
+                }
+                updateTimes();
+                onUpdateDoses();
+                return;
+            }
+
             int doseID = intent.getIntExtra("doseID", -1);
             if (action.equals("com.cliambrown.broadcast.DOSE_ADDED")) {
                 for (int i=0; i<doses.size(); ++i) {
@@ -125,6 +169,7 @@ public class MedActivity extends AppCompatActivity {
                     }
                 }
                 updateTimes();
+                onUpdateDoses();
                 return;
             }
             if (action.equals("com.cliambrown.broadcast.DOSE_EDITED")) {
@@ -145,8 +190,21 @@ public class MedActivity extends AppCompatActivity {
                     }
                 }
                 updateTimes();
+                onUpdateDoses();
                 return;
             }
+        }
+    }
+
+    public void onUpdateDoses() {
+        if (ll_med_no_doses == null) return;
+        if (med.getDoses().size() > 0) {
+            ll_med_no_doses.setVisibility(View.GONE);
+        } else {
+            ll_med_no_doses.setVisibility(View.VISIBLE);
+        }
+        if (mAdapter != null) {
+            mAdapter.notifyItemChanged(0, "update_show_more_btn");
         }
     }
 
@@ -208,6 +266,7 @@ public class MedActivity extends AppCompatActivity {
         updateTimes();
         // TODO replace with some kind of queue system? maybe in PillTimeApplication
         mAdapter.notifyDataSetChanged();
+        onUpdateDoses();
         startUpdateTimer();
     }
 

@@ -117,43 +117,6 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 Toast.makeText(EditDoseActivity.this, "Dose saved", Toast.LENGTH_SHORT).show();
 
                 EditDoseActivity.this.finish();
-
-
-//                String takenAtTime;
-//                String takenAtDate;
-//                Calendar cal = Calendar.getInstance();
-//
-//                try {
-//                    count = Double.parseDouble(et_editDose_count.getText().toString());
-////                    takenAtTime = et_editDose_takenAtTime.getText().toString();
-//                    takenAtTime = "20:00";
-//                    takenAtDate = et_editDose_takenAtDate.getText().toString();
-//                } catch (Exception e) {
-//                    Toast.makeText(EditDoseActivity.this, "Error saving dose: invalid data", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                try {
-////                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm", Locale.ENGLISH);
-////                    cal.setTime(dateFormat.parse(takenAtDate + " " + takenAtTime));
-////                } catch (ParseException e) {
-////                    e.printStackTrace();
-////                }
-//
-//                long unixTime = cal.getTimeInMillis() / 1000L;
-//                Dose dose = new Dose(doseID, medID, count, unixTime, EditDoseActivity.this);
-//
-//                if (doseID > -1) {
-//                    boolean edited = mApp.setDose(med, dose);
-//                    if (!edited) return;
-//                } else {
-//                    boolean added = mApp.addDose(med, dose);
-//                    if (!added) return;
-//                }
-//
-//                Toast.makeText(EditDoseActivity.this, "Dose saved", Toast.LENGTH_SHORT).show();
-//
-//                EditDoseActivity.this.finish();
             }
         });
     }

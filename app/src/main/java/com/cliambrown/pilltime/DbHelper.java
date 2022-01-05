@@ -3,7 +3,6 @@ package com.cliambrown.pilltime;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -11,9 +10,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -39,6 +36,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean deleteDB() {
         context.deleteDatabase(DB_NAME);
+        getAllMeds();
         return true;
     }
 
@@ -48,7 +46,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MEDS_COL_NAME + " TEXT, " +
                 MEDS_COL_MAX_DOSE + " INTEGER, " +
-                MEDS_COL_DOSE_HOURS + " INTEGER)";
+                MEDS_COL_DOSE_HOURS + " INTEGER," +
+                MEDS_COL_COLOR + " TEXT)";
         db.execSQL(stmt);
         String stmt2 = "CREATE TABLE IF NOT EXISTS " + DOSES_TABLE +
                 " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -68,83 +67,34 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Med> getAllMeds() {
+
         List<Med> returnList = new ArrayList<>();
 
-        String stmt = "SELECT " +
-                MEDS_TABLE + ".id AS " + MEDS_TABLE + "_id, " +
-                MEDS_TABLE + "." + MEDS_COL_NAME + " AS " + MEDS_TABLE + "_" + MEDS_COL_NAME + ", " +
-                MEDS_TABLE + "." + MEDS_COL_MAX_DOSE + " AS " + MEDS_TABLE + "_" + MEDS_COL_MAX_DOSE + ", " +
-                MEDS_TABLE + "." + MEDS_COL_DOSE_HOURS + " AS " + MEDS_TABLE + "_" + MEDS_COL_DOSE_HOURS + ", " +
-                MEDS_TABLE + "." + MEDS_COL_COLOR + " AS " + MEDS_TABLE + "_" + MEDS_COL_COLOR + ", " +
-                "JT.id AS " + DOSES_TABLE + "_id, " +
-                "JT." + DOSES_COL_MED_ID + " AS " + DOSES_TABLE + "_" + DOSES_COL_MED_ID + ", " +
-                "JT." + DOSES_COL_COUNT + " AS " + DOSES_TABLE + "_" + DOSES_COL_COUNT + ", " +
-                "JT." + DOSES_COL_TAKEN_AT + " AS " + DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT + " " +
-                "FROM " + MEDS_TABLE + " " +
-                "LEFT JOIN (SELECT " +
-                DOSES_TABLE + ".id, " +
-                DOSES_TABLE + "." + DOSES_COL_MED_ID + ", " +
-                DOSES_TABLE + "." + DOSES_COL_COUNT + ", " +
-                DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " " +
-                "FROM " + DOSES_TABLE + " " +
-                "ORDER BY " + DOSES_TABLE + "." + DOSES_COL_TAKEN_AT + " DESC, " +
-                DOSES_TABLE + ".id DESC " +
-                "LIMIT 20) JT ON JT.id = " + MEDS_TABLE + "_id " +
-                "ORDER BY " + DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT + " DESC, " +
-                DOSES_TABLE + "_id DESC, " +
-                MEDS_TABLE + "_id DESC";
+        String stmt = "SELECT * FROM " + MEDS_TABLE +
+                " LEFT JOIN (SELECT id AS dose_id, " + DOSES_COL_MED_ID + ", MAX(" + DOSES_COL_TAKEN_AT + ") AS " + DOSES_COL_TAKEN_AT + " " +
+                "FROM " + DOSES_TABLE + " GROUP BY " + DOSES_COL_MED_ID + ") AS D " +
+                "ON " + MEDS_TABLE + ".id = D." + DOSES_COL_MED_ID + " " +
+                "ORDER BY " + DOSES_COL_TAKEN_AT + " DESC, dose_id DESC, id DESC";
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
 //        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
 
         if (cursor.moveToFirst()) {
-            List<Integer> medIDs = new ArrayList<>();
-            Map<String, Med> medMap = new HashMap<String, Med>();
-            int meds_col_id = cursor.getColumnIndex(MEDS_TABLE + "_id");
-            int meds_col_name = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_NAME);
-            int meds_col_maxDose = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_MAX_DOSE);
-            int meds_col_color = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_COLOR);
-            int meds_col_doseHours = cursor.getColumnIndex(MEDS_TABLE + "_" + MEDS_COL_DOSE_HOURS);
-            int doses_col_id = cursor.getColumnIndex(DOSES_TABLE + "_id");
-            int doses_col_count = cursor.getColumnIndex(DOSES_TABLE + "_" + DOSES_COL_COUNT);
-            int doses_col_takenAt = cursor.getColumnIndex(DOSES_TABLE + "_" + DOSES_COL_TAKEN_AT);
-            do {
-                Med med;
-                int medID = cursor.getInt(meds_col_id);
-                boolean medExists = false;
-                for (int i=0; i<medIDs.size(); ++i) {
-                    if (medIDs.get(i) == medID) {
-                        medExists = true;
-                        break;
-                    }
-                }
-                if (!medExists) {
-                    medIDs.add(medID);
-                    String medName = cursor.getString(meds_col_name);
-                    int maxDose = cursor.getInt(meds_col_maxDose);
-                    int doseHours = cursor.getInt(meds_col_doseHours);
-                    String color = cursor.getString(meds_col_color);
-                    med = new Med(medID, medName, maxDose, doseHours, color, context);
-                    medMap.put(String.valueOf(medID), med);
-                } else {
-                    med = medMap.get(String.valueOf(medID));
-                }
-                if (!cursor.isNull(doses_col_id)) {
-                    int doseID = cursor.getInt(doses_col_id);
-                    double count = cursor.getDouble(doses_col_count);
-                    long takenAt = cursor.getLong(doses_col_takenAt);
-                    Dose dose = new Dose(doseID, medID, count, takenAt, context);
-                    med.addDose(dose);
-                }
-            } while (cursor.moveToNext());
+            int col_id = cursor.getColumnIndex("id");
+            int col_name = cursor.getColumnIndex(MEDS_COL_NAME);
+            int col_maxDose = cursor.getColumnIndex(MEDS_COL_MAX_DOSE);
+            int col_doseHours = cursor.getColumnIndex(MEDS_COL_DOSE_HOURS);
+            int col_color = cursor.getColumnIndex(MEDS_COL_COLOR);
 
-            for (int i=0; i<medIDs.size(); ++i) {
-                int medID = medIDs.get(i);
-                Med med = medMap.get(String.valueOf(medID));
-                int doseCount = med.getDoses().size();
-                med.setHasLoadedAllDoses(doseCount < 20);
-                returnList.add(med);
-            }
+            do {
+                int medID = cursor.getInt(col_id);
+                String medName = cursor.getString(col_name);
+                int maxDose = cursor.getInt(col_maxDose);
+                int doseHours = cursor.getInt(col_doseHours);
+                String color = cursor.getString(col_color);
+                returnList.add(new Med(medID, medName, maxDose, doseHours, color, context));
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -218,4 +168,68 @@ public class DbHelper extends SQLiteOpenHelper {
         db.delete(DOSES_TABLE, "id = ?", selectionArgs);
         db.close();
     }
+
+    public List<Dose> loadDoses(Med med) {
+        List<Dose> returnList = new ArrayList<Dose>();
+        String stmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ? ";
+        List<Integer> doseIDs = new ArrayList<Integer>();
+        for (Dose dose : med.getDoses()) {
+            doseIDs.add(dose.getId());
+        }
+        if (doseIDs.size() > 0) {
+            String inClause = doseIDs.toString();
+            inClause = inClause.replace("[","(");
+            inClause = inClause.replace("]",")");
+            stmt = stmt + "AND id NOT IN " + inClause + " ";
+        }
+        stmt = stmt + "ORDER BY " + DOSES_COL_TAKEN_AT + " DESC, id DESC LIMIT 21";
+        String[] selectionArgs = new String[]{String.valueOf(med.getId())};
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(stmt, selectionArgs);
+        if (cursor.moveToFirst()) {
+            int col_id = cursor.getColumnIndex("id");
+            int col_count = cursor.getColumnIndex(DOSES_COL_COUNT);
+            int col_takenAt = cursor.getColumnIndex(DOSES_COL_TAKEN_AT);
+            do {
+                int doseID = cursor.getInt(col_id);
+                double count = cursor.getDouble(col_count);
+                long takenAt = cursor.getLong(col_takenAt);
+                Dose dose = new Dose(doseID, med.getId(), count, takenAt, context);
+                returnList.add(dose);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return returnList;
+    }
+
+//    public List<Dose> loadMoreDoses(int medID, List<Integer> doseIDs) {
+//        List<Dose> returnList = new ArrayList<Dose>();
+//        String inClause = doseIDs.toString();
+//        inClause = inClause.replace("[","(");
+//        inClause = inClause.replace("]",")");
+//        String stmt = "SELECT * FROM " + DOSES_TABLE + " " +
+//                "WHERE " + DOSES_COL_MED_ID + " = ? AND " +
+//                "id NOT IN " + inClause + " " +
+//                "ORDER BY " + DOSES_COL_TAKEN_AT + " DESC, " +
+//                "id DESC";
+//        String[] selectionArgs = new String[]{String.valueOf(medID)};
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(stmt, selectionArgs);
+//        if (cursor.moveToFirst()) {
+//            int doses_col_id = cursor.getColumnIndex("id");
+//            int doses_col_count = cursor.getColumnIndex(DOSES_COL_COUNT);
+//            int doses_col_takenAt = cursor.getColumnIndex(DOSES_COL_TAKEN_AT);
+//            do {
+//                int doseID = cursor.getInt(doses_col_id);
+//                double count = cursor.getDouble(doses_col_count);
+//                long takenAt = cursor.getLong(doses_col_takenAt);
+//                Dose dose = new Dose(doseID, medID, count, takenAt, context);
+//                returnList.add(dose);
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        db.close();
+//        return returnList;
+//    }
 }
