@@ -264,8 +264,6 @@ public class MedActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
         updateTimes();
-        // TODO replace with some kind of queue system? maybe in PillTimeApplication
-        mAdapter.notifyDataSetChanged();
         onUpdateDoses();
         startUpdateTimer();
     }

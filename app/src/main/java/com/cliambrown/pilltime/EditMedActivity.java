@@ -62,12 +62,12 @@ public class EditMedActivity extends SimpleMenuActivity {
         btn_editMed_save = findViewById(R.id.btn_editMed_save);
 
         np_editMed_maxDose = findViewById(R.id.np_editMed_maxDose);
-        np_editMed_maxDose.setMinValue(0);
+        np_editMed_maxDose.setMinValue(1);
         np_editMed_maxDose.setMaxValue(100);
         np_editMed_maxDose.setWrapSelectorWheel(false);
 
         np_editMed_doseHours = findViewById(R.id.np_editMed_doseHours);
-        np_editMed_doseHours.setMinValue(0);
+        np_editMed_doseHours.setMinValue(1);
         np_editMed_doseHours.setMaxValue(100);
         np_editMed_doseHours.setWrapSelectorWheel(false);
 

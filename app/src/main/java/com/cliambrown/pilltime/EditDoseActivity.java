@@ -145,6 +145,9 @@ public class EditDoseActivity extends SimpleMenuActivity {
                     return;
                 }
 
+                // Round down to nearest exact minute
+                selectedDatetime.set( Calendar.SECOND, 0 );
+                selectedDatetime.set( Calendar.MILLISECOND, 0 );
                 long unixTime = selectedDatetime.getTimeInMillis() / 1000L;
                 Dose dose = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
 

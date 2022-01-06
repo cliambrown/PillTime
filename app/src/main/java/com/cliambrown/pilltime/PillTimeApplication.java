@@ -1,8 +1,13 @@
 package com.cliambrown.pilltime;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +23,7 @@ public class PillTimeApplication extends Application {
     private static Context context;
     DbHelper dbHelper;
     private List<Med> meds = new ArrayList<Med>();
+    public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
 
     public void onCreate() {
         super.onCreate();
@@ -25,6 +31,7 @@ public class PillTimeApplication extends Application {
         dbHelper = new DbHelper(context);
         loadMeds();
         AppCompatDelegate.setDefaultNightMode(ThemeProvider.getThemeFromPrefs(context));
+        createNotificationChannel();
     }
 
     public PillTimeApplication() {
@@ -100,6 +107,11 @@ public class PillTimeApplication extends Application {
         for (int i=0; i<meds.size(); ++i) {
             listMed = meds.get(i);
             if (listMed.getId() != medID) continue;
+
+            // Check expiry times BEFORE rescheduling (use listMed, not med)
+            long now = System.currentTimeMillis() * 1000L;
+            long rescheduleBeforeTakenAt = now - (listMed.getDoseHours() * 60L * 60L);
+
             listMed.setName(med.getName());
             listMed.setMaxDose(med.getMaxDose());
             listMed.setDoseHours(med.getDoseHours());
@@ -109,6 +121,12 @@ public class PillTimeApplication extends Application {
             intent.setAction("com.cliambrown.broadcast.MED_EDITED");
             intent.putExtra("medID", medID);
             sendBroadcast(intent);
+
+            List<Dose> doses = listMed.getDoses();
+            for (Dose dose : doses) {
+                if (dose.getTakenAt() <= rescheduleBeforeTakenAt) break;
+                scheduleNotification(listMed, dose);
+            }
             return true;
         }
         return false;
@@ -143,21 +161,36 @@ public class PillTimeApplication extends Application {
 
     public boolean addDose(Med med, Dose dose) {
         int insertID = dbHelper.insertDose(dose);
-        if (insertID >= 0) {
-            dose.setId(insertID);
-            med.addDose(dose);
-            med.updateDoseStatus();
-            Intent intent = new Intent();
-            intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
-            intent.putExtra("medID", med.getId());
-            intent.putExtra("doseID", dose.getId());
-            sendBroadcast(intent);
-            repositionMed(med);
-        } else {
+        if (insertID < 0) {
             Toast.makeText(context, "Error saving dose", Toast.LENGTH_SHORT).show();
             return false;
         }
+        dose.setId(insertID);
+
+        scheduleNotification(med, dose);
+
+        med.addDose(dose);
+        med.updateDoseStatus();
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseID", dose.getId());
+        sendBroadcast(intent);
+        repositionMed(med);
         return true;
+    }
+
+    public void scheduleNotification(Med med, Dose dose) {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+        intent.putExtra("doseID", dose.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, 0);
+        am.cancel(pendingIntent);
+        if (!dose.getNotify() || med == null) return;
+        long now = System.currentTimeMillis();
+        long triggerAtMillis = (dose.getTakenAt() + (med.getDoseHours() * 60L * 60L)) * 1000L;
+        if (triggerAtMillis < now) return;
+        am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
     }
 
     public void repositionMed(Med med) {
@@ -221,11 +254,14 @@ public class PillTimeApplication extends Application {
             intent.putExtra("toPosition", toPosition);
         }
         sendBroadcast(intent);
+        scheduleNotification(med, dose);
         repositionMed(med);
         return true;
     }
 
     public void removeDose(Dose dose) {
+        dose.setNotify(false);
+        scheduleNotification(null, dose);
         int medID = dose.getMedID();
         int doseID = dose.getId();
         dbHelper.deleteDoseById(doseID);
@@ -272,4 +308,21 @@ public class PillTimeApplication extends Application {
         sendBroadcast(intent);
         repositionMed(med);
     }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }

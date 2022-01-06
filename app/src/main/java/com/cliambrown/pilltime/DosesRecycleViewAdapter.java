@@ -189,10 +189,15 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             if (dose.isActive()) {
                 iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_filled_24", "drawable");
                 textColor = ThemeProvider.getThemeAttr(R.attr.greenText, context);
-                tv_rvDose_expires.setText(context.getString(R.string.expires));
             } else {
                 iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_24", "drawable");
                 textColor = ThemeProvider.getThemeAttr(R.attr.lighterText, context);
+                tv_rvDose_expires.setText(context.getString(R.string.expired));
+            }
+            long now = System.currentTimeMillis() / 1000L;
+            if (dose.getExpiresAt() > now) {
+                tv_rvDose_expires.setText(context.getString(R.string.expires));
+            } else {
                 tv_rvDose_expires.setText(context.getString(R.string.expired));
             }
             iv_rvDose_active.setImageResource(iconID);

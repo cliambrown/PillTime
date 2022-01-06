@@ -14,11 +14,12 @@ public class Dose {
     private int id;
     private int medID;
     private double count;
-    private long takenAt; // Unix time
+    private long takenAt; // Unix time (s)
     private boolean notify;
     private boolean notifySound;
     private Context context;
     boolean isActive;
+    private long expiresAt; // Unix time (s)
     String takenAtTimeAgo;
     String expiresAtTimeAgo;
 
@@ -110,8 +111,16 @@ public class Dose {
         return expiresAtTimeAgo;
     }
 
+    public long getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(long expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
     public void updateDoseStatus(Med med) {
-        long expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
+        expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
         long now = System.currentTimeMillis() / 1000L;
         isActive = (takenAt <= now && expiresAt > now);
         takenAtTimeAgo = DateUtils.getRelativeTimeSpanString(

@@ -204,8 +204,9 @@ public class Med {
         for (int i=0; i<doses.size(); ++i) {
             dose = doses.get(i);
             long takenAt = dose.getTakenAt();
+            if (takenAt >= now) continue;
             if (takenAt <= doseTimeAgo) break;
-            if (takenAt <= now) count += dose.getCount();
+            count += dose.getCount();
         }
         return count;
     }
