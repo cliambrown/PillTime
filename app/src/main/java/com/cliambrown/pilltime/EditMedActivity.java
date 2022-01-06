@@ -48,6 +48,7 @@ public class EditMedActivity extends SimpleMenuActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_med);
 

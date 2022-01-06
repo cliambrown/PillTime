@@ -47,6 +47,7 @@ public class MedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med);
 

@@ -115,18 +115,6 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_editDose_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:textColor="?attr/buttonText"/>
-
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_editDose_notify"
         android:layout_width="match_parent"
@@ -150,5 +138,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switch_editDose_notify" />
+
+    <Button
+        android:id="@+id/btn_editDose_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/save"
+        android:textColor="?attr/buttonText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switch_editDose_notifySound"
+        app:layout_constraintVertical_bias="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

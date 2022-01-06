@@ -20,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         if (savedInstanceState == null) {
@@ -89,8 +90,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-//                intent = new Intent(SettingsActivity.this, MainActivity.class);
-//                startActivity(intent);
                 this.finish();
                 return true;
         }
