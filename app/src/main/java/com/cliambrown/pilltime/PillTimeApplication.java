@@ -325,4 +325,14 @@ public class PillTimeApplication extends Application {
         }
     }
 
+    public void removeDoseAndOlder(Med med, Dose dose) {
+        dbHelper.removeDoseAndOlder(med, dose);
+        med.removeDoseAndOlder(dose);
+        med.updateDoseStatus();
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        intent.putExtra("medID", med.getId());
+        sendBroadcast(intent);
+        repositionMed(med);
+    }
 }

@@ -95,6 +95,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+                        AlertDialog.Builder builder;
                         switch (menuItem.getItemId()) {
                             case R.id.mi_dose_option_edit:
                                 Intent intent = new Intent(context, EditDoseActivity.class);
@@ -103,7 +104,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                                 context.startActivity(intent);
                                 return true;
                             case R.id.mi_dose_option_delete:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder = new AlertDialog.Builder(context);
                                 builder.setMessage(R.string.dialog_delete_item)
                                         .setTitle(R.string.delete)
                                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -118,6 +119,28 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                                             }
                                         });
                                 builder.show();
+                                return true;
+                            case R.id.mi_dose_option_delete_and_older:
+                                builder = new AlertDialog.Builder(context);
+                                builder.setMessage(R.string.dialog_delete_item)
+                                        .setTitle(R.string.delete_and_older)
+                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                int position = holder.getAdapterPosition();
+                                                int itemCount = doses.size()- position;
+                                                mApp.removeDoseAndOlder(holder.med, holder.dose);
+                                                DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position, itemCount);
+                                                holder.updateLoadMore();
+                                                DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.show();
+                                return true;
                         }
                         return false;
                     }
@@ -142,6 +165,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         }
         if (payloadStr.equals("update_show_more_btn")) {
             holder.updateLoadMore();
+            DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
         }
         if (payloadStr.equals("update_times")) {
             holder.updateTimes();

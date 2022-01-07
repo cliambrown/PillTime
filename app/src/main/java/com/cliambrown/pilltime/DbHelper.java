@@ -345,4 +345,20 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
         return returnList;
     }
+
+    public void removeDoseAndOlder(Med med, Dose dose) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] selectionArgs = new String[]{
+                String.valueOf(med.getId()),
+                String.valueOf(dose.getTakenAt()),
+                String.valueOf(dose.getTakenAt()),
+                String.valueOf(dose.getId())
+        };
+        String whereClause = DOSES_COL_MED_ID + " = ? AND (" +
+                DOSES_COL_TAKEN_AT + " < ?  OR (" +
+                DOSES_COL_TAKEN_AT + " = ? AND " +
+                "id <= ?))";
+        db.delete(DOSES_TABLE, whereClause, selectionArgs);
+        db.close();
+    }
 }

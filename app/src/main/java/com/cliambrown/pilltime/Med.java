@@ -277,4 +277,20 @@ public class Med {
     public void setHasLoadedAllDoses(boolean hasLoadedAllDoses) {
         this.hasLoadedAllDoses = hasLoadedAllDoses;
     }
+
+    public void removeDoseAndOlder(Dose dose) {
+        int position = -1;
+        for (int i=0; i<doses.size(); ++i) {
+            Dose listDose = doses.get(i);
+            if (listDose.getId() == dose.getId()) {
+                position = i;
+                break;
+            }
+        }
+        if (position == -1) return;
+        while (doses.size() > position) {
+            doses.remove(doses.size() - 1);
+        }
+        this.hasLoadedAllDoses = true;
+    }
 }

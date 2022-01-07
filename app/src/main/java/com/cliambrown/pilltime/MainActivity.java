@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
+        filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
         this.registerReceiver(br, filter);
 
         btn_main_no_meds.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
             if (action.equals("com.cliambrown.broadcast.DOSE_ADDED") ||
                     action.equals("com.cliambrown.broadcast.DOSES_ADDED") ||
                     action.equals("com.cliambrown.broadcast.DOSE_EDITED") ||
-                    action.equals("com.cliambrown.broadcast.DOSE_REMOVED")
+                    action.equals("com.cliambrown.broadcast.DOSE_REMOVED") ||
+                    action.equals("com.cliambrown.broadcast.DOSES_REMOVED")
             ) {
                 for (int i=0; i<meds.size(); ++i) {
                     if (meds.get(i).getId() == medID) {
