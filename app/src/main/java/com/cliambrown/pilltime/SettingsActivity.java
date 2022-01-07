@@ -57,8 +57,21 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            Preference export = getPreferenceManager().findPreference("export");
+            if (export != null) {
+                export.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Toast.makeText(getActivity(), "export test", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+            }
+
             Preference clearDB = getPreferenceManager().findPreference("clearDb");
             if (clearDB != null) {
+//                clearDB.get
                 clearDB.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {

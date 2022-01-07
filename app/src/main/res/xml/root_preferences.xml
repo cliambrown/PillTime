@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/notifications_header">
 
@@ -26,9 +27,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Database">
+    <PreferenceCategory app:title="@string/data">
 
         <Preference
+            app:key="export"
+            app:title="@string/export_all"
+            android:summary="@string/export_all_summary" />
+
+        <com.cliambrown.pilltime.ClearDbPreference
             app:key="clearDb"
             app:title="@string/clear_db" />
 
