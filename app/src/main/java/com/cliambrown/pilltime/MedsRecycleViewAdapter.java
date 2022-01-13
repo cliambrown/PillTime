@@ -69,7 +69,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditDoseActivity.class);
-                intent.putExtra("med_id", medID);
+                intent.putExtra("medID", medID);
                 context.startActivity(intent);
             }
         });

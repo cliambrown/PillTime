@@ -79,7 +79,10 @@
     <string name="channel_name">PillTime Notifications</string>
     <string name="channel_description">Notifications for expiring doses</string>
     <string name="delete_and_older">Delete this and older</string>
+
     <string name="data">Data</string>
     <string name="export_all">Export all data</string>
     <string name="export_all_summary">Creates a file that can be imported on any device</string>
+    <string name="import_data">Import data</string>
+    <string name="import_from_file">Requires a text file on your device, exported from this app\n(Does NOT overwrite existing data)</string>
 </resources>

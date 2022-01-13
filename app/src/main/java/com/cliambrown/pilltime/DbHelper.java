@@ -1,15 +1,31 @@
 package com.cliambrown.pilltime;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -36,9 +52,14 @@ public class DbHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public void deleteDB() {
+    public void clearDB() {
         if (context == null) return;
-        context.deleteDatabase(DB_NAME);
+        SQLiteDatabase db = this.getWritableDatabase();
+        String stmt = "DROP TABLE IF EXISTS " + MEDS_TABLE;
+        db.execSQL(stmt);
+        String stmt2 = "DROP TABLE IF EXISTS " + DOSES_TABLE;
+        db.execSQL(stmt2);
+        onCreate(db);
         getAllMeds();
     }
 
@@ -323,14 +344,14 @@ public class DbHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             int col_id = cursor.getColumnIndex("dose_id");
             int col_expiresAt = cursor.getColumnIndex("expires_at");
-            int col_med_id = cursor.getColumnIndex(DOSES_COL_MED_ID);
+            int col_medID = cursor.getColumnIndex(DOSES_COL_MED_ID);
             int col_count = cursor.getColumnIndex(DOSES_COL_COUNT);
             int col_takenAt = cursor.getColumnIndex(DOSES_COL_TAKEN_AT);
             int col_notify = cursor.getColumnIndex(DOSES_COL_NOTIFY);
             int col_notifySound = cursor.getColumnIndex(DOSES_COL_NOTIFY_SOUND);
             do {
                 int doseID = cursor.getInt(col_id);
-                int medID = cursor.getInt(col_med_id);
+                int medID = cursor.getInt(col_medID);
                 double count = cursor.getDouble(col_count);
                 long takenAt = cursor.getLong(col_takenAt);
                 boolean notify = (cursor.getInt(col_notify) == 1);
@@ -359,6 +380,167 @@ public class DbHelper extends SQLiteOpenHelper {
                 DOSES_COL_TAKEN_AT + " = ? AND " +
                 "id <= ?))";
         db.delete(DOSES_TABLE, whereClause, selectionArgs);
+        db.close();
+    }
+
+    public JSONObject getExportedDb() throws JSONException {
+        SQLiteDatabase db = this.getReadableDatabase();
+        JSONObject rootJsonObject = new JSONObject();
+
+        JSONObject dbObject = new JSONObject();
+        dbObject.put("version", db.getVersion());
+
+        HashMap<String, String> colCodesMap = new HashMap<String, String>();
+        colCodesMap.put(MEDS_COL_NAME, "m1");
+        colCodesMap.put(MEDS_COL_MAX_DOSE, "m2");
+        colCodesMap.put(MEDS_COL_DOSE_HOURS, "m3");
+        colCodesMap.put(MEDS_COL_COLOR, "m4");
+        colCodesMap.put(DOSES_COL_COUNT, "d1");
+        colCodesMap.put(DOSES_COL_TAKEN_AT, "d2");
+        colCodesMap.put(DOSES_COL_NOTIFY, "d3");
+        colCodesMap.put(DOSES_COL_NOTIFY_SOUND, "d4");
+
+        JSONObject colCodesObject = new JSONObject();
+        colCodesObject.put(MEDS_COL_NAME, colCodesMap.get(MEDS_COL_NAME));
+        colCodesObject.put(MEDS_COL_MAX_DOSE, colCodesMap.get(MEDS_COL_MAX_DOSE));
+        colCodesObject.put(MEDS_COL_DOSE_HOURS, colCodesMap.get(MEDS_COL_DOSE_HOURS));
+        colCodesObject.put(MEDS_COL_COLOR, colCodesMap.get(MEDS_COL_COLOR));
+        colCodesObject.put(DOSES_COL_COUNT, colCodesMap.get(DOSES_COL_COUNT));
+        colCodesObject.put(DOSES_COL_TAKEN_AT, colCodesMap.get(DOSES_COL_TAKEN_AT));
+        colCodesObject.put(DOSES_COL_NOTIFY, colCodesMap.get(DOSES_COL_NOTIFY));
+        colCodesObject.put(DOSES_COL_NOTIFY_SOUND, colCodesMap.get(DOSES_COL_NOTIFY_SOUND));
+        dbObject.put("col_codes", colCodesObject);
+
+        rootJsonObject.put("db", dbObject);
+
+        JSONArray medsArray = new JSONArray();
+        String stmt = "SELECT * FROM " + MEDS_TABLE;
+        Cursor medCursor = db.rawQuery(stmt, null);
+        int i = 0;
+        if (medCursor.moveToFirst()) {
+            int col_id = medCursor.getColumnIndex("id");
+            int col_name = medCursor.getColumnIndex(MEDS_COL_NAME);
+            int col_maxDose = medCursor.getColumnIndex(MEDS_COL_MAX_DOSE);
+            int col_doseHours = medCursor.getColumnIndex(MEDS_COL_DOSE_HOURS);
+            int col_color = medCursor.getColumnIndex(MEDS_COL_COLOR);
+            do {
+                int medID = medCursor.getInt(col_id);
+                String medName = medCursor.getString(col_name);
+                int maxDose = medCursor.getInt(col_maxDose);
+                int doseHours = medCursor.getInt(col_doseHours);
+                String color = medCursor.getString(col_color);
+                JSONObject medObject = new JSONObject();
+                medObject.put(colCodesMap.get(MEDS_COL_NAME), medName);
+                medObject.put(colCodesMap.get(MEDS_COL_MAX_DOSE), maxDose);
+                medObject.put(colCodesMap.get(MEDS_COL_DOSE_HOURS), doseHours);
+                medObject.put(colCodesMap.get(MEDS_COL_COLOR), color);
+
+                JSONArray dosesArray = new JSONArray();
+                String doseStmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ?";
+                String[] selectionArgs = new String[]{String.valueOf(medID)};
+                Cursor doseCursor = db.rawQuery(doseStmt, selectionArgs);
+                int j = 0;
+                if (doseCursor.moveToFirst()) {
+                    int col_count = doseCursor.getColumnIndex(DOSES_COL_COUNT);
+                    int col_takenAt = doseCursor.getColumnIndex(DOSES_COL_TAKEN_AT);
+                    int col_notify = doseCursor.getColumnIndex(DOSES_COL_NOTIFY);
+                    int col_notifySound = doseCursor.getColumnIndex(DOSES_COL_NOTIFY_SOUND);
+                    do {
+                        double count = doseCursor.getDouble(col_count);
+                        long takenAt = doseCursor.getLong(col_takenAt);
+                        int notify = doseCursor.getInt(col_notify);
+                        int notifySound = doseCursor.getInt(col_notifySound);
+                        JSONObject doseObject = new JSONObject();
+                        doseObject.put(colCodesMap.get(DOSES_COL_COUNT), count);
+                        doseObject.put(colCodesMap.get(DOSES_COL_TAKEN_AT), takenAt);
+                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY), notify);
+                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY_SOUND), notifySound);
+                        dosesArray.put(j, doseObject);
+                        ++j;
+                    } while (doseCursor.moveToNext());
+                }
+                medObject.put("doses", dosesArray);
+                doseCursor.close();
+
+                medsArray.put(i, medObject);
+                ++i;
+            } while (medCursor.moveToNext());
+            rootJsonObject.put("meds", medsArray);
+        }
+
+        medCursor.close();
+        db.close();
+        return rootJsonObject;
+    }
+
+    public void importFromString(String jsonText) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = null;
+        ContentValues cv;
+        try {
+            JSONObject rootJsonObject = new JSONObject(jsonText);
+            JSONObject dbObject = rootJsonObject.getJSONObject("db");
+            JSONObject colCodesObject = dbObject.getJSONObject("col_codes");
+            Iterator<String> keys = colCodesObject.keys();
+            HashMap<String, String> colCodesMap = new HashMap<String, String>();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String val = colCodesObject.getString(key);
+                colCodesMap.put(key, val);
+            }
+
+            JSONArray medsArray = rootJsonObject.getJSONArray("meds");
+            for (int i=0; i<medsArray.length(); ++i) {
+                JSONObject medObject = medsArray.getJSONObject(i);
+                String medName = medObject.getString(colCodesMap.get(MEDS_COL_NAME));
+                int maxDose = medObject.getInt(colCodesMap.get(MEDS_COL_MAX_DOSE));
+                int doseHours = medObject.getInt(colCodesMap.get(MEDS_COL_DOSE_HOURS));
+                String color = medObject.getString(colCodesMap.get(MEDS_COL_COLOR));
+
+                int medID;
+                String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
+                        "WHERE " + MEDS_COL_NAME + " = ? AND " +
+                        MEDS_COL_MAX_DOSE + " = ? AND " +
+                        MEDS_COL_DOSE_HOURS + " = ?";
+                String[] selectionArgs = new String[]{
+                        medName,
+                        String.valueOf(maxDose),
+                        String.valueOf(doseHours)
+                };
+                cursor = db.rawQuery(stmt, selectionArgs);
+                if (cursor.moveToFirst()) {
+                    int col_id = cursor.getColumnIndex("id");
+                    medID = cursor.getInt(col_id);
+                } else {
+                    cv = new ContentValues();
+                    cv.put(MEDS_COL_NAME, medName);
+                    cv.put(MEDS_COL_MAX_DOSE, maxDose);
+                    cv.put(MEDS_COL_DOSE_HOURS, doseHours);
+                    cv.put(MEDS_COL_COLOR, color);
+                    medID = (int) db.insert(MEDS_TABLE, null, cv);
+                }
+
+                JSONArray dosesArray = medObject.getJSONArray("doses");
+                for (int j=0; j<dosesArray.length(); ++j) {
+                    JSONObject doseObject = dosesArray.getJSONObject(j);
+                    double count = doseObject.getDouble(colCodesMap.get(DOSES_COL_COUNT));
+                    long takenAt = doseObject.getLong(colCodesMap.get(DOSES_COL_TAKEN_AT));
+                    boolean notify = doseObject.getInt(colCodesMap.get(DOSES_COL_NOTIFY)) == 1;
+                    boolean notifySound = doseObject.getInt(colCodesMap.get(DOSES_COL_NOTIFY_SOUND)) == 1;
+                    cv = new ContentValues();
+                    cv.put(DOSES_COL_MED_ID, medID);
+                    cv.put(DOSES_COL_COUNT, count);
+                    cv.put(DOSES_COL_TAKEN_AT, takenAt);
+                    cv.put(DOSES_COL_NOTIFY, notify);
+                    cv.put(DOSES_COL_NOTIFY_SOUND, notifySound);
+                    db.insert(DOSES_TABLE, null, cv);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error importing database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if (cursor != null) cursor.close();
         db.close();
     }
 }

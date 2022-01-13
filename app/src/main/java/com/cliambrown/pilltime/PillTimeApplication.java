@@ -7,12 +7,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +57,7 @@ public class PillTimeApplication extends Application {
     }
 
     public void clearMeds() {
-        dbHelper.deleteDB();
+        dbHelper.clearDB();
         meds.clear();
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DB_CLEARED");
@@ -334,5 +336,21 @@ public class PillTimeApplication extends Application {
         intent.putExtra("medID", med.getId());
         sendBroadcast(intent);
         repositionMed(med);
+    }
+
+
+    public void importFromUri(Uri uri) {
+        try {
+            String jsonText = Utils.readTextFromUri(uri, context);
+            DbHelper dbHelper = new DbHelper(context);
+            dbHelper.importFromString(jsonText);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error importing database (IO exception)", Toast.LENGTH_SHORT).show();
+        }
+        loadMeds();
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("com.cliambrown.broadcast.DB_CLEARED");
+        sendBroadcast(broadcastIntent);
     }
 }

@@ -109,7 +109,7 @@ public class MedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MedActivity.this, EditDoseActivity.class);
-                intent.putExtra("med_id", medID);
+                intent.putExtra("medID", medID);
                 startActivity(intent);
             }
         });
@@ -290,7 +290,7 @@ public class MedActivity extends AppCompatActivity {
                 return true;
             case R.id.mi_med_add:
                 intent = new Intent(MedActivity.this, EditDoseActivity.class);
-                intent.putExtra("med_id", medID);
+                intent.putExtra("medID", medID);
                 startActivity(intent);
                 return true;
             case R.id.mi_med_settings:

@@ -99,8 +99,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                         switch (menuItem.getItemId()) {
                             case R.id.mi_dose_option_edit:
                                 Intent intent = new Intent(context, EditDoseActivity.class);
-                                intent.putExtra("med_id", holder.dose.getMedID());
-                                intent.putExtra("dose_id", holder.dose.getId());
+                                intent.putExtra("medID", holder.dose.getMedID());
+                                intent.putExtra("doseID", holder.dose.getId());
                                 context.startActivity(intent);
                                 return true;
                             case R.id.mi_dose_option_delete:

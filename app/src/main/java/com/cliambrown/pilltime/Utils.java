@@ -1,11 +1,18 @@
 package com.cliambrown.pilltime;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.format.DateUtils;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
 
@@ -42,5 +49,19 @@ public class Utils {
 
     public static int getResourceIdentifier(Context context, String name, String type) {
         return context.getResources().getIdentifier(name, type, context.getPackageName());
+    }
+
+    public static String readTextFromUri(Uri uri, Context context) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (InputStream inputStream =
+                     context.getContentResolver().openInputStream(uri);
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+        return stringBuilder.toString();
     }
 }

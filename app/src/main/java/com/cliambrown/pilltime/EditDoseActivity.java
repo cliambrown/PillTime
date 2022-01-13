@@ -64,8 +64,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
         btn_editDose_save = findViewById(R.id.btn_editDose_save);
 
         Intent intent = getIntent();
-        medID = intent.getIntExtra("med_id", -1);
-        doseID = intent.getIntExtra("dose_id", -1);
+        medID = intent.getIntExtra("medID", -1);
+        doseID = intent.getIntExtra("doseID", -1);
         mApp = (PillTimeApplication) this.getApplication();
         Med med = mApp.getMed(medID);
         Dose dose;
