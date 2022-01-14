@@ -1,10 +1,13 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.notifications;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.cliambrown.pilltime.utilities.DbHelper;
+import com.cliambrown.pilltime.doses.Dose;
 
 import java.util.List;
 

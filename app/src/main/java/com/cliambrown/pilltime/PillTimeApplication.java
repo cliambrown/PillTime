@@ -14,25 +14,31 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.cliambrown.pilltime.utilities.DbHelper;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.meds.Med;
+import com.cliambrown.pilltime.notifications.AlarmBroadcastReceiver;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PillTimeApplication extends Application {
 
-    private static Context context;
+    private Context context;
     DbHelper dbHelper;
     private List<Med> meds = new ArrayList<Med>();
     public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
 
     public void onCreate() {
         super.onCreate();
-        PillTimeApplication.context = getApplicationContext();
+        context = getApplicationContext();
         dbHelper = new DbHelper(context);
         loadMeds();
-        AppCompatDelegate.setDefaultNightMode(ThemeProvider.getThemeFromPrefs(context));
+        AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(context));
         createNotificationChannel();
     }
 
@@ -51,7 +57,7 @@ public class PillTimeApplication extends Application {
                 ++doseCount;
                 if (doseCount >= 20) break;
             }
-            med.updateDoseStatus();
+            med.updateTimes();
         }
 //        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
@@ -86,7 +92,9 @@ public class PillTimeApplication extends Application {
             Toast.makeText(context, "Error saving med", Toast.LENGTH_SHORT).show();
             return false;
         }
-        meds.add(0, med);
+        med.updateTimes();
+        meds.add(med);
+        repositionMed(med);
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.MED_ADDED");
         intent.putExtra("medID", med.getId());
@@ -118,7 +126,7 @@ public class PillTimeApplication extends Application {
             listMed.setMaxDose(med.getMaxDose());
             listMed.setDoseHours(med.getDoseHours());
             listMed.setColor(med.getColor());
-            listMed.updateDoseStatus();
+            listMed.updateTimes();
             Intent intent = new Intent();
             intent.setAction("com.cliambrown.broadcast.MED_EDITED");
             intent.putExtra("medID", medID);
@@ -134,15 +142,11 @@ public class PillTimeApplication extends Application {
         return false;
     }
 
-    public static Context getAppContext() {
-        return PillTimeApplication.context;
-    }
-
-    public boolean removeMedById(int medID) {
+    public void removeMedById(int medID) {
         boolean deleted = dbHelper.deleteMedById(medID);
         if (!deleted) {
             Toast.makeText(context, "Error deleting med", Toast.LENGTH_SHORT).show();
-            return false;
+            return;
         }
         int position = -1;
         for (int i=0; i<meds.size(); ++i) {
@@ -156,9 +160,7 @@ public class PillTimeApplication extends Application {
             intent.setAction("com.cliambrown.broadcast.MED_REMOVED");
             intent.putExtra("medID", medID);
             sendBroadcast(intent);
-            return true;
         }
-        return false;
     }
 
     public boolean addDose(Med med, Dose dose) {
@@ -172,7 +174,7 @@ public class PillTimeApplication extends Application {
         scheduleNotification(med, dose);
 
         med.addDose(dose);
-        med.updateDoseStatus();
+        med.updateTimes();
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
         intent.putExtra("medID", med.getId());
@@ -241,8 +243,8 @@ public class PillTimeApplication extends Application {
             Toast.makeText(context, "Error updating dose", Toast.LENGTH_SHORT).show();
             return false;
         }
-        med.updateDoseStatus();
-        dose.updateDoseStatus(med);
+        med.updateTimes();
+        dose.updateTimes(med);
         int fromPosition = med.setDose(dose);
         int toPosition = med.repositionDose(dose, fromPosition);
         Intent intent = new Intent();
@@ -281,7 +283,7 @@ public class PillTimeApplication extends Application {
             }
             if (position > -1) {
                 doses.remove(position);
-                med.updateDoseStatus();
+                med.updateTimes();
                 Intent intent = new Intent();
                 intent.setAction("com.cliambrown.broadcast.DOSE_REMOVED");
                 intent.putExtra("medID", medID);
@@ -302,7 +304,7 @@ public class PillTimeApplication extends Application {
             doseIDs.add(dose.getId());
             if (doseIDs.size() >= 20) break;
         }
-        med.updateDoseStatus();
+        med.updateTimes();
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DOSES_ADDED");
         intent.putExtra("medID", med.getId());
@@ -330,7 +332,7 @@ public class PillTimeApplication extends Application {
     public void removeDoseAndOlder(Med med, Dose dose) {
         dbHelper.removeDoseAndOlder(med, dose);
         med.removeDoseAndOlder(dose);
-        med.updateDoseStatus();
+        med.updateTimes();
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DOSES_REMOVED");
         intent.putExtra("medID", med.getId());

@@ -1,16 +1,11 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.meds;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Random;
 
 public class EditMedActivity extends SimpleMenuActivity {
@@ -48,7 +42,6 @@ public class EditMedActivity extends SimpleMenuActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_med);
 
@@ -100,7 +93,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                 48,
                 getResources().getDisplayMetrics()
         );
-        int btnText = ThemeProvider.getThemeAttr(R.attr.buttonText, this);
+        int btnText = ThemeHelper.getThemeAttr(R.attr.buttonText, this);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(dp48, dp48);
 
         for (String colorName : colors) {

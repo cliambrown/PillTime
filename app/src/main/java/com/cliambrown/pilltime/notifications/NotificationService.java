@@ -1,15 +1,22 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 import static com.cliambrown.pilltime.PillTimeApplication.CHANNEL_ID;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.MedActivity;
+import com.cliambrown.pilltime.utilities.DbHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.meds.Med;
 
 import java.util.Locale;
 
@@ -17,6 +24,7 @@ public class NotificationService extends Service {
     public NotificationService() {
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -59,7 +67,12 @@ public class NotificationService extends Service {
 
         Intent deleteIntent = new Intent(this, NotificationService.class);
         deleteIntent.putExtra("cancel", true);
-        PendingIntent pendingDeleteIntent = PendingIntent.getService(this, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingDeleteIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingDeleteIntent = PendingIntent.getService(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingDeleteIntent = PendingIntent.getService(this, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
 
         NotificationCompat.Builder publicBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)

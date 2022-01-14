@@ -1,29 +1,22 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.utilities;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.meds.Med;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -473,6 +466,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return rootJsonObject;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void importFromString(String jsonText) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
@@ -487,6 +481,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 String key = keys.next();
                 String val = colCodesObject.getString(key);
                 colCodesMap.put(key, val);
+            }
+
+            if (!colCodesMap.containsKey(MEDS_COL_NAME) ||
+                    colCodesMap.containsKey(MEDS_COL_MAX_DOSE) ||
+                    colCodesMap.containsKey(MEDS_COL_DOSE_HOURS) ||
+                    colCodesMap.containsKey(MEDS_COL_COLOR)) {
+                throw new Exception("Missing column code");
             }
 
             JSONArray medsArray = rootJsonObject.getJSONArray("meds");

@@ -13,18 +13,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/ThemeSplash">
+        android:theme="@style/ThemePillTime">
         <service
-            android:name=".NotificationService"
+            android:name=".notifications.NotificationService"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name=".AlarmBroadcastReceiver"
+            android:name=".notifications.AlarmBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".BootReceiver"
+            android:name=".notifications.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -33,20 +33,20 @@
         </receiver>
 
         <activity
-            android:name=".SimpleMenuActivity"
+            android:name=".utilities.SimpleMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".EditDoseActivity"
+            android:name=".doses.EditDoseActivity"
             android:exported="false" />
         <activity
-            android:name=".MedActivity"
+            android:name=".meds.MedActivity"
             android:exported="false" />
         <activity
-            android:name=".EditMedActivity"
+            android:name=".meds.EditMedActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

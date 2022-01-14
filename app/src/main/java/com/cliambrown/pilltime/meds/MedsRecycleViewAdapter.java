@@ -1,14 +1,9 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.meds;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +14,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.cliambrown.pilltime.doses.EditDoseActivity;
+import com.cliambrown.pilltime.doses.Dose;
+
 import java.util.List;
+import java.util.Locale;
 
 public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleViewAdapter.MedViewHolder> {
 
@@ -84,33 +84,35 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         Intent intent;
-                        switch (menuItem.getItemId()) {
-                            case R.id.mi_med_option_edit:
-                                intent = new Intent(context, EditMedActivity.class);
-                                intent.putExtra("id", medID);
-                                context.startActivity(intent);
-                                return true;
-                            case R.id.mi_med_option_history:
-                                intent = new Intent(context, MedActivity.class);
-                                intent.putExtra("id", medID);
-                                context.startActivity(intent);
-                                return true;
-                            case R.id.mi_med_option_delete:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setMessage(R.string.dialog_delete_item)
-                                        .setTitle(R.string.delete)
-                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                mApp.removeMedById(medID);
-                                                MedsRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.show();
+                        int itemID = menuItem.getItemId();
+                        if (itemID == R.id.mi_med_option_edit) {
+                            intent = new Intent(context, EditMedActivity.class);
+                            intent.putExtra("id", medID);
+                            context.startActivity(intent);
+                            return true;
+                        }
+                        if (itemID == R.id.mi_med_option_history) {
+                            intent = new Intent(context, MedActivity.class);
+                            intent.putExtra("id", medID);
+                            context.startActivity(intent);
+                            return true;
+                        }
+                        if (itemID == R.id.mi_med_option_delete) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage(R.string.dialog_delete_item)
+                                    .setTitle(R.string.delete)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            mApp.removeMedById(medID);
+                                            MedsRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.show();
                         }
                         return false;
                     }
@@ -121,6 +123,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         });
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     @Override
     public void onBindViewHolder(@NonNull MedViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
@@ -150,6 +153,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         TextView tv_rvMed_currentTotalDoseCount;
         TextView tv_rvMed_takenInPast;
         TextView tv_rvMed_latestDoseExpiresIn;
+        TextView tv_rvMed_lastTaken;
         ImageButton btn_rvMed_more;
         Med med;
         Context context;
@@ -163,18 +167,19 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             tv_rvMed_currentTotalDoseCount = itemView.findViewById(R.id.tv_rvMed_currentTotalDoseCount);
             tv_rvMed_takenInPast = itemView.findViewById(R.id.tv_rvMed_takenInPast);
             tv_rvMed_latestDoseExpiresIn = itemView.findViewById(R.id.tv_rvMed_latestDoseExpiresIn);
+            tv_rvMed_lastTaken = itemView.findViewById(R.id.tv_rvMed_lastTaken);
             btn_rvMed_more = itemView.findViewById(R.id.btn_rvMed_more);
         }
 
         public void updateTimes() {
             if (med == null) return;
-            med.updateDoseStatus();
+            med.updateTimes();
             double currentTotalDoseCount = med.getCurrentTotalDoseCount();
             tv_rvMed_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
             if (currentTotalDoseCount >= (long) med.getMaxDose()) {
-                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.redText, context));
+                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, context));
             } else {
-                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.textColorPrimary, context));
+                tv_rvMed_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.textColorPrimary, context));
             }
             Dose latestDose = med.getLatestDose();
             if (latestDose == null || currentTotalDoseCount == 0) {
@@ -184,6 +189,13 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                 tv_rvMed_latestDoseExpiresIn.setText(expiresIn);
                 tv_rvMed_latestDoseExpiresIn.setVisibility(View.VISIBLE);
             }
+            String lastTaken;
+            if (latestDose == null) {
+                lastTaken = ": " + context.getString(R.string.never);
+            } else {
+                lastTaken = " " + med.getLastTakenAtStr().toLowerCase(Locale.ROOT);
+            }
+            tv_rvMed_lastTaken.setText(lastTaken);
         }
 
         public void updateInfo() {
@@ -193,7 +205,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             tv_rvMed_name.setText(med.getName());
             String colorName = med.getColor();
             int attrResourceID = Utils.getResourceIdentifier(context, colorName + "Text", "attr");
-            int textColor = ThemeProvider.getThemeAttr(attrResourceID, context);
+            int textColor = ThemeHelper.getThemeAttr(attrResourceID, context);
             try {
                 int drawableID = Utils.getResourceIdentifier(context, "round_button_" + colorName, "drawable");
                 btn_rvMed_add.setBackgroundResource(drawableID);

@@ -1,16 +1,15 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.util.TypedValue;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-public class ThemeProvider {
+import com.cliambrown.pilltime.R;
+
+public class ThemeHelper {
 
     public static int getThemeFromPrefs(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

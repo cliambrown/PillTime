@@ -1,14 +1,18 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.meds;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.format.DateUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.cliambrown.pilltime.doses.Dose;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Med {
 
     private int id;
@@ -16,13 +20,14 @@ public class Med {
     private int maxDose;
     private int doseHours;
     private String color;
-    private List<Dose> doses = new ArrayList<Dose>();
+    private final List<Dose> doses = new ArrayList<Dose>();
     private Context context;
     private boolean hasLoadedAllDoses;
 
     Dose latestDose;
     double currentTotalDoseCount;
     String latestDoseExpiresInStr;
+    String lastTakenAtStr;
 
     public Med(int id, String name, int maxDose, int doseHours, String color, Context context) {
         this.id = id;
@@ -34,6 +39,7 @@ public class Med {
         this.hasLoadedAllDoses = false;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Med{" +
@@ -94,7 +100,7 @@ public class Med {
         return doses;
     }
 
-    public int addDose(Dose dose) {
+    public void addDose(Dose dose) {
         int position = -1;
         int doseID = dose.getId();
         long takenAt = dose.getTakenAt();
@@ -113,10 +119,8 @@ public class Med {
         if (position > -1) {
             doses.add(position, dose);
         } else {
-            position = doses.size();
             doses.add(dose);
         }
-        return position;
     }
 
     public void addDoseToEnd(Dose dose) {
@@ -227,10 +231,6 @@ public class Med {
         return latestDose;
     }
 
-    public void setLatestDose(Dose latestDose) {
-        this.latestDose = latestDose;
-    }
-
     public double getCurrentTotalDoseCount() {
         return currentTotalDoseCount;
     }
@@ -243,16 +243,17 @@ public class Med {
         return latestDoseExpiresInStr;
     }
 
-    public void setLatestDoseExpiresInStr(String latestDoseExpiresInStr) {
-        this.latestDoseExpiresInStr = latestDoseExpiresInStr;
+    public String getLastTakenAtStr() {
+        return lastTakenAtStr;
     }
 
-    public void updateDoseStatus() {
+    public void updateTimes() {
         latestDose = calculateLatestDose();
         currentTotalDoseCount = calculateCurrentTotalDoseCount();
 
         if (latestDose == null) {
             latestDoseExpiresInStr = "";
+            lastTakenAtStr = "never";
         } else {
             double latestDoseCount = latestDose.getCount();
             long expiresAtUnix = latestDose.getTakenAt() + (doseHours * 60L * 60L);
@@ -267,6 +268,12 @@ public class Med {
             if (latestDoseCount < currentTotalDoseCount) {
                 latestDoseExpiresInStr = "x" + Utils.getStrFromDbl(latestDoseCount) + " " + latestDoseExpiresInStr;
             }
+            lastTakenAtStr = DateUtils.getRelativeTimeSpanString(
+                    latestDose.getTakenAt() * 1000L,
+                    System.currentTimeMillis(),
+                    0,
+                    DateUtils.FORMAT_ABBREV_RELATIVE
+            ).toString();
         }
     }
 

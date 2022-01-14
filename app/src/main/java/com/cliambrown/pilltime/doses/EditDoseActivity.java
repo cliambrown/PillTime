@@ -1,4 +1,4 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.doses;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -25,10 +24,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.text.format.DateFormat;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
+import com.cliambrown.pilltime.meds.Med;
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.Utils;
+
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.TimeZone;
 
 public class EditDoseActivity extends SimpleMenuActivity {
 
@@ -36,6 +39,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
     EditText et_editDose_count;
     TextView tv_editDose_takenAtTime;
     TextView tv_editDose_takenAtDate;
+    TextView tv_editDose_timezone;
     SwitchCompat switch_editDose_notify;
     SwitchCompat switch_editDose_notifySound;
     Button btn_editDose_save;
@@ -45,7 +49,6 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dose);
 
@@ -59,6 +62,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         et_editDose_count = findViewById(R.id.et_editDose_count);
         tv_editDose_takenAtTime = findViewById(R.id.tv_editDose_takenAtTime);
         tv_editDose_takenAtDate = findViewById(R.id.tv_editDose_takenAtDate);
+        tv_editDose_timezone = findViewById(R.id.tv_editDose_timezone);
         switch_editDose_notify = findViewById(R.id.switch_editDose_notify);
         switch_editDose_notifySound = findViewById(R.id.switch_editDose_notifySound);
         btn_editDose_save = findViewById(R.id.btn_editDose_save);
@@ -72,13 +76,19 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
         if (med == null) {
             EditDoseActivity.this.finish();
+            return;
         }
 
         selectedDatetime = Calendar.getInstance();
+
+        TimeZone tz = selectedDatetime.getTimeZone();
+        tv_editDose_timezone.setText(tz.getDisplayName());
+
         if (doseID > -1) {
             dose = med.getDoseById(doseID);
             if (dose == null) {
                 EditDoseActivity.this.finish();
+                return;
             }
             setTitle(getString(R.string.edit) + " " + getString(R.string.dose));
             selectedDatetime.setTimeInMillis(dose.getTakenAt() * 1000L);

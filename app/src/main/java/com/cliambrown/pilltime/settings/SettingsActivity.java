@@ -1,18 +1,14 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,16 +17,18 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import org.json.JSONArray;
+import com.cliambrown.pilltime.utilities.DbHelper;
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,7 +46,6 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         if (savedInstanceState == null) {
@@ -124,7 +121,7 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if ("theme".equals(key)) {
-            AppCompatDelegate.setDefaultNightMode(ThemeProvider.getThemeFromPrefs(SettingsActivity.this));
+            AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(SettingsActivity.this));
         }
     }
 
@@ -198,10 +195,10 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

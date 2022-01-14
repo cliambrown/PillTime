@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditDoseActivity">
+    tools:context=".doses.EditDoseActivity">
 
     <LinearLayout
         android:id="@+id/ll_editDose_count"
@@ -69,7 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_weight="0"
         android:text="@string/dose_taken_at"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +93,7 @@
             android:layout_height="48dp"
             android:layout_weight="0"
             android:layout_marginEnd="12dp"
-            android:background="#E8E8E8"
+            android:background="@drawable/clickable_textview"
             android:textColor="@color/gray_700"
             android:gravity="center_horizontal|center_vertical"
             android:paddingStart="12dp"
@@ -106,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="0"
-            android:background="#E8E8E8"
+            android:background="@drawable/clickable_textview"
             android:textColor="@color/gray_700"
             android:gravity="center_horizontal|center_vertical"
             android:paddingStart="12dp"
@@ -114,6 +113,18 @@
             android:textSize="20dp" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_editDose_timezone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="?attr/lightText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtDateTime" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_editDose_notify"
@@ -125,7 +136,7 @@
         android:text="@string/notify_expiring_dose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtDateTime" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editDose_timezone" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_editDose_notifySound"

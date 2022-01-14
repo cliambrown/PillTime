@@ -39,7 +39,7 @@
             app:title="@string/import_data"
             android:summary="@string/import_from_file" />
 
-        <com.cliambrown.pilltime.ClearDbPreference
+        <com.cliambrown.pilltime.settings.ClearDbPreference
             app:key="clearDb"
             app:title="@string/clear_db" />
 

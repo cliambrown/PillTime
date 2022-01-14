@@ -1,4 +1,4 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.meds;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,11 +22,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.cliambrown.pilltime.doses.EditDoseActivity;
+import com.cliambrown.pilltime.settings.SettingsActivity;
+import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.doses.DosesRecycleViewAdapter;
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@SuppressWarnings("rawtypes")
 public class MedActivity extends AppCompatActivity {
 
     TextView tv_med_name;
@@ -36,9 +46,7 @@ public class MedActivity extends AppCompatActivity {
     LinearLayout ll_med_no_doses;
     Button btn_med_no_doses;
 
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     PillTimeApplication mApp;
     Timer timer;
@@ -47,7 +55,6 @@ public class MedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med);
 
@@ -68,7 +75,10 @@ public class MedActivity extends AppCompatActivity {
         mApp = (PillTimeApplication) this.getApplication();
         med = mApp.getMed(medID);
 
-        if (med == null) MedActivity.this.finish();
+        if (med == null) {
+            MedActivity.this.finish();
+            return;
+        }
 
         setTitle(getString(R.string.dose) + " " + getString(R.string.history));
 
@@ -76,15 +86,16 @@ public class MedActivity extends AppCompatActivity {
         updateTimes();
         onUpdateDoses();
 
-        recyclerView = findViewById(R.id.rv_med_doses);
+        RecyclerView recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, mApp);
         recyclerView.setAdapter(mAdapter);
 
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_med);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onRefresh() {
                 mApp.loadMeds();
@@ -116,12 +127,14 @@ public class MedActivity extends AppCompatActivity {
     }
 
     public class MedBroadcastReceiver extends BroadcastReceiver {
+        @SuppressWarnings({"unchecked", "UnnecessaryReturnStatement"})
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action == null) return;
             if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
                 MedActivity.this.finish();
+                return;
             }
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
@@ -217,7 +230,7 @@ public class MedActivity extends AppCompatActivity {
         tv_med_name.setText(med.getName());
         String colorName = med.getColor();
         int attrResourceID = Utils.getResourceIdentifier(MedActivity.this, colorName + "Text", "attr");
-        int textColor = ThemeProvider.getThemeAttr(attrResourceID, MedActivity.this);
+        int textColor = ThemeHelper.getThemeAttr(attrResourceID, MedActivity.this);
         tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfo());
         tv_med_takenInPast.setText(takenInPast);
@@ -225,13 +238,13 @@ public class MedActivity extends AppCompatActivity {
 
     public void updateTimes() {
         if (med == null) return;
-        med.updateDoseStatus();
+        med.updateTimes();
         double currentTotalDoseCount = med.getCurrentTotalDoseCount();
         tv_med_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
         if (currentTotalDoseCount >= (long) med.getMaxDose()) {
-            tv_med_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.redText, MedActivity.this));
+            tv_med_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, MedActivity.this));
         } else {
-            tv_med_currentTotalDoseCount.setTextColor(ThemeProvider.getThemeAttr(R.attr.textColorPrimary, MedActivity.this));
+            tv_med_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.textColorPrimary, MedActivity.this));
         }
         if (mAdapter == null) return;
         for (int i=0; i<med.getDoses().size(); ++i) {
@@ -279,24 +292,27 @@ public class MedActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                MedActivity.this.finish();
-                return true;
-            case R.id.mi_med_edit:
-                intent = new Intent(MedActivity.this, EditMedActivity.class);
-                intent.putExtra("id", medID);
-                startActivity(intent);
-                return true;
-            case R.id.mi_med_add:
-                intent = new Intent(MedActivity.this, EditDoseActivity.class);
-                intent.putExtra("medID", medID);
-                startActivity(intent);
-                return true;
-            case R.id.mi_med_settings:
-                intent = new Intent(MedActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            MedActivity.this.finish();
+            return true;
+        }
+        if (itemID == R.id.mi_med_edit) {
+            intent = new Intent(MedActivity.this, EditMedActivity.class);
+            intent.putExtra("id", medID);
+            startActivity(intent);
+            return true;
+        }
+        if (itemID == R.id.mi_med_add) {
+            intent = new Intent(MedActivity.this, EditDoseActivity.class);
+            intent.putExtra("medID", medID);
+            startActivity(intent);
+            return true;
+        }
+        if (itemID == R.id.mi_med_settings) {
+            intent = new Intent(MedActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

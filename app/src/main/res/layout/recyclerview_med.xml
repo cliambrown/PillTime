@@ -85,6 +85,26 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/last_taken"
+                    android:textColor="?attr/lightText"/>
+
+                <TextView
+                    android:id="@+id/tv_rvMed_lastTaken"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:textColor="?attr/lightText" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <ImageButton

@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -21,6 +21,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.cliambrown.pilltime.meds.EditMedActivity;
+import com.cliambrown.pilltime.settings.SettingsActivity;
+import com.cliambrown.pilltime.meds.Med;
+import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MedsRecycleViewAdapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
     LinearLayout ll_main_no_meds;
     Button btn_main_no_meds;
 
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.ThemePillTime);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rv_main_meds);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MedsRecycleViewAdapter(meds, this, mApp);
         recyclerView.setAdapter(mAdapter);
 
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_main);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onRefresh() {
                 mApp.loadMeds();
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class MainBroadcastReceiver extends BroadcastReceiver {
+        @SuppressWarnings("UnnecessaryReturnStatement")
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mAdapter == null) return;
@@ -106,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i=0; i<meds.size(); ++i) {
                     if (meds.get(i).getId() == medID) {
                         mAdapter.notifyItemInserted(i);
+                        recyclerView.scrollToPosition(i);
                         onUpdateMeds();
                         return;
                     }
@@ -209,18 +216,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                MainActivity.this.finish();
-                return true;
-            case R.id.mi_main_add:
-                intent = new Intent(MainActivity.this, EditMedActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.mi_main_settings:
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            MainActivity.this.finish();
+            return true;
+        }
+        if (itemID == R.id.mi_main_add) {
+            intent = new Intent(MainActivity.this, EditMedActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (itemID == R.id.mi_main_settings) {
+            intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

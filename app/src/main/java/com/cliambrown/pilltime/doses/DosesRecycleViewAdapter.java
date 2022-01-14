@@ -1,11 +1,10 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.doses;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +16,13 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cliambrown.pilltime.PillTimeApplication;
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.cliambrown.pilltime.meds.Med;
 
 import java.util.List;
 
@@ -96,51 +100,53 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         AlertDialog.Builder builder;
-                        switch (menuItem.getItemId()) {
-                            case R.id.mi_dose_option_edit:
-                                Intent intent = new Intent(context, EditDoseActivity.class);
-                                intent.putExtra("medID", holder.dose.getMedID());
-                                intent.putExtra("doseID", holder.dose.getId());
-                                context.startActivity(intent);
-                                return true;
-                            case R.id.mi_dose_option_delete:
-                                builder = new AlertDialog.Builder(context);
-                                builder.setMessage(R.string.dialog_delete_item)
-                                        .setTitle(R.string.delete)
-                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                mApp.removeDose(holder.dose);
-                                                DosesRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.show();
-                                return true;
-                            case R.id.mi_dose_option_delete_and_older:
-                                builder = new AlertDialog.Builder(context);
-                                builder.setMessage(R.string.dialog_delete_item)
-                                        .setTitle(R.string.delete_and_older)
-                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                int position = holder.getAdapterPosition();
-                                                int itemCount = doses.size()- position;
-                                                mApp.removeDoseAndOlder(holder.med, holder.dose);
-                                                DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position, itemCount);
-                                                holder.updateLoadMore();
-                                                DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.show();
-                                return true;
+                        int itemID = menuItem.getItemId();
+                        if (itemID == R.id.mi_dose_option_edit) {
+                            Intent intent = new Intent(context, EditDoseActivity.class);
+                            intent.putExtra("medID", holder.dose.getMedID());
+                            intent.putExtra("doseID", holder.dose.getId());
+                            context.startActivity(intent);
+                            return true;
+                        }
+                        if (itemID == R.id.mi_dose_option_delete) {
+                            builder = new AlertDialog.Builder(context);
+                            builder.setMessage(R.string.dialog_delete_item)
+                                    .setTitle(R.string.delete)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            mApp.removeDose(holder.dose);
+                                            DosesRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.show();
+                            return true;
+                        }
+                        if (itemID == R.id.mi_dose_option_delete_and_older) {
+                            builder = new AlertDialog.Builder(context);
+                            builder.setMessage(R.string.dialog_delete_item)
+                                    .setTitle(R.string.delete_and_older)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            int position = holder.getAdapterPosition();
+                                            int itemCount = doses.size()- position;
+                                            mApp.removeDoseAndOlder(holder.med, holder.dose);
+                                            DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position, itemCount);
+                                            holder.updateLoadMore();
+                                            DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.show();
+                            return true;
                         }
                         return false;
                     }
@@ -207,15 +213,15 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         public void updateTimes() {
             if (dose == null) return;
             if (med == null) return;
-            dose.updateDoseStatus(med);
+            dose.updateTimes(med);
             int textColor;
             int iconID;
             if (dose.isActive()) {
                 iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_filled_24", "drawable");
-                textColor = ThemeProvider.getThemeAttr(R.attr.greenText, context);
+                textColor = ThemeHelper.getThemeAttr(R.attr.greenText, context);
             } else {
                 iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_24", "drawable");
-                textColor = ThemeProvider.getThemeAttr(R.attr.lighterText, context);
+                textColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
                 tv_rvDose_expires.setText(context.getString(R.string.expired));
             }
             long now = System.currentTimeMillis() / 1000L;

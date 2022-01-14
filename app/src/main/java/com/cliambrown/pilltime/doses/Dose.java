@@ -1,12 +1,12 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.doses;
 
 import android.content.Context;
 import android.text.format.DateUtils;
-import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import androidx.annotation.NonNull;
+
+import com.cliambrown.pilltime.meds.Med;
+
 import java.util.Locale;
 
 public class Dose {
@@ -33,6 +33,7 @@ public class Dose {
         this.context = context;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Dose{" +
@@ -119,7 +120,7 @@ public class Dose {
         this.expiresAt = expiresAt;
     }
 
-    public void updateDoseStatus(Med med) {
+    public void updateTimes(Med med) {
         expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
         long now = System.currentTimeMillis() / 1000L;
         isActive = (takenAt <= now && expiresAt > now);

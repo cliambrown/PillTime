@@ -4,6 +4,7 @@
     <attr name="lightText" format="reference|color" />
     <attr name="lighterText" format="reference|color" />
     <attr name="buttonText" format="reference|color" />
+    <attr name="windowBackground" format="reference|color" />
 
     <attr name="redText" format="reference|color" />
     <attr name="orangeText" format="reference|color" />

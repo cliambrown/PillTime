@@ -1,17 +1,15 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.utilities;
 
 import android.content.Context;
 import android.net.Uri;
 import android.text.format.DateUtils;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Objects;
 
 public class Utils {
@@ -26,7 +24,7 @@ public class Utils {
             return string;
         }
 
-        char c[] = string.toCharArray();
+        char[] c = string.toCharArray();
         c[0] = Character.toLowerCase(c[0]);
 
         return new String(c);

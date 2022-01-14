@@ -1,4 +1,4 @@
-package com.cliambrown.pilltime;
+package com.cliambrown.pilltime.utilities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.settings.SettingsActivity;
 
 public class SimpleMenuActivity extends AppCompatActivity {
 
@@ -20,14 +23,15 @@ public class SimpleMenuActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                SimpleMenuActivity.this.finish();
-                return true;
-            case R.id.mi_main_settings:
-                intent = new Intent(SimpleMenuActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            SimpleMenuActivity.this.finish();
+            return true;
+        }
+        if (itemID == R.id.mi_main_settings) {
+            intent = new Intent(SimpleMenuActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
