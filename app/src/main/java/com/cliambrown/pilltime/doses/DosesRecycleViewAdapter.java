@@ -185,13 +185,14 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     }
 
     public static class DoseViewHolder extends RecyclerView.ViewHolder {
+        ImageView iv_rvDose_clock;
+        ImageView iv_rvDose_notification;
         TextView tv_rvDose_count;
-        TextView tv_rvDose_takenAt;
-        TextView tv_rvDose_takenAtTimeAgo;
-        ImageView iv_rvDose_active;
         TextView tv_rvDose_expires;
         TextView tv_rvDose_expiresAt;
         TextView tv_rvDose_expiresAtTimeAgo;
+        TextView tv_rvDose_takenAt;
+        TextView tv_rvDose_takenAtTimeAgo;
         ImageButton btn_rvDose_more;
         Button btn_med_loadMore;
         Dose dose;
@@ -200,13 +201,14 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
         public DoseViewHolder(@NonNull View itemView) {
             super(itemView);
+            iv_rvDose_clock = itemView.findViewById(R.id.iv_rvDose_clock);
+            iv_rvDose_notification = itemView.findViewById(R.id.iv_rvDose_notification);
             tv_rvDose_count = itemView.findViewById(R.id.tv_rvDose_count);
-            tv_rvDose_takenAt = itemView.findViewById(R.id.tv_rvDose_takenAt);
-            tv_rvDose_takenAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_takenAtTimeAgo);
-            iv_rvDose_active = itemView.findViewById(R.id.iv_rvDose_active);
             tv_rvDose_expires = itemView.findViewById(R.id.tv_rvDose_expires);
             tv_rvDose_expiresAt = itemView.findViewById(R.id.tv_rvDose_expiresAt);
             tv_rvDose_expiresAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_expiresAtTimeAgo);
+            tv_rvDose_takenAt = itemView.findViewById(R.id.tv_rvDose_takenAt);
+            tv_rvDose_takenAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_takenAtTimeAgo);
             btn_rvDose_more = itemView.findViewById(R.id.btn_rvDose_more);
             btn_med_loadMore = itemView.findViewById(R.id.btn_med_loadMore);
         }
@@ -215,15 +217,32 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             if (dose == null) return;
             if (med == null) return;
             dose.updateTimes(med);
-            int textColor;
-            int iconID;
+            int clockTextColor;
+            int clockIconID;
+            int notifTextColor;
+            int notifIconID;
             if (dose.isActive()) {
-                iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_filled_24", "drawable");
-                textColor = ThemeHelper.getThemeAttr(R.attr.greenText, context);
+                clockIconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_filled_24", "drawable");
+                clockTextColor = ThemeHelper.getThemeAttr(R.attr.greenText, context);
+                if (dose.getNotify()) {
+                    notifTextColor = ThemeHelper.getThemeAttr(R.attr.cyanText, context);
+                    if (dose.getNotifySound()) {
+                        notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_active_24", "drawable");
+                    } else {
+                        notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_24", "drawable");
+                    }
+                } else {
+                    notifTextColor = ThemeHelper.getThemeAttr(R.attr.lightText, context);
+                    notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_off_24", "drawable");
+                }
+                iv_rvDose_notification.setImageResource(notifIconID);
+                iv_rvDose_notification.setColorFilter(notifTextColor);
+                iv_rvDose_notification.setVisibility(View.VISIBLE);
             } else {
-                iconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_24", "drawable");
-                textColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
+                clockIconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_24", "drawable");
+                clockTextColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
                 tv_rvDose_expires.setText(context.getString(R.string.expired));
+                iv_rvDose_notification.setVisibility(View.GONE);
             }
             long now = System.currentTimeMillis() / 1000L;
             if (dose.getExpiresAt() > now) {
@@ -231,8 +250,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             } else {
                 tv_rvDose_expires.setText(context.getString(R.string.expired));
             }
-            iv_rvDose_active.setImageResource(iconID);
-            iv_rvDose_active.setColorFilter(textColor);
+            iv_rvDose_clock.setImageResource(clockIconID);
+            iv_rvDose_clock.setColorFilter(clockTextColor);
             tv_rvDose_takenAtTimeAgo.setText(dose.getTakenAtTimeAgo());
             tv_rvDose_expiresAtTimeAgo.setText(dose.getExpiresAtTimeAgo());
         }
