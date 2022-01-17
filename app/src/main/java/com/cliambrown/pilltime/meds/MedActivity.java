@@ -46,7 +46,8 @@ public class MedActivity extends AppCompatActivity {
     LinearLayout ll_med_no_doses;
     Button btn_med_no_doses;
 
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView recyclerView;
+    private DosesRecycleViewAdapter mAdapter;
 
     PillTimeApplication mApp;
     Timer timer;
@@ -86,7 +87,7 @@ public class MedActivity extends AppCompatActivity {
         updateTimes();
         onUpdateDoses();
 
-        RecyclerView recyclerView = findViewById(R.id.rv_med_doses);
+        recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -179,6 +180,7 @@ public class MedActivity extends AppCompatActivity {
                 for (int i=0; i<doses.size(); ++i) {
                     if (doses.get(i).getId() == doseID) {
                         mAdapter.notifyItemInserted(i);
+                        recyclerView.scrollToPosition(i);
                         break;
                     }
                 }

@@ -93,8 +93,20 @@ public class PillTimeApplication extends Application {
             return false;
         }
         med.updateTimes();
-        meds.add(med);
-        repositionMed(med);
+        Med listMed;
+        int position = -1;
+        for (int i=0; i<meds.size(); ++i) {
+            listMed = meds.get(i);
+            if (med.sortBefore(listMed)) {
+                position = i;
+                break;
+            }
+        }
+        if (position == -1) {
+            meds.add(med);
+        } else {
+            meds.add(position, med);
+        }
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.MED_ADDED");
         intent.putExtra("medID", med.getId());

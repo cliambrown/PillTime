@@ -484,9 +484,13 @@ public class DbHelper extends SQLiteOpenHelper {
             }
 
             if (!colCodesMap.containsKey(MEDS_COL_NAME) ||
-                    colCodesMap.containsKey(MEDS_COL_MAX_DOSE) ||
-                    colCodesMap.containsKey(MEDS_COL_DOSE_HOURS) ||
-                    colCodesMap.containsKey(MEDS_COL_COLOR)) {
+                    !colCodesMap.containsKey(MEDS_COL_MAX_DOSE) ||
+                    !colCodesMap.containsKey(MEDS_COL_DOSE_HOURS) ||
+                    !colCodesMap.containsKey(MEDS_COL_COLOR) ||
+                    !colCodesMap.containsKey(DOSES_COL_COUNT) ||
+                    !colCodesMap.containsKey(DOSES_COL_TAKEN_AT) ||
+                    !colCodesMap.containsKey(DOSES_COL_NOTIFY) ||
+                    !colCodesMap.containsKey(DOSES_COL_NOTIFY_SOUND)) {
                 throw new Exception("Missing column code");
             }
 
