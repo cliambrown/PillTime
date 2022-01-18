@@ -78,7 +78,12 @@ public class NotificationService extends Service {
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)
                 .setContentTitle(publicTitle)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .setSilent(!dose.getNotifySound())
+                .setDeleteIntent(pendingDeleteIntent);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)
