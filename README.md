@@ -4,6 +4,8 @@
 
 * No ads or trackers of any kind
 * Free and open source
+* Enter your custom meds and their dosage limitations
+* Enter
 * Light and dark themes
 
 Made by [C. Liam Brown](https://cliambrown.com).
@@ -24,7 +26,7 @@ The full privacy policy is available <a href="https://github.com/cliambrown/Pill
 
 ## Screenshots
 
-coming soon
+<a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_1.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_1.png" width="200px" alt="Screenshot 1"></a> <a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_2.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_2.png" width="200px" alt="Screenshot 2"></a> <a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_3.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_3.png" width="200px" alt="Screenshot 3"></a> <a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_4.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_4.png" width="200px" alt="Screenshot 4"></a> <a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_5.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_5.png" width="200px" alt="Screenshot 5"></a> <a href="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_6.png"><img src="https://raw.githubusercontent.com/cliambrown/EasyNoise/master/easy_noise_screenshot_6.png" width="200px" alt="Screenshot 6"></a>
 
 ## Installation for development
 
