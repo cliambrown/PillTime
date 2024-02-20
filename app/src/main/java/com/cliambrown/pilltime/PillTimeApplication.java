@@ -1,5 +1,7 @@
 package com.cliambrown.pilltime;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -200,7 +202,12 @@ public class PillTimeApplication extends Application {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra("doseID", dose.getId());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, 0);
+        PendingIntent pendingIntent = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, 0);
+        }
         am.cancel(pendingIntent);
         if (!dose.getNotify() || med == null) return;
         long now = System.currentTimeMillis();

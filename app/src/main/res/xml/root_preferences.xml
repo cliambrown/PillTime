@@ -6,11 +6,13 @@
         <SwitchPreferenceCompat
             app:key="notify_default"
             app:title="@string/notify_expiring_dose"
+            app:singleLineTitle="false"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
             app:key="notify_sound_default"
             app:title="@string/notification_sound"
+            app:singleLineTitle="false"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
@@ -42,6 +44,20 @@
         <com.cliambrown.pilltime.settings.ClearDbPreference
             app:key="clearDb"
             app:title="@string/clear_db" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/about_app">
+
+        <Preference
+            app:key="export"
+            app:title="@string/info_link_title"
+            android:summary="https://github.com/cliambrown/PillTime">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/cliambrown/PillTime"
+                android:title="App repo on GitHub"/>
+        </Preference>
 
     </PreferenceCategory>
 

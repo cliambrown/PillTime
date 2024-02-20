@@ -36,6 +36,27 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/tv_main_disclaimer_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="20dp"
+            android:text="@string/disclaimer_title"
+            android:textAlignment="textStart"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tv_main_disclaimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="50dp"
+            android:text="@string/disclaimer"
+            android:textAlignment="textStart" />
+
+        <TextView
             android:id="@+id/tv_main_no_meds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

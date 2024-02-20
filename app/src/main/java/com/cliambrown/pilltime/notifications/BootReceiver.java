@@ -1,10 +1,13 @@
 package com.cliambrown.pilltime.notifications;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.doses.Dose;
@@ -22,7 +25,12 @@ public class BootReceiver extends BroadcastReceiver {
             for (Dose dose : activeDoses) {
                 Intent alarmIntent = new Intent(context, AlarmBroadcastReceiver.class);
                 alarmIntent.putExtra("doseID", dose.getId());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, 0);
+                PendingIntent pendingIntent = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, FLAG_IMMUTABLE);
+                } else {
+                    pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, 0);
+                }
                 long triggerAtMillis = dose.getExpiresAt() * 1000L;
                 am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
             }

@@ -19,7 +19,7 @@ public class ThemeHelper {
     }
 
     public static int getTheme(Context context, String themeStr) {
-        if (themeStr.equals(context.getString(R.string.theme_value_light))) {
+        if (themeStr.equals(context.getString(R.string.theme_value_dark))) {
             return AppCompatDelegate.MODE_NIGHT_YES;
         }
         if (themeStr.equals(context.getString(R.string.theme_value_light))) {
