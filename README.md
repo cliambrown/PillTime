@@ -1,6 +1,13 @@
+<p align="center"><img src="https://raw.githubusercontent.com/cliambrown/PillTime/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"></a></p>
+
 <h2 align="center"><b>Pill Time</b></h2>
 
 <h4 align="center">A simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).</h4>
+
+<p align="center">
+    <a href="https://github.com/cliambrown/PillTime/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/cliambrown/PillTime"></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
+</p>
 
 * No ads or trackers of any kind
 * Free and open source
