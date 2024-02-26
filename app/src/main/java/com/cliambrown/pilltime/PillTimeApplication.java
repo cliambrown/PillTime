@@ -203,11 +203,7 @@ public class PillTimeApplication extends Application {
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra("doseID", dose.getId());
         PendingIntent pendingIntent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, 0);
-        }
+        pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
         am.cancel(pendingIntent);
         if (!dose.getNotify() || med == null) return;
         long now = System.currentTimeMillis();

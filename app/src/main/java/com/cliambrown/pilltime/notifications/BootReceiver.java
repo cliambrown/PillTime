@@ -26,11 +26,7 @@ public class BootReceiver extends BroadcastReceiver {
                 Intent alarmIntent = new Intent(context, AlarmBroadcastReceiver.class);
                 alarmIntent.putExtra("doseID", dose.getId());
                 PendingIntent pendingIntent = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, FLAG_IMMUTABLE);
-                } else {
-                    pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, 0);
-                }
+                pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), alarmIntent, FLAG_IMMUTABLE);
                 long triggerAtMillis = dose.getExpiresAt() * 1000L;
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
             }
