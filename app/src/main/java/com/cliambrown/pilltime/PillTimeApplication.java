@@ -213,7 +213,7 @@ public class PillTimeApplication extends Application {
         long now = System.currentTimeMillis();
         long triggerAtMillis = (dose.getTakenAt() + (med.getDoseHours() * 60L * 60L)) * 1000L;
         if (triggerAtMillis < now) return;
-        am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
     }
 
     public void repositionMed(Med med) {

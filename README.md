@@ -5,7 +5,7 @@
 * No ads or trackers of any kind
 * Free and open source
 * Enter your custom meds and their dosage limitations
-* Enter
+* Receive a notification when a dose expires
 * Light and dark themes
 
 Made by [C. Liam Brown](https://cliambrown.com).
