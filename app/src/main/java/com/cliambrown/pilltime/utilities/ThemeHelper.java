@@ -34,7 +34,7 @@ public class ThemeHelper {
         if (usingDarkMode(context)) {
             return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
         }
-        return AppCompatDelegate.MODE_NIGHT_NO;
+        return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
     }
 
     public static int getThemeAttr(int attr, Context context) {
