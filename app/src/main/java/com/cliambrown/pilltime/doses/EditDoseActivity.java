@@ -1,11 +1,15 @@
 package com.cliambrown.pilltime.doses;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -46,6 +50,11 @@ public class EditDoseActivity extends SimpleMenuActivity {
     PillTimeApplication mApp;
     int medID, doseID;
     Calendar selectedDatetime;
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (!isGranted) switch_editDose_notify.setChecked(false);
+        });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +111,13 @@ public class EditDoseActivity extends SimpleMenuActivity {
         switch_editDose_notifySound.setChecked(dose.getNotifySound());
         switch_editDose_notifySound.setEnabled(dose.getNotify());
 
+        handleNotifyPermissions();
+
         switch_editDose_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 switch_editDose_notifySound.setEnabled(isChecked);
+                handleNotifyPermissions();
             }
         });
 
@@ -175,6 +187,16 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 EditDoseActivity.this.finish();
             }
         });
+    }
+
+    private void handleNotifyPermissions() {
+        if (switch_editDose_notify.isChecked()) {
+            boolean notificationsEnabled = mApp.areNotificationsEnabled();
+            if (!notificationsEnabled) {
+                String[] permissions = {"android.permission.POST_NOTIFICATIONS"};
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     private void incrementCount(double changeBy) {

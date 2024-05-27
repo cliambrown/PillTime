@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PillTimeApplication extends Application {
 
@@ -200,8 +202,13 @@ public class PillTimeApplication extends Application {
 
     public void scheduleNotification(Med med, Dose dose) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra("doseID", dose.getId());
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("medName", med.getName());
+        intent.putExtra("setSilent", !dose.getNotifySound());
+
         PendingIntent pendingIntent = null;
         pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
         am.cancel(pendingIntent);
@@ -209,7 +216,8 @@ public class PillTimeApplication extends Application {
         long now = System.currentTimeMillis();
         long triggerAtMillis = (dose.getTakenAt() + (med.getDoseHours() * 60L * 60L)) * 1000L;
         if (triggerAtMillis < now) return;
-        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+//        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
     }
 
     public void repositionMed(Med med) {
@@ -369,5 +377,17 @@ public class PillTimeApplication extends Application {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("com.cliambrown.broadcast.DB_CLEARED");
         sendBroadcast(broadcastIntent);
+    }
+
+    public boolean areNotificationsEnabled() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!manager.areNotificationsEnabled()) return false;
+            NotificationChannel channel = manager.getNotificationChannel(CHANNEL_ID);
+            if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) return false;
+            return true;
+        } else {
+            return NotificationManagerCompat.from(context).areNotificationsEnabled();
+        }
     }
 }

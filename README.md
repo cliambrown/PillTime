@@ -21,7 +21,7 @@ Made by [C. Liam Brown](https://cliambrown.com).
 
 This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.
 
-This is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone will unfortunately disable all future notifications from this app.)
+This is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)
 
 This app is not appropriate for meds that need to be taken regularly on a set schedule. It was built to track meds that may be taken when needed, but in limited amounts.
 

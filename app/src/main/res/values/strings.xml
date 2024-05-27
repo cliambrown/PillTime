@@ -71,7 +71,7 @@
     <string name="rose">Rose</string>
 
     <string name="disclaimer_title">Disclaimer</string>
-    <string name="disclaimer">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.\n\nThis is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone will unfortunately disable all future notifications from this app.)</string>
+    <string name="disclaimer">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.\n\nThis is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
 
     <string name="no_meds">No meds found.</string>
     <string name="add_med">Add a Med</string>
