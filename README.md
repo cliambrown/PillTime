@@ -1,8 +1,13 @@
-<p align="center"><img src="https://raw.githubusercontent.com/cliambrown/PillTime/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"></a></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_launcher.png"></a></p>
 
 <h2 align="center"><b>Pill Time</b></h2>
 
 <h4 align="center">A simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).</h4>
+
+<p align="center">
+<!-- <a href="https://www.f-droid.org/en/packages/com.cliambrown.easynoise/"><img alt='Get it on F-Droid' width="200px" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"/></a> -->
+<a href="https://play.google.com/store/apps/details?id=com.cliambrown.pilltime"><img alt='Get it on Google Play' width="200px" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"/></a>
+</p>
 
 <p align="center">
     <a href="https://github.com/cliambrown/PillTime/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/cliambrown/PillTime"></a>
