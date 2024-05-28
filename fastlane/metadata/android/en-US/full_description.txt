@@ -1,0 +1,7 @@
+No ads or trackers of any kind.
+Free and open source.
+Enter your custom meds and their dosage limitations.
+Receive a notification when a dose expires.
+Light and dark themes.
+
+The full source code is available at https://github.com/cliambrown/PillTime

@@ -1,0 +1,2 @@
+- Removed exact alarm permission
+- Request notification permissions when required, if missing
