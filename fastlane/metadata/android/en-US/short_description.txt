@@ -1,1 +1,1 @@
-A simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).
+Keep track of meds that can be taken as needed (not at a specific time)
