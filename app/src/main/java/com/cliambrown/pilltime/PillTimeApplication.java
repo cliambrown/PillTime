@@ -288,7 +288,6 @@ public class PillTimeApplication extends Application {
 
     public void removeDose(Dose dose) {
         dose.setNotify(false);
-        scheduleNotification(null, dose);
         int medID = dose.getMedID();
         int doseID = dose.getId();
         dbHelper.deleteDoseById(doseID);
@@ -297,6 +296,7 @@ public class PillTimeApplication extends Application {
         for (int i=0; i<meds.size(); ++i) {
             med = meds.get(i);
             if (med.getId() != medID) continue;
+            scheduleNotification(med, dose);
             doses = med.getDoses();
             int position = -1;
             for (int j=0; j<doses.size(); ++j) {

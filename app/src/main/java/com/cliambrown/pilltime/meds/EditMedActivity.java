@@ -145,6 +145,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                     boolean edited = mApp.setMed(med);
                     if (!edited) return;
                 } else {
+                    med.setHasLoadedAllDoses(true);
                     boolean added = mApp.addMed(med);
                     if (!added) return;
                 }

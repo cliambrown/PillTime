@@ -2,6 +2,7 @@ package com.cliambrown.pilltime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     List<Med> meds;
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @SuppressLint({"UnspecifiedRegisterReceiverFlag", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +89,12 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
         filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
 
+        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
+        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
+        // HOWEVER the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
+        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            this.registerReceiver(br, filter, RECEIVER_NOT_EXPORTED);
+            this.registerReceiver(br, filter, RECEIVER_EXPORTED);
         } else {
             this.registerReceiver(br, filter);
         }

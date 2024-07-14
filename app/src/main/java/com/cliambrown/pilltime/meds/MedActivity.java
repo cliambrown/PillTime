@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,6 +59,7 @@ public class MedActivity extends AppCompatActivity {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med);
 
@@ -118,8 +120,12 @@ public class MedActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
 
+        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
+        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
+        // HOWEVER the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
+        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            this.registerReceiver(br, filter, RECEIVER_NOT_EXPORTED);
+            this.registerReceiver(br, filter, RECEIVER_EXPORTED);
         } else {
             this.registerReceiver(br, filter);
         }
@@ -138,6 +144,9 @@ public class MedActivity extends AppCompatActivity {
         @SuppressWarnings({"unchecked", "UnnecessaryReturnStatement"})
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            Log.d("cliambrown-debug", "cliambrown-debug-test");
+
             String action = intent.getAction();
             if (action == null) return;
             if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
@@ -223,11 +232,11 @@ public class MedActivity extends AppCompatActivity {
         if (ll_med_no_doses == null) return;
         if (med.getDoses().size() > 0) {
             ll_med_no_doses.setVisibility(View.GONE);
+            if (mAdapter != null) {
+                mAdapter.notifyItemChanged(0, "update_show_more_btn");
+            }
         } else {
             ll_med_no_doses.setVisibility(View.VISIBLE);
-        }
-        if (mAdapter != null) {
-            mAdapter.notifyItemChanged(0, "update_show_more_btn");
         }
     }
 
