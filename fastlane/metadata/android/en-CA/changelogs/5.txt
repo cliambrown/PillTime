@@ -1,0 +1,1 @@
+- Increase targeted Android API, as per Google requirements
