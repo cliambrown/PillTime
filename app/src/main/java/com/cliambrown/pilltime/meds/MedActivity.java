@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -54,6 +55,7 @@ public class MedActivity extends AppCompatActivity {
     int medID;
     Med med;
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +117,12 @@ public class MedActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
-        this.registerReceiver(br, filter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.registerReceiver(br, filter, RECEIVER_NOT_EXPORTED);
+        } else {
+            this.registerReceiver(br, filter);
+        }
 
         btn_med_no_doses.setOnClickListener(new View.OnClickListener() {
             @Override
