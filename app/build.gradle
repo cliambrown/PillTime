@@ -16,6 +16,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Required for F-Droid — https://gitlab.com/fdroid/rfp/-/issues/2765#note_2043665365
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
