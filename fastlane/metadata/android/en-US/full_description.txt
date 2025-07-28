@@ -6,6 +6,9 @@
 
 From the main app screen, see the current status of each med, including total current dose, last time taken, and time until the next dose expires.
 
+* No ads or trackers
+* Light and dark themes
+
 <br><b>DISCLAIMER:</b>
 
 This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.
