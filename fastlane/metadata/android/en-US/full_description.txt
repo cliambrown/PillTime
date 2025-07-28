@@ -1,7 +1,15 @@
-No ads or trackers of any kind.
-Free and open source.
-Enter your custom meds and their dosage limitations.
-Receive a notification when a dose expires.
-Light and dark themes.
+<i>Pill Time</i> is a simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).
 
-The full source code is available at https://github.com/cliambrown/PillTime
+* <b>Enter your meds:</b> choose a name, a colour, and a maximum dosage (e.g. max 2 every 6 hours).
+* <b>Enter your doses</b> (time, date, and amount).
+* Receive a notification when a dose expires.
+
+From the main app screen, see the current status of each med, including total current dose, last time taken, and time until the next dose expires.
+
+<br><b>DISCLAIMER:</b>
+
+This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.
+
+This is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone will unfortunately disable all future notifications from this app.)
+
+This app is not appropriate for meds that need to be taken regularly on a set schedule. It was built to track meds that may be taken when needed, but in limited amounts.
