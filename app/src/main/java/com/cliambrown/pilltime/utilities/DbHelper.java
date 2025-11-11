@@ -290,7 +290,7 @@ public class DbHelper extends SQLiteOpenHelper {
         for (Dose dose : med.getDoses()) {
             doseIDs.add(dose.getId());
         }
-        if (doseIDs.size() > 0) {
+        if (!doseIDs.isEmpty()) {
             String inClause = doseIDs.toString();
             inClause = inClause.replace("[","(");
             inClause = inClause.replace("]",")");
@@ -323,7 +323,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Dose> getActiveDoses() {
         List<Dose> returnList = new ArrayList<Dose>();
-        List<Med> meds = new ArrayList<Med>();
         long now = System.currentTimeMillis() / 1000L;
         SQLiteDatabase db = this.getReadableDatabase();
         // NOTE: using selectionArgs here for now didn't work for some reason

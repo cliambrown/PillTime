@@ -6,8 +6,6 @@
     <string name="max">max</string>
     <string name="max_dose">Max Dose</string>
     <string name="every">every</string>
-    <string name="hours">hours</string>
-    <string name="hours_short">h</string>
     <string name="num_hours"># hours</string>
     <string name="new_med">New Med</string>
     <string name="history">History</string>
@@ -26,6 +24,25 @@
     <string name="expired">expired</string>
     <string name="on">on</string>
     <string name="at">at</string>
+
+    <!-- Example: "expired 10m 43s ago" -->
+    <!-- Example: "expires in 10M 2w" -->
+    <string name="ago">ago</string>
+    <string name="in">in</string>
+    <string name="seconds">seconds</string>
+    <string name="seconds_short">s</string>
+    <string name="minutes">minutes</string>
+    <string name="minutes_short">m</string>
+    <string name="hours">hours</string>
+    <string name="hours_short">h</string>
+    <string name="days">days</string>
+    <string name="days_short">d</string>
+    <string name="weeks">weeks</string>
+    <string name="weeks_short">w</string>
+    <string name="months">months</string>
+    <string name="months_short">M</string>
+    <string name="years">years</string>
+    <string name="years_short">y</string>
 
     <string name="add">Add</string>
     <string name="save">Save</string>
@@ -77,7 +94,13 @@
     <string name="rose">Rose</string>
 
     <string name="disclaimer_title">Disclaimer</string>
-    <string name="disclaimer">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.\n\nThis is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
+    <string name="disclaimer_1">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.</string>
+    <string name="disclaimer_2">This is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
+
+    <string name="dev_decree_title">Notice</string>
+    <string name="dev_decree_notice">Due to terrible new Google policies, this app may soon become difficult or impossible for you to install.\n\nGoogle plans to restrict Android devices from installing any app unless its developer has paid them a fee and submitted government identification documents.</string>
+    <string name="learn_more">Learn More</string>
+    <string name="close">Close</string>
 
     <string name="no_meds">No meds found.</string>
     <string name="add_med">Add a Med</string>

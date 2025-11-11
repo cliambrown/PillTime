@@ -1,0 +1,4 @@
+- Added notice about Google Developer Registration blocking access to the app in future
+- More detail in time intervals (e.g. "expires in 4h 26m" instead of "expires in 4 hrs")
+- When multiple doses are active, the expiry time shown is now the next expiring dose (instead of the last dose taken)
+- New improved adaptive icon

@@ -2,20 +2,26 @@ package com.cliambrown.pilltime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +37,6 @@ import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     PillTimeApplication mApp;
     Timer timer;
+    static SharedPreferences prefs;
 
     List<Med> meds;
 
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         btn_main_no_meds = findViewById(R.id.btn_main_no_meds);
 
         mApp = (PillTimeApplication) this.getApplication();
+        prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         meds = mApp.getMeds();
         onUpdateMeds();
 
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new MedsRecycleViewAdapter(meds, this, mApp);
         recyclerView.setAdapter(mAdapter);
 
-        SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_main);
+        SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swiperefresh_main);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -176,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onUpdateMeds() {
         if (ll_main_no_meds == null) return;
-        if (meds.size() > 0) {
+        if (!meds.isEmpty()) {
             ll_main_no_meds.setVisibility(View.GONE);
         } else {
             ll_main_no_meds.setVisibility(View.VISIBLE);
@@ -212,11 +219,44 @@ public class MainActivity extends AppCompatActivity {
         if (timer != null) timer.cancel();
     }
 
+    public static class DevDecreeDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.dev_decree_title)
+                    .setMessage(R.string.dev_decree_notice)
+                    .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("show_dev_decree_dialog", false);
+                            editor.apply();
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton(R.string.learn_more, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent browserIntent = new Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://f-droid.org/en/2025/09/29/google-developer-registration-decree.html")
+                            );
+                            startActivity(browserIntent);
+                        }
+                    });
+            return builder.create();
+        }
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
         updateTimes();
         startUpdateTimer();
+        boolean showDevDecreeDialog = prefs.getBoolean("show_dev_decree_dialog", true);
+        if (showDevDecreeDialog) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            new DevDecreeDialogFragment().show(fragmentManager, "DEV_DECREE_DIALOG");
+        }
     }
 
     @Override

@@ -1,11 +1,15 @@
-<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_launcher.png"></a></p>
+<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_adaptive.png"></a></p>
 
 <h2 align="center"><b>Pill Time</b></h2>
 
 <h4 align="center">A simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).</h4>
 
+<p>
+    <strong>NOTE:</strong> Due to terrible new Google policies, this app and many others may soon become difficult or impossible for you to install — Google plans to restrict Android devices from installing any app unless its developer has paid them a fee and submitted government identification documents. (And they can still decide to block any app, at any time, for any reason.) More information <a href="https://f-droid.org/en/2025/09/29/google-developer-registration-decree.html">in this F-Droid article</a> or at <a href="https://keepandroidopen.org/">keepandroidopen.org</a>.
+</p>
+
 <p align="center">
-<a href="https://f-droid.org/packages/com.cliambrown.pilltime/"><img alt='Get it on F-Droid' width="200px" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"/></a>
+    <a href="https://f-droid.org/packages/com.cliambrown.pilltime/"><img alt='Get it on F-Droid' width="200px" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"/></a>
 </p>
 
 <p align="center">

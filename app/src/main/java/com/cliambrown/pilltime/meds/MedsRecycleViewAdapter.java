@@ -14,7 +14,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
@@ -25,7 +24,6 @@ import com.cliambrown.pilltime.doses.EditDoseActivity;
 import com.cliambrown.pilltime.doses.Dose;
 
 import java.util.List;
-import java.util.Locale;
 
 public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleViewAdapter.MedViewHolder> {
 
@@ -186,7 +184,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             if (latestDose == null || currentTotalDoseCount == 0) {
                 tv_rvMed_latestDoseExpiresIn.setVisibility(View.GONE);
             } else {
-                String expiresIn = med.getLatestDoseExpiresInStr();
+                String expiresIn = med.getNextExpiringDoseExpiresInStr();
                 tv_rvMed_latestDoseExpiresIn.setText(expiresIn);
                 tv_rvMed_latestDoseExpiresIn.setVisibility(View.VISIBLE);
             }
@@ -194,7 +192,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             if (latestDose == null) {
                 lastTaken = ": " + context.getString(R.string.never);
             } else {
-                lastTaken = " " + med.getLastTakenAtStr().toLowerCase(Locale.ROOT);
+                lastTaken = " " + med.getLastTakenAtStr();
             }
             tv_rvMed_lastTaken.setText(lastTaken);
         }

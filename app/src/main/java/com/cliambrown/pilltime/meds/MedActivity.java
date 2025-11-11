@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -98,7 +97,7 @@ public class MedActivity extends AppCompatActivity {
         mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, mApp);
         recyclerView.setAdapter(mAdapter);
 
-        SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_med);
+        SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swiperefresh_med);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -144,8 +143,6 @@ public class MedActivity extends AppCompatActivity {
         @SuppressWarnings({"unchecked", "UnnecessaryReturnStatement"})
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            Log.d("cliambrown-debug", "cliambrown-debug-test");
 
             String action = intent.getAction();
             if (action == null) return;
@@ -230,7 +227,7 @@ public class MedActivity extends AppCompatActivity {
 
     public void onUpdateDoses() {
         if (ll_med_no_doses == null) return;
-        if (med.getDoses().size() > 0) {
+        if (!med.getDoses().isEmpty()) {
             ll_med_no_doses.setVisibility(View.GONE);
             if (mAdapter != null) {
                 mAdapter.notifyItemChanged(0, "update_show_more_btn");
@@ -276,11 +273,7 @@ public class MedActivity extends AppCompatActivity {
         TimerTask doAsynchronousTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        updateTimes();
-                    }
-                });
+                handler.post(MedActivity.this::updateTimes);
             }
         };
         timer.schedule(doAsynchronousTask, 60000, 60000); // once every minute

@@ -1,13 +1,11 @@
 package com.cliambrown.pilltime.doses;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 
 import com.cliambrown.pilltime.meds.Med;
-
-import java.util.Locale;
+import com.cliambrown.pilltime.utilities.Utils;
 
 public class Dose {
 
@@ -64,16 +62,8 @@ public class Dose {
 
     public double getCount() { return count; }
 
-    public void setCount(double count) {
-        this.count = count;
-    }
-
     public long getTakenAt() {
         return takenAt;
-    }
-
-    public void setTakenAt(long takenAt) {
-        this.takenAt = takenAt;
     }
 
     public Context getContext() {
@@ -100,10 +90,6 @@ public class Dose {
         return notifySound;
     }
 
-    public void setNotifySound(boolean notifySound) {
-        this.notifySound = notifySound;
-    }
-
     public String getTakenAtTimeAgo() {
         return takenAtTimeAgo;
     }
@@ -124,17 +110,7 @@ public class Dose {
         expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
         long now = System.currentTimeMillis() / 1000L;
         isActive = (takenAt <= now && expiresAt > now);
-        takenAtTimeAgo = DateUtils.getRelativeTimeSpanString(
-                takenAt * 1000L,
-                System.currentTimeMillis(),
-                0,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            ).toString().toLowerCase(Locale.ROOT);
-        expiresAtTimeAgo = DateUtils.getRelativeTimeSpanString(
-                expiresAt * 1000L,
-                System.currentTimeMillis(),
-                0,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-        ).toString().toLowerCase(Locale.ROOT);
+        takenAtTimeAgo = Utils.getRelativeTimeSpanString(context, takenAt);
+        expiresAtTimeAgo = Utils.getRelativeTimeSpanString(context, expiresAt);
     }
 }

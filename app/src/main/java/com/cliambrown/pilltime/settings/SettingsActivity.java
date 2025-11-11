@@ -1,17 +1,12 @@
 package com.cliambrown.pilltime.settings;
 
-import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
@@ -75,8 +70,10 @@ public class SettingsActivity extends AppCompatActivity
                         Intent intent = result.getData();
                         if (intent == null) return;
                         Uri uri = intent.getData();
+                        if (uri == null) return;
                         try {
                             ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "w");
+                            assert pfd != null;
                             FileOutputStream fileOutputStream =
                                     new FileOutputStream(pfd.getFileDescriptor());
                             DbHelper dbHelper = new DbHelper(SettingsActivity.this);
@@ -88,6 +85,9 @@ public class SettingsActivity extends AppCompatActivity
                             }
                             fileOutputStream.close();
                             pfd.close();
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast.makeText(SettingsActivity.this, "Error exporting database (null pointer exception)", Toast.LENGTH_SHORT).show();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                             Toast.makeText(SettingsActivity.this, "Error exporting database (file not found)", Toast.LENGTH_SHORT).show();
@@ -139,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity
             if (export != null) {
                 export.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {
+                    public boolean onPreferenceClick(@NonNull Preference preference) {
                         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.setType("text/plain");
@@ -158,7 +158,7 @@ public class SettingsActivity extends AppCompatActivity
             if (importPref != null) {
                 importPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {
+                    public boolean onPreferenceClick(@NonNull Preference preference) {
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.setType("text/plain");
@@ -172,7 +172,7 @@ public class SettingsActivity extends AppCompatActivity
             if (clearDB != null) {
                 clearDB.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {
+                    public boolean onPreferenceClick(@NonNull Preference preference) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(R.string.dialog_clear_db)
                                 .setTitle(R.string.clear_db)

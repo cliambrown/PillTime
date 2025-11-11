@@ -1,23 +1,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/notifications_header">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/notifications_header">
 
         <SwitchPreferenceCompat
             app:key="notify_default"
             app:title="@string/notify_expiring_dose"
             app:singleLineTitle="false"
+            app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
             app:key="notify_sound_default"
             app:title="@string/notification_sound"
             app:singleLineTitle="false"
+            app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/theme_header">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/theme_header">
 
         <ListPreference
             app:entries="@array/themes_entries"
@@ -25,32 +31,64 @@
             app:key="theme"
             app:defaultValue="@string/theme_value_system_default"
             app:title="@string/theme_header"
+            app:iconSpaceReserved="false"
             app:summary="%s"/>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/data">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/data">
 
         <Preference
             app:key="export"
             app:title="@string/export_all"
+            app:iconSpaceReserved="false"
             android:summary="@string/export_all_summary" />
 
         <Preference
             app:key="import"
+            app:iconSpaceReserved="false"
             app:title="@string/import_data"
             android:summary="@string/import_from_file" />
 
         <com.cliambrown.pilltime.settings.ClearDbPreference
             app:key="clearDb"
+            app:iconSpaceReserved="false"
             app:title="@string/clear_db" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/about_app">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/about_app"
+        >
+
+        <Preference
+            app:key="disclaimer"
+            app:iconSpaceReserved="false"
+            app:selectable="false"
+            app:persistent="false"
+            app:summary="@string/disclaimer_1"/>
+
+        <Preference
+            app:key="disclaimer"
+            app:iconSpaceReserved="false"
+            app:selectable="false"
+            app:persistent="false"
+            app:summary="@string/disclaimer_2"/>
+
+        <Preference
+            app:key="dev_decree"
+            app:iconSpaceReserved="false"
+            app:selectable="false"
+            app:persistent="false"
+            app:title="@string/dev_decree_title"
+            app:summary="@string/dev_decree_notice"/>
 
         <Preference
             app:key="export"
+            app:iconSpaceReserved="false"
             app:title="@string/info_link_title"
             android:summary="https://github.com/cliambrown/PillTime">
             <intent

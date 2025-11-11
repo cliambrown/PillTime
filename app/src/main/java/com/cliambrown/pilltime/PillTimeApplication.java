@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class PillTimeApplication extends Application {
 
@@ -63,7 +61,6 @@ public class PillTimeApplication extends Application {
             }
             med.updateTimes();
         }
-//        Toast.makeText(this, meds.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void clearMeds() {
@@ -209,8 +206,7 @@ public class PillTimeApplication extends Application {
         intent.putExtra("medName", med.getName());
         intent.putExtra("setSilent", !dose.getNotifySound());
 
-        PendingIntent pendingIntent = null;
-        pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
         am.cancel(pendingIntent);
         if (!dose.getNotify() || med == null) return;
         long now = System.currentTimeMillis();
@@ -384,8 +380,7 @@ public class PillTimeApplication extends Application {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (!manager.areNotificationsEnabled()) return false;
             NotificationChannel channel = manager.getNotificationChannel(CHANNEL_ID);
-            if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) return false;
-            return true;
+            return channel.getImportance() != NotificationManager.IMPORTANCE_NONE;
         } else {
             return NotificationManagerCompat.from(context).areNotificationsEnabled();
         }

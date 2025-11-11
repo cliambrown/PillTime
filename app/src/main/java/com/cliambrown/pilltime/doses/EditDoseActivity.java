@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -15,6 +14,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -194,7 +194,9 @@ public class EditDoseActivity extends SimpleMenuActivity {
             boolean notificationsEnabled = mApp.areNotificationsEnabled();
             if (!notificationsEnabled) {
                 String[] permissions = {"android.permission.POST_NOTIFICATIONS"};
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                }
             }
         }
     }

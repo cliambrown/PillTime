@@ -1,7 +1,6 @@
 package com.cliambrown.pilltime.meds;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 
@@ -25,8 +24,9 @@ public class Med {
     private boolean hasLoadedAllDoses;
 
     Dose latestDose;
+    Dose nextExpiringDose;
     double currentTotalDoseCount;
-    String latestDoseExpiresInStr;
+    String nextExpiringDoseExpiresInStr;
     String lastTakenAtStr;
 
     public Med(int id, String name, int maxDose, int doseHours, String color, Context context) {
@@ -143,7 +143,7 @@ public class Med {
         for (int i=0; i<doses.size(); ++i) {
             if (doses.get(i).getId() == dose.getId()) {
                 position = i;
-            };
+            }
         }
         if (position > -1) {
             doses.set(position, dose);
@@ -220,11 +220,30 @@ public class Med {
         Dose dose;
         for (int i=0; i<doses.size(); ++i) {
             dose = doses.get(i);
-            long takenAt = dose.getTakenAt();
-            if (takenAt > now) continue;
+            if (dose.getTakenAt() > now) continue;
             return dose;
         }
         return null;
+    }
+
+    public Dose calculateNextExpiringDose() {
+        Dose nextExpiringDose = null;
+        Dose dose;
+        long now = System.currentTimeMillis() / 1000L;
+        long takenAt;
+        long expiresAt;
+        for (int i=0; i<doses.size(); i++) {
+            dose = doses.get(i);
+            takenAt = dose.getTakenAt();
+            expiresAt = takenAt + (doseHours * 60L * 60L);
+            if (takenAt > now) continue;
+            if (expiresAt > now) {
+                nextExpiringDose = dose;
+            } else {
+                break;
+            }
+        }
+        return nextExpiringDose;
     }
 
     public Dose getLatestDose() {
@@ -239,8 +258,8 @@ public class Med {
         this.currentTotalDoseCount = currentTotalDoseCount;
     }
 
-    public String getLatestDoseExpiresInStr() {
-        return latestDoseExpiresInStr;
+    public String getNextExpiringDoseExpiresInStr() {
+        return nextExpiringDoseExpiresInStr;
     }
 
     public String getLastTakenAtStr() {
@@ -248,32 +267,26 @@ public class Med {
     }
 
     public void updateTimes() {
-        latestDose = calculateLatestDose();
         currentTotalDoseCount = calculateCurrentTotalDoseCount();
 
-        if (latestDose == null) {
-            latestDoseExpiresInStr = "";
-            lastTakenAtStr = "never";
-        } else {
-            double latestDoseCount = latestDose.getCount();
-            long expiresAtUnix = latestDose.getTakenAt() + (doseHours * 60L * 60L);
-            String timeAgo = DateUtils.getRelativeTimeSpanString(
-                    expiresAtUnix * 1000L,
-                    System.currentTimeMillis(),
-                    0,
-                    DateUtils.FORMAT_ABBREV_RELATIVE
-                ).toString();
-            latestDoseExpiresInStr = context.getString(R.string.expires) + " " +
-                    Utils.decapitalize(timeAgo) + " (" + Utils.simpleFutureTime(context, expiresAtUnix) + ")";
-            if (latestDoseCount < currentTotalDoseCount) {
-                latestDoseExpiresInStr = "x" + Utils.getStrFromDbl(latestDoseCount) + " " + latestDoseExpiresInStr;
+        nextExpiringDose = calculateNextExpiringDose();
+        if (nextExpiringDose != null) {
+            double nextExpiringDoseCount = nextExpiringDose.getCount();
+            long expiresAtUnix = nextExpiringDose.getTakenAt() + (doseHours * 60L * 60L);
+            String timeAgo = Utils.getRelativeTimeSpanString(context, expiresAtUnix);
+            nextExpiringDoseExpiresInStr = context.getString(R.string.expires) + " " +
+                    timeAgo + " (" + Utils.simpleFutureTime(context, expiresAtUnix) + ")";
+            if (nextExpiringDoseCount < currentTotalDoseCount) {
+                nextExpiringDoseExpiresInStr = "x" + Utils.getStrFromDbl(nextExpiringDoseCount)
+                        + " " + nextExpiringDoseExpiresInStr;
             }
-            lastTakenAtStr = DateUtils.getRelativeTimeSpanString(
-                    latestDose.getTakenAt() * 1000L,
-                    System.currentTimeMillis(),
-                    0,
-                    DateUtils.FORMAT_ABBREV_RELATIVE
-            ).toString();
+        }
+
+        latestDose = calculateLatestDose();
+        if (latestDose == null) {
+            lastTakenAtStr = context.getString(R.string.never);
+        } else {
+            lastTakenAtStr = Utils.getRelativeTimeSpanString(context, latestDose.getTakenAt());
         }
     }
 

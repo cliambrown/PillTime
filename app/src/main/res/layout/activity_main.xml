@@ -47,13 +47,23 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/tv_main_disclaimer"
+            android:id="@+id/tv_main_disclaimer_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp"
+            android:text="@string/disclaimer_1"
+            android:textAlignment="textStart" />
+
+        <TextView
+            android:id="@+id/tv_main_disclaimer_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:paddingBottom="50dp"
-            android:text="@string/disclaimer"
+            android:text="@string/disclaimer_2"
             android:textAlignment="textStart" />
 
         <TextView
