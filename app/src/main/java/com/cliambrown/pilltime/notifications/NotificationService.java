@@ -4,7 +4,6 @@ import static android.app.PendingIntent.FLAG_IMMUTABLE;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.os.IBinder;
 
 import static com.cliambrown.pilltime.PillTimeApplication.CHANNEL_ID;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -81,7 +79,7 @@ public class NotificationService extends Service {
 
         String textTitle = med.getName() + " " + getString(R.string.dose).toLowerCase(Locale.ROOT) + " " +
                 getString(R.string.expired);
-        String textContent = Utils.getStrFromDbl(med.getCurrentTotalDoseCount()) + " " +
+        String textContent = Utils.getStrFromDbl(med.getActiveDoseCount()) + " " +
                 getString(R.string.taken_in_past) + " " +
                 med.getDoseHours() + " " + getString(R.string.hours);
 

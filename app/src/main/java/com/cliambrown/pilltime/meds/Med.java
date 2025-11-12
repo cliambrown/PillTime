@@ -25,7 +25,7 @@ public class Med {
 
     Dose latestDose;
     Dose nextExpiringDose;
-    double currentTotalDoseCount;
+    double activeDoseCount;
     String nextExpiringDoseExpiresInStr;
     String lastTakenAtStr;
 
@@ -199,63 +199,16 @@ public class Med {
         return (id > compareMed.getId());
     }
 
-    // Assumes doses are correctly ordered by time desc
-    public double calculateCurrentTotalDoseCount() {
-        double count = 0.0D;
-        long now = System.currentTimeMillis() / 1000L;
-        long doseTimeAgo = now - (doseHours * 60L * 60L);
-        Dose dose;
-        for (int i=0; i<doses.size(); ++i) {
-            dose = doses.get(i);
-            long takenAt = dose.getTakenAt();
-            if (takenAt >= now) continue;
-            if (takenAt <= doseTimeAgo) break;
-            count += dose.getCount();
-        }
-        return count;
-    }
-
-    public Dose calculateLatestDose() {
-        long now = System.currentTimeMillis() / 1000L;
-        Dose dose;
-        for (int i=0; i<doses.size(); ++i) {
-            dose = doses.get(i);
-            if (dose.getTakenAt() > now) continue;
-            return dose;
-        }
-        return null;
-    }
-
-    public Dose calculateNextExpiringDose() {
-        Dose nextExpiringDose = null;
-        Dose dose;
-        long now = System.currentTimeMillis() / 1000L;
-        long takenAt;
-        long expiresAt;
-        for (int i=0; i<doses.size(); i++) {
-            dose = doses.get(i);
-            takenAt = dose.getTakenAt();
-            expiresAt = takenAt + (doseHours * 60L * 60L);
-            if (takenAt > now) continue;
-            if (expiresAt > now) {
-                nextExpiringDose = dose;
-            } else {
-                break;
-            }
-        }
-        return nextExpiringDose;
-    }
-
     public Dose getLatestDose() {
         return latestDose;
     }
 
-    public double getCurrentTotalDoseCount() {
-        return currentTotalDoseCount;
+    public double getActiveDoseCount() {
+        return activeDoseCount;
     }
 
-    public void setCurrentTotalDoseCount(double currentTotalDoseCount) {
-        this.currentTotalDoseCount = currentTotalDoseCount;
+    public void setActiveDoseCount(double activeDoseCount) {
+        this.activeDoseCount = activeDoseCount;
     }
 
     public String getNextExpiringDoseExpiresInStr() {
@@ -267,22 +220,40 @@ public class Med {
     }
 
     public void updateTimes() {
-        currentTotalDoseCount = calculateCurrentTotalDoseCount();
+        double doseCount = 0.0D;
+        long now = System.currentTimeMillis() / 1000L;
+        long doseDuration = doseHours * 60L * 60L;
+        long earliestActiveTakenAt = now - doseDuration;
+        Dose dose;
+        Dose loopNextExpiringDose = null;
+        Dose loopLatestDose = null;
+        for (int i=0; i<doses.size(); i++) {
+            dose = doses.get(i);
+            if (dose.getTakenAt() > now) continue;
+            if (loopLatestDose == null) loopLatestDose = dose;
+            if (dose.getTakenAt() > earliestActiveTakenAt) {
+                doseCount += dose.getCount();
+                loopNextExpiringDose = dose;
+            } else {
+                break;
+            }
+        }
+        activeDoseCount = doseCount;
+        latestDose = loopLatestDose;
+        nextExpiringDose = loopNextExpiringDose;
 
-        nextExpiringDose = calculateNextExpiringDose();
         if (nextExpiringDose != null) {
             double nextExpiringDoseCount = nextExpiringDose.getCount();
-            long expiresAtUnix = nextExpiringDose.getTakenAt() + (doseHours * 60L * 60L);
+            long expiresAtUnix = nextExpiringDose.getTakenAt() + doseDuration;
             String timeAgo = Utils.getRelativeTimeSpanString(context, expiresAtUnix);
             nextExpiringDoseExpiresInStr = context.getString(R.string.expires) + " " +
                     timeAgo + " (" + Utils.simpleFutureTime(context, expiresAtUnix) + ")";
-            if (nextExpiringDoseCount < currentTotalDoseCount) {
+            if (nextExpiringDoseCount < activeDoseCount) {
                 nextExpiringDoseExpiresInStr = "x" + Utils.getStrFromDbl(nextExpiringDoseCount)
                         + " " + nextExpiringDoseExpiresInStr;
             }
         }
 
-        latestDose = calculateLatestDose();
         if (latestDose == null) {
             lastTakenAtStr = context.getString(R.string.never);
         } else {

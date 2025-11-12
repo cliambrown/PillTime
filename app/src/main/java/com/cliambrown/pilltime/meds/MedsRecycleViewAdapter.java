@@ -173,7 +173,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         public void updateTimes() {
             if (med == null) return;
             med.updateTimes();
-            double currentTotalDoseCount = med.getCurrentTotalDoseCount();
+            double currentTotalDoseCount = med.getActiveDoseCount();
             tv_rvMed_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
             if (currentTotalDoseCount >= (long) med.getMaxDose()) {
                 tv_rvMed_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, context));

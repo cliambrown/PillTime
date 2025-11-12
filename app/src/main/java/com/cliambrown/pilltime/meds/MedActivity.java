@@ -254,7 +254,7 @@ public class MedActivity extends AppCompatActivity {
     public void updateTimes() {
         if (med == null) return;
         med.updateTimes();
-        double currentTotalDoseCount = med.getCurrentTotalDoseCount();
+        double currentTotalDoseCount = med.getActiveDoseCount();
         tv_med_currentTotalDoseCount.setText(Utils.getStrFromDbl(currentTotalDoseCount));
         if (currentTotalDoseCount >= (long) med.getMaxDose()) {
             tv_med_currentTotalDoseCount.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, MedActivity.this));

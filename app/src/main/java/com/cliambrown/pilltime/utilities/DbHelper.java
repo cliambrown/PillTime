@@ -156,11 +156,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 "AND " + DOSES_COL_TAKEN_AT + " > ?";
         cursor = db.rawQuery(stmt, selectionArgs);
         if (!cursor.moveToFirst()) {
-            med.setCurrentTotalDoseCount(0D);
+            med.setActiveDoseCount(0D);
             return med;
         }
         int col_doseCount = cursor.getColumnIndex("dose_count");
-        med.setCurrentTotalDoseCount(cursor.getDouble(col_doseCount));
+        med.setActiveDoseCount(cursor.getDouble(col_doseCount));
 
         cursor.close();
         db.close();
