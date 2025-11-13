@@ -10,8 +10,8 @@ android {
         minSdk 23
         //noinspection OldTargetApi,EditedTargetSdkVersion
         targetSdk 34
-        versionCode 11
-        versionName "11.0"
+        versionCode 10
+        versionName "10.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
