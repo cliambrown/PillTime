@@ -31,9 +31,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String MEDS_COL_MAX_DOSE = "max_dose";
     public static final String MEDS_COL_DOSE_HOURS = "dose_hours";
     public static final String MEDS_COL_COLOR = "color";
-    public static final String MEDS_COL_REMAINING_DOSES_TRACKED = "remaining_doses_tracked";
-    public static final String MEDS_COL_REMAINING_DOSES_REPORTED = "remaining_doses_reported";
-    public static final String MEDS_COL_REMAINING_DOSES_REPORTED_AT = "remaining_doses_reported_at";
+    public static final String MEDS_COL_IS_INVENTORY_TRACKED = "is_inventory_tracked";
+    public static final String MEDS_COL_REPORTED_INVENTORY = "reported_inventory";
+    public static final String MEDS_COL_INVENTORY_REPORTED_AT = "inventory_reported_at";
 
     public static final String DOSES_TABLE = "doses";
     public static final String DOSES_COL_MED_ID = "med_id";
@@ -68,9 +68,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 MEDS_COL_MAX_DOSE + " INTEGER, " +
                 MEDS_COL_DOSE_HOURS + " INTEGER," +
                 MEDS_COL_COLOR + " TEXT," +
-                MEDS_COL_REMAINING_DOSES_TRACKED + " INTEGER," +
-                MEDS_COL_REMAINING_DOSES_REPORTED + " REAL," +
-                MEDS_COL_REMAINING_DOSES_REPORTED_AT + " REAL)";
+                MEDS_COL_IS_INVENTORY_TRACKED + " INTEGER," +
+                MEDS_COL_REPORTED_INVENTORY + " REAL," +
+                MEDS_COL_INVENTORY_REPORTED_AT + " REAL)";
         db.execSQL(stmt);
         String stmt2 = "CREATE TABLE IF NOT EXISTS " + DOSES_TABLE + " " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -92,9 +92,9 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + DOSES_TABLE + " ADD COLUMN " + DOSES_COL_NOTIFY_SOUND + " INTEGER");
         }
         if (oldVersion < 4) {
-            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_REMAINING_DOSES_TRACKED + " INTEGER");
-            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_REMAINING_DOSES_REPORTED + " REAL");
-            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_REMAINING_DOSES_REPORTED_AT + " REAL");
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_IS_INVENTORY_TRACKED + " INTEGER");
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_REPORTED_INVENTORY + " REAL");
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_INVENTORY_REPORTED_AT + " REAL");
         }
     }
 
@@ -110,7 +110,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
-//        Log.d("clb", DatabaseUtils.dumpCursorToString(cursor));
 
         if (cursor.moveToFirst()) {
             int col_id = cursor.getColumnIndex("id");
@@ -118,9 +117,9 @@ public class DbHelper extends SQLiteOpenHelper {
             int col_maxDose = cursor.getColumnIndex(MEDS_COL_MAX_DOSE);
             int col_doseHours = cursor.getColumnIndex(MEDS_COL_DOSE_HOURS);
             int col_color = cursor.getColumnIndex(MEDS_COL_COLOR);
-            int col_remainingDosesTracked = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_TRACKED);
-            int col_remainingDosesReported = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_REPORTED);
-            int col_remainingDosesReportedAt = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_REPORTED_AT);
+            int col_isInventoryTracked = cursor.getColumnIndex(MEDS_COL_IS_INVENTORY_TRACKED);
+            int col_reportedInventory = cursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
+            int col_inventoryReportedAt = cursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
 
             do {
                 int medID = cursor.getInt(col_id);
@@ -128,11 +127,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 int maxDose = cursor.getInt(col_maxDose);
                 int doseHours = cursor.getInt(col_doseHours);
                 String color = cursor.getString(col_color);
-                boolean remainingDosesTracked = cursor.getInt(col_remainingDosesTracked) != 0;
-                double remainingDosesReported = cursor.getDouble(col_remainingDosesReported);
-                long remainingDosesReportedAt = cursor.getLong(col_remainingDosesReportedAt);
-                returnList.add(new Med(medID, medName, maxDose, doseHours, color, remainingDosesTracked,
-                        remainingDosesReported, remainingDosesReportedAt, context));
+                boolean isInventoryTracked = cursor.getInt(col_isInventoryTracked) != 0;
+                double reportedInventory = cursor.getDouble(col_reportedInventory);
+                long inventoryReportedAt = cursor.getLong(col_inventoryReportedAt);
+                returnList.add(new Med(medID, medName, maxDose, doseHours, color, isInventoryTracked,
+                        reportedInventory, inventoryReportedAt, context));
             } while (cursor.moveToNext());
         }
 
@@ -154,21 +153,21 @@ public class DbHelper extends SQLiteOpenHelper {
         int col_maxDose = cursor.getColumnIndex(MEDS_COL_MAX_DOSE);
         int col_doseHours = cursor.getColumnIndex(MEDS_COL_DOSE_HOURS);
         int col_color = cursor.getColumnIndex(MEDS_COL_COLOR);
-        int col_remainingDosesTracked = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_TRACKED);
-        int col_remainingDosesReported = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_REPORTED);
-        int col_remainingDosesReportedAt = cursor.getColumnIndex(MEDS_COL_REMAINING_DOSES_REPORTED_AT);
+        int col_isInventoryTracked = cursor.getColumnIndex(MEDS_COL_IS_INVENTORY_TRACKED);
+        int col_reportedInventory = cursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
+        int col_inventoryReportedAt = cursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
         String medName = cursor.getString(col_name);
         int maxDose = cursor.getInt(col_maxDose);
         int doseHours = cursor.getInt(col_doseHours);
         String color = cursor.getString(col_color);
-        boolean remainingDosesTracked = cursor.getInt(col_remainingDosesTracked) != 0;
-        double remainingDosesReported = cursor.getDouble(col_remainingDosesReported);
-        long remainingDosesReportedAt = cursor.getLong(col_remainingDosesReportedAt);
-        Med med = new Med(medID, medName, maxDose, doseHours, color, remainingDosesTracked, remainingDosesReported,
-                remainingDosesReportedAt, context);
+        boolean isInventoryTracked = cursor.getInt(col_isInventoryTracked) != 0;
+        double reportedInventory = cursor.getDouble(col_reportedInventory);
+        long inventoryReportedAt = cursor.getLong(col_inventoryReportedAt);
+        Med med = new Med(medID, medName, maxDose, doseHours, color, isInventoryTracked, reportedInventory,
+                inventoryReportedAt, context);
 
         long now = System.currentTimeMillis() / 1000L;
-        long startTime = now - (med.getDoseHours() * 60L * 60L);
+        long startTime = now - med.getDoseDurationInSeconds();
         selectionArgs = new String[]{
                 String.valueOf(med.getId()),
                 String.valueOf(now),
@@ -210,9 +209,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
         cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
         cv.put(MEDS_COL_COLOR, med.getColor());
-        cv.put(MEDS_COL_REMAINING_DOSES_TRACKED, med.isRemainingDosesTracked());
-        cv.put(MEDS_COL_REMAINING_DOSES_REPORTED, med.getRemainingDosesReported());
-        cv.put(MEDS_COL_REMAINING_DOSES_REPORTED_AT, med.getRemainingDosesReportedAt());
+        cv.put(MEDS_COL_IS_INVENTORY_TRACKED, med.getIsInventoryTracked());
+        cv.put(MEDS_COL_REPORTED_INVENTORY, med.getReportedInventory());
+        cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         long insertID = db.insert(MEDS_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -226,9 +225,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_MAX_DOSE, med.getMaxDose());
         cv.put(MEDS_COL_DOSE_HOURS, med.getDoseHours());
         cv.put(MEDS_COL_COLOR, med.getColor());
-        cv.put(MEDS_COL_REMAINING_DOSES_TRACKED, med.isRemainingDosesTracked());
-        cv.put(MEDS_COL_REMAINING_DOSES_REPORTED, med.getRemainingDosesReported());
-        cv.put(MEDS_COL_REMAINING_DOSES_REPORTED_AT, med.getRemainingDosesReportedAt());
+        cv.put(MEDS_COL_IS_INVENTORY_TRACKED, med.getIsInventoryTracked());
+        cv.put(MEDS_COL_REPORTED_INVENTORY, med.getReportedInventory());
+        cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         String[] whereArgs = new String[]{String.valueOf(med.getId())};
         int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
         db.close();
@@ -418,6 +417,9 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesMap.put(MEDS_COL_MAX_DOSE, "m2");
         colCodesMap.put(MEDS_COL_DOSE_HOURS, "m3");
         colCodesMap.put(MEDS_COL_COLOR, "m4");
+        colCodesMap.put(MEDS_COL_IS_INVENTORY_TRACKED, "m5");
+        colCodesMap.put(MEDS_COL_REPORTED_INVENTORY, "m6");
+        colCodesMap.put(MEDS_COL_INVENTORY_REPORTED_AT, "m7");
         colCodesMap.put(DOSES_COL_COUNT, "d1");
         colCodesMap.put(DOSES_COL_TAKEN_AT, "d2");
         colCodesMap.put(DOSES_COL_NOTIFY, "d3");
@@ -428,6 +430,9 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesObject.put(MEDS_COL_MAX_DOSE, colCodesMap.get(MEDS_COL_MAX_DOSE));
         colCodesObject.put(MEDS_COL_DOSE_HOURS, colCodesMap.get(MEDS_COL_DOSE_HOURS));
         colCodesObject.put(MEDS_COL_COLOR, colCodesMap.get(MEDS_COL_COLOR));
+        colCodesObject.put(MEDS_COL_IS_INVENTORY_TRACKED, colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED));
+        colCodesObject.put(MEDS_COL_REPORTED_INVENTORY, colCodesMap.get(MEDS_COL_REPORTED_INVENTORY));
+        colCodesObject.put(MEDS_COL_INVENTORY_REPORTED_AT, colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT));
         colCodesObject.put(DOSES_COL_COUNT, colCodesMap.get(DOSES_COL_COUNT));
         colCodesObject.put(DOSES_COL_TAKEN_AT, colCodesMap.get(DOSES_COL_TAKEN_AT));
         colCodesObject.put(DOSES_COL_NOTIFY, colCodesMap.get(DOSES_COL_NOTIFY));
@@ -446,17 +451,26 @@ public class DbHelper extends SQLiteOpenHelper {
             int col_maxDose = medCursor.getColumnIndex(MEDS_COL_MAX_DOSE);
             int col_doseHours = medCursor.getColumnIndex(MEDS_COL_DOSE_HOURS);
             int col_color = medCursor.getColumnIndex(MEDS_COL_COLOR);
+            int col_isInventoryTracked = medCursor.getColumnIndex(MEDS_COL_IS_INVENTORY_TRACKED);
+            int col_reportedInventory = medCursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
+            int col_inventoryReportedAt = medCursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
             do {
                 int medID = medCursor.getInt(col_id);
                 String medName = medCursor.getString(col_name);
                 int maxDose = medCursor.getInt(col_maxDose);
                 int doseHours = medCursor.getInt(col_doseHours);
                 String color = medCursor.getString(col_color);
+                boolean isInventoryTracked = medCursor.getInt(col_isInventoryTracked) > 0;
+                double reportedInventory = medCursor.getDouble(col_reportedInventory);
+                long inventoryReportedAt = medCursor.getLong(col_inventoryReportedAt);
                 JSONObject medObject = new JSONObject();
                 medObject.put(colCodesMap.get(MEDS_COL_NAME), medName);
                 medObject.put(colCodesMap.get(MEDS_COL_MAX_DOSE), maxDose);
                 medObject.put(colCodesMap.get(MEDS_COL_DOSE_HOURS), doseHours);
                 medObject.put(colCodesMap.get(MEDS_COL_COLOR), color);
+                medObject.put(colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED), isInventoryTracked);
+                medObject.put(colCodesMap.get(MEDS_COL_REPORTED_INVENTORY), reportedInventory);
+                medObject.put(colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT), inventoryReportedAt);
 
                 JSONArray dosesArray = new JSONArray();
                 String doseStmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ?";
@@ -531,6 +545,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 int doseHours = medObject.getInt(colCodesMap.get(MEDS_COL_DOSE_HOURS));
                 String color = medObject.getString(colCodesMap.get(MEDS_COL_COLOR));
 
+                boolean isInventoryTracked = colCodesMap.containsKey(MEDS_COL_IS_INVENTORY_TRACKED)
+                        && medObject.getBoolean(colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED));
+                double reportedInventory = (isInventoryTracked && colCodesMap.containsKey(MEDS_COL_REPORTED_INVENTORY))
+                        ? medObject.getDouble(colCodesMap.get(MEDS_COL_REPORTED_INVENTORY))
+                        : 0d;
+                long inventoryReportedAt = (isInventoryTracked && colCodesMap.containsKey(MEDS_COL_INVENTORY_REPORTED_AT))
+                        ? medObject.getLong(colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT))
+                        : 0L;
+
                 int medID;
                 String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
                         "WHERE " + MEDS_COL_NAME + " = ? AND " +
@@ -542,15 +565,20 @@ public class DbHelper extends SQLiteOpenHelper {
                         String.valueOf(doseHours)
                 };
                 cursor = db.rawQuery(stmt, selectionArgs);
+                cv = new ContentValues();
+                cv.put(MEDS_COL_COLOR, color);
+                cv.put(MEDS_COL_IS_INVENTORY_TRACKED, isInventoryTracked);
+                cv.put(MEDS_COL_REPORTED_INVENTORY, reportedInventory);
+                cv.put(MEDS_COL_INVENTORY_REPORTED_AT, inventoryReportedAt);
                 if (cursor.moveToFirst()) {
                     int col_id = cursor.getColumnIndex("id");
                     medID = cursor.getInt(col_id);
+                    String[] whereArgs = new String[]{String.valueOf(medID)};
+                    db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
                 } else {
-                    cv = new ContentValues();
                     cv.put(MEDS_COL_NAME, medName);
                     cv.put(MEDS_COL_MAX_DOSE, maxDose);
                     cv.put(MEDS_COL_DOSE_HOURS, doseHours);
-                    cv.put(MEDS_COL_COLOR, color);
                     medID = (int) db.insert(MEDS_TABLE, null, cv);
                 }
 
@@ -570,6 +598,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.insert(DOSES_TABLE, null, cv);
                 }
             }
+            Toast.makeText(context, context.getString(R.string.toast_data_imported), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context,context.getString(R.string.toast_error_importing_database) + ": " + e.getMessage(),

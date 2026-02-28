@@ -18,8 +18,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.meds.MedActivity;
 
-import java.util.Locale;
-
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
 
     @Override
@@ -32,14 +30,6 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
             return;
         }
         if (doseID == -1) return;
-
-//        Intent serviceIntent = new Intent(context, NotificationService.class);
-//        serviceIntent.putExtra("doseID", doseID);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            context.startForegroundService(serviceIntent);
-//        } else {
-//            context.startService(serviceIntent);
-//        }
 
         Intent notifIntent = new Intent(context, MedActivity.class);
         notifIntent.putExtra("id", intent.getIntExtra("medID", -1));
@@ -85,6 +75,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
             Log.w(AlarmBroadcastReceiver.class.getName(), "Can't show notification. Permission NOT granted!");
             return;
         }
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(doseID, builder.build());
     }

@@ -1,12 +1,12 @@
 package com.cliambrown.pilltime.utilities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.settings.SettingsActivity;

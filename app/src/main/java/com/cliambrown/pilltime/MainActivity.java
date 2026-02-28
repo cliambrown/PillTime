@@ -1,15 +1,5 @@
 package com.cliambrown.pilltime;
 
-import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,17 +12,26 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.cliambrown.pilltime.meds.EditMedActivity;
-import com.cliambrown.pilltime.settings.SettingsActivity;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
+import com.cliambrown.pilltime.settings.SettingsActivity;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -132,56 +131,53 @@ public class MainActivity extends AppCompatActivity {
                 onUpdateMeds();
             }
             int medID = intent.getIntExtra("medID", -1);
-            if (action.equals("com.cliambrown.broadcast.MED_ADDED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemInserted(i);
-                        recyclerView.scrollToPosition(i);
-                        onUpdateMeds();
-                        return;
+            switch (action) {
+                case "com.cliambrown.broadcast.MED_ADDED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemInserted(i);
+                            recyclerView.scrollToPosition(i);
+                            onUpdateMeds();
+                            return;
+                        }
                     }
-                }
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_EDITED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemChanged(i, "update_info");
-                        return;
+                    return;
+                case "com.cliambrown.broadcast.MED_EDITED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemChanged(i, "update_info");
+                            return;
+                        }
                     }
-                }
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_REMOVED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemRemoved(i);
-                        break;
+                    return;
+                case "com.cliambrown.broadcast.MED_REMOVED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemRemoved(i);
+                            break;
+                        }
                     }
-                }
-                onUpdateMeds();
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_MOVED")) {
-                int fromPosition = intent.getIntExtra("fromPosition", -1);
-                int toPosition = intent.getIntExtra("toPosition", -1);
-                mAdapter.notifyItemMoved(fromPosition, toPosition);
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.DOSE_ADDED") ||
-                    action.equals("com.cliambrown.broadcast.DOSES_ADDED") ||
-                    action.equals("com.cliambrown.broadcast.DOSE_EDITED") ||
-                    action.equals("com.cliambrown.broadcast.DOSE_REMOVED") ||
-                    action.equals("com.cliambrown.broadcast.DOSES_REMOVED")
-            ) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemChanged(i, "update_times");
-                        mAdapter.notifyItemChanged(i, "update_info");
-                        return;
+                    onUpdateMeds();
+                    return;
+                case "com.cliambrown.broadcast.MED_MOVED":
+                    int fromPosition = intent.getIntExtra("fromPosition", -1);
+                    int toPosition = intent.getIntExtra("toPosition", -1);
+                    mAdapter.notifyItemMoved(fromPosition, toPosition);
+                    return;
+                case "com.cliambrown.broadcast.DOSE_ADDED":
+                case "com.cliambrown.broadcast.DOSES_ADDED":
+                case "com.cliambrown.broadcast.DOSE_EDITED":
+                case "com.cliambrown.broadcast.DOSE_REMOVED":
+                case "com.cliambrown.broadcast.DOSES_REMOVED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemChanged(i, "update_times");
+                            mAdapter.notifyItemChanged(i, "update_info");
+                            return;
+                        }
                     }
-                }
-                return;
+                    return;
+
             }
         }
     }

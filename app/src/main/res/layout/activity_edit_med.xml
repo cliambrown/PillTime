@@ -17,7 +17,7 @@
             android:id="@+id/cl_editMed_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="80dp">
+            android:paddingBottom="100dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_editMed_name"
@@ -40,6 +40,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/med_name"
                     android:importantForAutofill="no"/>
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -82,78 +83,78 @@
                     android:layout_marginEnd="12dp" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_dayshourspicker"
+                    android:id="@+id/sp_editMed_daysHours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switch_editMed_trackRemainingDoses"
+                android:id="@+id/switch_editMed_trackInventory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/remaining_doses_track"
+                android:text="@string/is_inventory_tracked"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll_editMed_doseInfo" />
 
             <LinearLayout
-                android:id="@+id/ll_editMed_trackRemainingDoses"
+                android:id="@+id/ll_editMed_trackInventory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/switch_editMed_trackRemainingDoses"
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_trackInventory"
                 android:gravity="center_vertical"
                 android:visibility="visible" >
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/remaining_doses_amount"
-                        android:textColor="?attr/colorPrimary" />
-
                 <NumberPicker
-                        android:id="@+id/np_editMed_remainingDoses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp" />
+                    android:id="@+id/np_editMed_currentInventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reported_inventory"
+                    android:textColor="?attr/colorPrimary" />
 
             </LinearLayout>
 
             <TextView
-                    android:id="@+id/tv_editMed_remainingReportedAt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_editMed_trackRemainingDoses"
-                    android:textColor="?attr/lightText"
-                    android:text="@string/remaining_doses_reported_at"
-                    android:visibility="visible"/>
+                android:id="@+id/tv_editMed_inventoryReportedAt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_editMed_trackInventory"
+                android:textColor="?attr/lightText"
+                android:text="@string/inventory_reported_at"
+                android:visibility="visible"/>
 
             <TextView
                 android:id="@+id/tv_editMed_colorLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:layout_weight="0"
                 android:text="@string/color"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_editMed_remainingReportedAt" />
+                app:layout_constraintTop_toBottomOf="@id/tv_editMed_inventoryReportedAt" />
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow_editMed_colors"
@@ -182,4 +183,5 @@
         app:icon="@drawable/ic_baseline_check_24"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

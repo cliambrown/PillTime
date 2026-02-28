@@ -39,8 +39,8 @@
     <string name="dose_history">Dosisverlauf</string>
     <string name="dose_taken">Eingenommene Dosis</string>
     <string name="amount_taken">Menge eingenommen</string>
-    <string name="decrease_amount_taken">Button, um die Einnahmemenge zu verringern</string>
-    <string name="increase_amount_taken">Button, um die Einnahmemenge zu erhöhen</string>
+    <string name="decrease_amount_taken">Die Einnahmemenge zu verringern</string>
+    <string name="increase_amount_taken">Die Einnahmemenge zu erhöhen</string>
     <string name="new_dose">Neue Dosis</string>
     <string name="new_dose_title">Neue %1$s-Dosis</string>
     <string name="dose_taken_at">Eingenommen um</string>
@@ -52,6 +52,7 @@
         <item quantity="other">%1$s laufen ab: %2$s</item>
     </plurals>
     <plurals name="expired" tools:ignore="MissingQuantity">
+        <item quantity="one">%1$s abgelaufen: %2$s</item>
         <item quantity="other">%1$s abgelaufen: %2$s</item>
     </plurals>
     <string name="time_on_date">%1$s am %2$s</string>
@@ -96,14 +97,15 @@
     <string name="notifications_header">Standard für Benachrichtigungen</string>
     <string name="notify_expiring_dose">Benachrichtigen, wenn eine Dosis abläuft</string>
     <string name="notification_sound">Ton bei Benachrichtigung abspielen</string>
-    <string name="remaining_doses_track">Dosisvorrat im Blick behalten</string>
-    <string name="remaining_doses_amount">Dosen aktuell auf Vorrat:</string>
-    <string name="remaining_doses_reported_at">Vorrat zuletzt angegeben: %1$s</string>
-    <string name="remaining_doses">Vorrat: %1$s</string>
+    <string name="is_inventory_tracked">Dosisvorrat im Blick behalten für dieses Medikation</string>
+    <string name="reported_inventory">Dosen aktuell auf Vorrat</string>
+    <string name="inventory_reported_at">Vorrat zuletzt angegeben: %1$s</string>
+    <string name="inventory">Vorrat: %1$s</string>
 
     <string name="toast_dose_saved">Dosis gespeichert</string>
     <string name="toast_med_saved">Medikation gespeichert</string>
     <string name="toast_error_importing_database">Fehler beim Importieren der Datenbank</string>
+    <string name="toast_data_imported">Die Daten wurden importiert</string>
     <string name="toast_error_exporting_database">Fehler beim Exportieren der Datenbank</string>
     <string name="toast_database_cleared">Datenbank geleert</string>
 
@@ -112,12 +114,6 @@
     <string name="theme_entry_dark">Dunkel</string>
     <string name="theme_entry_system_default">Systemstandard</string>
     <string name="theme_entry_auto_battery">Automatisch (Akku)</string>
-
-    <!-- These four strings are Android constants and should not be translated -->
-    <string name="theme_value_light">MODE_NIGHT_NO</string>
-    <string name="theme_value_dark">MODE_NIGHT_YES</string>
-    <string name="theme_value_system_default">MODE_NIGHT_FOLLOW_SYSTEM</string>
-    <string name="theme_value_auto_battery">MODE_NIGHT_AUTO_BATTERY</string>
 
     <string name="color">Farbe</string>
     <string name="red">Rot</string>
@@ -140,7 +136,7 @@
 
     <string name="disclaimer_title">Haftungsausschluss</string>
     <string name="disclaimer_1">Diese App gibt keine medizinischen Ratschläge, weder implizit noch anderweitig. Alle von der App bereitgestellten Informationen basieren ausschließlich auf Benutzereingaben und stellen keine Empfehlung dar. Medizinische Entscheidungen sollten stets in Absprache mit medizinischem Fachpersonal getroffen werden.</string>
-    <string name="disclaimer_2">Dies ist eine einfache App, die von einer einzelnen Person für den persönlichen Gebrauch erstellt wurde. Es darf sich nicht auf diese App für gesundheitliche Zwecke verlassen werden. Aufgrund technischer Einschränkungen und bekannter Probleme kann nicht garantiert werden, dass Benachrichtigungen zu bestimmten Zeiten erfolgen. (Beispielsweise kann ein Neustart des Telefons geplante Benachrichtigungen dieser App deaktivieren.)</string>
+    <string name="disclaimer_2">Dies ist eine einfache App, für den persönlichen Gebrauch erstellt wurde. Es darf sich nicht auf diese App für gesundheitliche Zwecke verlassen werden. Aufgrund technischer Einschränkungen und bekannter Probleme kann nicht garantiert werden, dass Benachrichtigungen zu bestimmten Zeiten erfolgen. (Beispielsweise kann ein Neustart des Telefons geplante Benachrichtigungen dieser App deaktivieren.)</string>
 
     <string name="dev_decree_title">Hinweis</string>
     <string name="dev_decree_notice">Aufgrund neuer, furchtbarer Google-Richtlinien könnte diese App bald schwer oder unmöglich zu installieren sein.\n\nGoogle plant, Android-Geräte daran zu hindern, Apps zu installieren, deren Entwickler keine Gebühr bezahlt und keine staatlichen Identifikationsdokumente eingereicht haben.</string>

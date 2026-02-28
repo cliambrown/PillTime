@@ -8,15 +8,16 @@ import android.text.ParcelableSpan;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.format.DateUtils;
-
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+
 import androidx.annotation.AttrRes;
-import androidx.annotation.ColorRes;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.cliambrown.pilltime.R;
+
 import org.jspecify.annotations.NonNull;
 
 import java.io.BufferedReader;
@@ -63,10 +64,12 @@ public class Utils {
         return str + " " + DateUtils.formatDateTime(context, unixTimeMs, DateUtils.FORMAT_SHOW_YEAR);
     }
 
-    public static String getRelativeTimeSpanString(Context context, long unixTime) {
+    public static String getRelativeTimeSpanString(Context context, long unixTime, boolean preferPast) {
         long now = System.currentTimeMillis() / 1000L;
         long timeDiffSec = Math.round(unixTime - now);
-        boolean isPast = (timeDiffSec < 0);
+        boolean isPast;
+        if (timeDiffSec == 0) isPast = preferPast;
+        else isPast = (timeDiffSec < 0);
         timeDiffSec = Math.abs(timeDiffSec);
 
         class TimeInterval {
@@ -181,9 +184,9 @@ public class Utils {
         for (List<ParcelableSpan> spans : spansList) {
             String param = "%" + (i + 1) + "$s";
             int start = unformatted.indexOf(param) - correction;
-            int arglength = String.valueOf(formatArgs[i]).length();
-            int end = start + arglength;
-            correction += 4 - arglength;
+            int argLength = String.valueOf(formatArgs[i]).length();
+            int end = start + argLength;
+            correction += 4 - argLength;
             for (ParcelableSpan span : spans) {
                 spannableString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }

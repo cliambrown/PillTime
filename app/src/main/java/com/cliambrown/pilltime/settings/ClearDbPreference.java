@@ -12,6 +12,7 @@ import androidx.preference.PreferenceViewHolder;
 
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
+
 import org.jspecify.annotations.NonNull;
 
 public class ClearDbPreference extends Preference {

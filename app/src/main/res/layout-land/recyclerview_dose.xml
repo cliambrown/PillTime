@@ -18,6 +18,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="0"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/ic_baseline_access_time_filled_24"
         app:tint="?greenText" />
 
@@ -64,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_baseline_notifications_24"
                 app:tint="?cyanText" />
 
@@ -77,10 +79,6 @@
                 android:contentDescription="@string/more_options" />
 
         </LinearLayout>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"

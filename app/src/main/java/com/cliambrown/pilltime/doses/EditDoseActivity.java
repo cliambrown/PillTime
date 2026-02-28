@@ -1,13 +1,5 @@
 package com.cliambrown.pilltime.doses;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -16,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.DatePicker;
@@ -24,12 +17,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.text.format.DateFormat;
 
-import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
-import com.cliambrown.pilltime.meds.Med;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
+
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.Med;
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -49,6 +49,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
     PillTimeApplication mApp;
     int medID, doseID;
     Calendar selectedDatetime;
+    boolean hasManuallySelectedTime = false;
 
     private ActivityResultLauncher<String> requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -88,6 +89,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         }
 
         selectedDatetime = Calendar.getInstance();
+        hasManuallySelectedTime = false;
 
         TimeZone tz = selectedDatetime.getTimeZone();
         tv_editDose_timezone.setText(tz.getDisplayName());
@@ -125,9 +127,9 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
         btn_editDose_plusCount.setOnClickListener(view -> incrementCount(1D));
 
-        tv_editDose_takenAtTime.setOnClickListener(view -> showTimePickerDialog(view));
+        tv_editDose_takenAtTime.setOnClickListener(this::showTimePickerDialog);
 
-        tv_editDose_takenAtDate.setOnClickListener(view -> showDatePickerDialog(view));
+        tv_editDose_takenAtDate.setOnClickListener(this::showDatePickerDialog);
 
         btn_editDose_save.setOnClickListener(view -> {
 
@@ -144,10 +146,14 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 return;
             }
 
-            // Round down to nearest exact minute
-            selectedDatetime.set( Calendar.SECOND, 0 );
-            selectedDatetime.set( Calendar.MILLISECOND, 0 );
+            // If the user has chosen the time, ignore current actual time and round to the minute
+            if (hasManuallySelectedTime) {
+                selectedDatetime.set(Calendar.SECOND, 0);
+                selectedDatetime.set(Calendar.MILLISECOND, 0);
+            }
+
             long unixTime = selectedDatetime.getTimeInMillis() / 1000L;
+
             Dose dose1 = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
 
             if (doseID > -1) {
@@ -231,6 +237,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 hour = activity.selectedDatetime.get(Calendar.HOUR_OF_DAY);
                 minute = activity.selectedDatetime.get(Calendar.MINUTE);
             } else {
+                // This block may not be necessary (?)
                 final Calendar c = Calendar.getInstance();
                 hour = c.get(Calendar.HOUR_OF_DAY);
                 minute = c.get(Calendar.MINUTE);
@@ -247,6 +254,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             activity.selectedDatetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
             activity.selectedDatetime.set(Calendar.MINUTE, minute);
             activity.updateTimeField();
+            activity.hasManuallySelectedTime = true;
         }
     }
 
@@ -269,6 +277,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 month = activity.selectedDatetime.get(Calendar.MONTH);
                 day = activity.selectedDatetime.get(Calendar.DAY_OF_MONTH);
             } else {
+                // This block may not be necessary (?)
                 final Calendar c = Calendar.getInstance();
                 year = c.get(Calendar.YEAR);
                 month = c.get(Calendar.MONTH);
@@ -286,6 +295,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             activity.selectedDatetime.set(Calendar.MONTH, month);
             activity.selectedDatetime.set(Calendar.DAY_OF_MONTH, day);
             activity.updateDateField();
+            activity.hasManuallySelectedTime = true;
         }
     }
 

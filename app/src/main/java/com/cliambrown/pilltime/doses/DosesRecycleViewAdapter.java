@@ -3,25 +3,29 @@ package com.cliambrown.pilltime.doses;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.*;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
 import android.text.ParcelableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
-import com.cliambrown.pilltime.meds.MedActivity;
+import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
-import com.cliambrown.pilltime.meds.Med;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +81,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         long takenAt = holder.dose.getTakenAt();
         holder.tv_rvDose_takenAt.setText(Utils.buildTimeOnDateString(context, takenAt));
 
-        long expiresAtUnix = holder.dose.getTakenAt() + (med.getDoseHours() * 60L * 60L);
+        long expiresAtUnix = holder.dose.getTakenAt() + med.getDoseDurationInSeconds();
         holder.tv_rvDose_expiresAt.setText(Utils.buildTimeOnDateString(context, expiresAtUnix));
 
         holder.updateTimes();
@@ -233,7 +237,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             String countString = Utils.getStrFromDbl(dose.getCount());
             List<List<ParcelableSpan>> spansList = new ArrayList<>();
             List<ParcelableSpan> spans = new ArrayList<>();
-            spans.add(new StyleSpan(Typeface.BOLD_ITALIC));
+            spans.add(new StyleSpan(Typeface.BOLD));
             spansList.add(spans);
             spans = new ArrayList<>();
             spans.add(new StyleSpan(Typeface.BOLD));

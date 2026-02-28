@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime.notifications;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static com.cliambrown.pilltime.PillTimeApplication.CHANNEL_ID;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -14,21 +15,17 @@ import android.os.IBinder;
 import android.text.SpannableString;
 import android.util.Log;
 
-import static com.cliambrown.pilltime.PillTimeApplication.CHANNEL_ID;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.cliambrown.pilltime.MainActivity;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.meds.MedActivity;
 import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.Utils;
-import com.cliambrown.pilltime.doses.Dose;
-import com.cliambrown.pilltime.meds.Med;
-
-import java.util.Locale;
 
 public class NotificationService extends Service {
     public NotificationService() {
@@ -71,10 +68,8 @@ public class NotificationService extends Service {
 
             Notification notification = new Notification.Builder(this, CHANNEL_ID)
                         .setContentTitle("PillTime notification service")
-//                        .setContentText("Preparing notification")
                         .setSmallIcon(R.drawable.ic_baseline_access_time_24)
                         .setContentIntent(fgPendingIntent)
-//                        .setTicker("Preparing notification")
                         .setCategory(NotificationCompat.CATEGORY_SERVICE)
                         .build();
             startForeground(med.getId(), notification);
@@ -88,7 +83,6 @@ public class NotificationService extends Service {
         Intent notifIntent = new Intent(this, MedActivity.class);
         notifIntent.putExtra("id", med.getId());
         notifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
         PendingIntent pendingIntent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getBroadcast(this, 0, notifIntent, FLAG_IMMUTABLE);

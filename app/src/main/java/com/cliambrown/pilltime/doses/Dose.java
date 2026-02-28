@@ -107,10 +107,10 @@ public class Dose {
     }
 
     public void updateTimes(Med med) {
-        expiresAt = takenAt + (med.getDoseHours() * 60L * 60L);
+        expiresAt = takenAt + med.getDoseDurationInSeconds();
         long now = System.currentTimeMillis() / 1000L;
         isActive = (takenAt <= now && expiresAt > now);
-        takenAtTimeAgo = Utils.getRelativeTimeSpanString(context, takenAt);
-        expiresAtTimeAgo = Utils.getRelativeTimeSpanString(context, expiresAt);
+        takenAtTimeAgo = Utils.getRelativeTimeSpanString(context, takenAt, true);
+        expiresAtTimeAgo = Utils.getRelativeTimeSpanString(context, expiresAt, false);
     }
 }

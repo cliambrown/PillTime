@@ -11,8 +11,6 @@ import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -23,9 +21,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 
 import org.json.JSONException;
@@ -109,16 +107,13 @@ public class SettingsActivity extends AppCompatActivity
 
         importLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() != Activity.RESULT_OK) return;
-                        Intent intent = result.getData();
-                        if (intent == null) return;
-                        Uri uri = intent.getData();
-                        PillTimeApplication mApp = (PillTimeApplication) SettingsActivity.this.getApplication();
-                        mApp.importFromUri(uri);
-                    }
+                result -> {
+                    if (result.getResultCode() != Activity.RESULT_OK) return;
+                    Intent intent = result.getData();
+                    if (intent == null) return;
+                    Uri uri = intent.getData();
+                    PillTimeApplication mApp = (PillTimeApplication) SettingsActivity.this.getApplication();
+                    mApp.importFromUri(uri);
                 });
     }
 

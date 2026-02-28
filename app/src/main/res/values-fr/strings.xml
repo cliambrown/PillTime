@@ -1,0 +1,167 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Pill Time</string>
+
+    <string name="med_name">Nom</string>
+    <!-- "max" as in maximum, shortened to save space -->
+    <string name="max">max</string>
+    <plurals name="max_dose_per_hour" tools:ignore="MissingQuantity">
+        <item quantity="one">max %1$d / h</item>
+        <item quantity="other">max %1$d / %2$d h</item>
+    </plurals>
+    <plurals name="max_dose_per_day" tools:ignore="MissingQuantity">
+        <item quantity="one">max %1$d / jour</item>
+        <item quantity="other">max %1$d / %2$d jours</item>
+    </plurals>
+    <string name="max_dose">Dose maximale</string>
+    <string name="every">chaque</string>
+    <string name="new_med">Nouveau médicament</string>
+    <string name="history">Historique</string>
+    <!-- Example: "[X] meds taken in [the] past [Y] hours" -->
+    <plurals name="taken_in_past_hours" tools:ignore="MissingQuantity">
+        <!--
+             As a developer, you should always supply "one" and "other"
+             strings. Your translators will know which strings are actually
+             needed for their language. Always include %d in "one" because
+             translators will need to use %d for languages where "one"
+             doesn't mean 1 (as explained above).
+          -->
+        <item quantity="one">%1$s prises durant la dernière heure</item>
+        <item quantity="other">%1$s prises dans les %2$d dernières heures</item>
+    </plurals>
+    <!-- Example: "[X] meds taken in [the] past [Y] days" -->
+    <plurals name="taken_in_past_days" tools:ignore="MissingQuantity">
+        <item quantity="one">%1$s au cours de la dernière journée</item>
+        <item quantity="other">%1$s prises dans les %2$d journées</item>
+    </plurals>
+
+    <string name="edit_dose_title">Modifier dose de %1$s</string>
+    <string name="edit_med_title">Modifier %1$s</string>
+    <string name="dose_history">Historique des doses</string>
+    <string name="dose_taken">Dose prise</string>
+    <string name="amount_taken">Quantité prise</string>
+    <string name="decrease_amount_taken">Réduire la quantité prise</string>
+    <string name="increase_amount_taken">Augmenter la quantité prise</string>
+    <string name="new_dose">Nouvelle Dose</string>
+    <string name="new_dose_title">Nouvelle dose de %1$s</string>
+    <string name="dose_taken_at">Prise à</string>
+    <string name="pick_time">Choisir l\'heure</string>
+
+    <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
+    <plurals name="expires" tools:ignore="MissingQuantity">
+        <item quantity="one">%1$s expire %2$s</item>
+        <item quantity="other">%1$s expirent %2$s</item>
+    </plurals>
+    <plurals name="expired" tools:ignore="MissingQuantity">
+        <item quantity="one">%1$s expirée %2$s</item>
+        <item quantity="other">%1$s expirées %2$s</item>
+    </plurals>
+    <string name="time_on_date">%1$s le %2$s</string>
+    <string name="notification_public_title">Une dose a expiré</string>
+    <!-- "<user-picked med name> dose expired" - Example: "Greenpill dose expired"-->
+    <string name="notification_private_title">Dose de %1$s expirée</string>
+
+    <!-- Example: "expired 10m 43s ago" -->
+    <!-- Example: "expires in 10M 2w" -->
+    <string name="time_past_ago">il y a %1$s</string>
+    <string name="time_future_in">dans %1$s</string>
+    <string name="seconds">secondes</string>
+    <string name="seconds_short">s</string>
+    <string name="minutes">minutes</string>
+    <string name="minutes_short">m</string>
+    <string name="hours">heures</string>
+    <string name="hours_short">h</string>
+    <string name="days">jours</string>
+    <string name="days_short">j</string>
+    <string name="weeks">semaines</string>
+    <string name="weeks_short">sem.</string>
+    <string name="months">mois</string>
+    <string name="months_short">M</string>
+    <string name="years">ans</string>
+    <string name="years_short">a</string>
+
+    <string name="add">Ajouter</string>
+    <string name="save">Enregistrer</string>
+    <string name="edit">Modifier</string>
+    <string name="delete">Supprimer</string>
+    <string name="yes">Oui</string>
+    <string name="cancel">Annuler</string>
+    <string name="more_options">Plus d\'options</string>
+
+    <string name="dialog_clear_db">Êtes-vous certain de vouloir effacer la totalité de la base de données ? Cette opération est irréversible.</string>
+    <string name="dialog_delete_medication">Souhaitez-vous vraiment supprimer ce médicament ? Cela supprimera également toutes les données que vous avez saisies concernant ce médicament. Cette action est irréversible.</string>
+    <string name="dialog_delete_dose">Êtes-vous certain de vouloir supprimer cette dose ? Cette action est irréversible.</string>
+    <string name="dialog_delete_dose_and_older">Souhaitez-vous vraiment supprimer cette dose et toutes les doses antérieures ? Cette action est irréversible.</string>
+
+    <string name="settings">Paramètres</string>
+    <string name="clear_db">Effacer toutes les données</string>
+    <string name="notifications_header">Défauts des notifications</string>
+    <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
+    <string name="notification_sound">Émettre un son avec la notification</string>
+    <string name="is_inventory_tracked">Suivez votre stock personnel de ce médicament ?</string>
+    <string name="reported_inventory">doses actuellement disponibles en stock</string>
+    <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
+    <string name="inventory">%1$s en stock</string>
+
+    <string name="toast_dose_saved">Dose sauvegardée</string>
+    <string name="toast_med_saved">Médicament sauvegardé</string>
+    <string name="toast_error_importing_database">Erreur d\'importation de la base de données</string>
+    <string name="toast_data_imported">Données importées</string>
+    <string name="toast_error_exporting_database">Erreur d\'exportation de la base de données</string>
+    <string name="toast_database_cleared">Base de données effacée</string>
+
+    <string name="theme_header">Thème</string>
+    <string name="theme_entry_light">Clair</string>
+    <string name="theme_entry_dark">Sombre</string>
+    <string name="theme_entry_system_default">Défaut du système</string>
+    <string name="theme_entry_auto_battery">Automatique - batterie</string>
+
+    <string name="color">Couleur</string>
+    <string name="red">Rouge</string>
+    <string name="orange">Orange</string>
+    <string name="amber">Ambre</string>
+    <string name="yellow">Jaune</string>
+    <string name="lime">Lime</string>
+    <string name="green">Vert</string>
+    <string name="emerald">Émeraude</string>
+    <string name="teal">Bleu sarcelle</string>
+    <string name="cyan">Cyan</string>
+    <string name="sky">Ciel</string>
+    <string name="blue">Bleu</string>
+    <string name="indigo">Indigo</string>
+    <string name="violet">Violet</string>
+    <string name="purple">Pourpre</string>
+    <string name="fuchsia">Fuchsia</string>
+    <string name="pink">Rose</string>
+    <string name="rose">Rouge pâle</string>
+
+    <string name="disclaimer_title">Avertissement</string>
+    <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des professionnels de santé.</string>
+    <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
+
+    <string name="dev_decree_title">Attention</string>
+    <string name="dev_decree_notice">En raison des nouvelles politiques terribles de Google, cette application pourrait bientôt devenir difficile, voire impossible, à installer. Google prévoit d\'empêcher les appareils Android d\'installer toute application dont la développeuse ou le développeur n\'aura pas payé de frais et fourni des documents d\'identité officiels.</string>
+    <string name="learn_more">En apprendre davantage</string>
+    <string name="close">Fermer</string>
+
+    <string name="no_meds">Aucun médicament trouvé</string>
+    <string name="add_med">Ajouter un médicament</string>
+    <string name="no_doses">Aucune dose prise.</string>
+    <string name="add_dose">Ajouter une dose</string>
+    <string name="show_more">Afficher plus</string>
+    <string name="taken">prise %1$s</string>
+    <string name="channel_name">Notifications de doses expirées</string>
+    <string name="channel_description">Des notifications lorsque les doses s\'expirent</string>
+    <string name="delete_and_older">Supprimer celle-ci et et celles antérieures</string>
+
+    <string name="data">Données</string>
+    <string name="export_all">Exporter toutes les données</string>
+    <string name="export_all_summary">Cela permet de créer un fichier qui peut être importé sur n\'importe quel appareil</string>
+    <string name="import_data">Importer des données</string>
+    <string name="import_from_file">Nécessite un fichier texte sur votre appareil, exporté depuis cette application\n(N\'écrase PAS les données existantes)</string>
+    <string name="last_taken">dernière dose %1$s</string>
+    <!-- Example: "last taken never" -->
+    <string name="never">jamais</string>
+
+    <string name="about_app">À propos de Pill Time</string>
+    <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
+</resources>

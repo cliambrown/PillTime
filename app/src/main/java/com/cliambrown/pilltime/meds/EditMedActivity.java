@@ -1,29 +1,38 @@
 package com.cliambrown.pilltime.meds;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.text.ParcelableSpan;
 import android.text.style.StyleSpan;
-import android.widget.*;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 
 public class EditMedActivity extends SimpleMenuActivity {
 
@@ -31,11 +40,11 @@ public class EditMedActivity extends SimpleMenuActivity {
     EditText et_editMed_name;
     NumberPicker np_editMed_maxDose;
     NumberPicker np_editMed_doseHoursDays;
-    AppCompatSpinner sp_dayshours_picker;
-    SwitchCompat switch_editMed_trackRemainingDoses;
-    LinearLayout ll_editMed_trackRemainingDoses;
-    NumberPicker np_editMed_remainingDoses;
-    TextView tv_editMed_remainingReportedAt;
+    AppCompatSpinner sp_editMed_daysHours;
+    SwitchCompat switch_editMed_trackInventory;
+    LinearLayout ll_editMed_trackInventory;
+    NumberPicker np_editMed_currentInventory;
+    TextView tv_editMed_inventoryReportedAt;
     Flow flow_editMed_colors;
     ExtendedFloatingActionButton btn_editMed_save;
     PillTimeApplication mApp;
@@ -43,7 +52,6 @@ public class EditMedActivity extends SimpleMenuActivity {
     String[] colors;
     String selectedColor;
     List<ImageButton> colorButtons;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,31 +78,32 @@ public class EditMedActivity extends SimpleMenuActivity {
         np_editMed_doseHoursDays.setMaxValue(100);
         np_editMed_doseHoursDays.setWrapSelectorWheel(false);
 
-        sp_dayshours_picker = findViewById(R.id.sp_dayshourspicker);
+        sp_editMed_daysHours = findViewById(R.id.sp_editMed_daysHours);
         // Create an ArrayAdapter using the string array and a default spinner layout.
         String[] spinnerItems = {getString(R.string.hours), getString(R.string.days)};
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerItems);
         // Specify the layout to use when the list of choices appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
-        sp_dayshours_picker.setAdapter(adapter);
+        sp_editMed_daysHours.setAdapter(adapter);
 
-        np_editMed_remainingDoses = findViewById(R.id.np_editMed_remainingDoses);
-        np_editMed_remainingDoses.setMinValue(1);
-        np_editMed_remainingDoses.setMaxValue(1000);
-        np_editMed_remainingDoses.setWrapSelectorWheel(false);
+        np_editMed_currentInventory = findViewById(R.id.np_editMed_currentInventory);
+        np_editMed_currentInventory.setMinValue(0);
+        np_editMed_currentInventory.setMaxValue(1000);
+        np_editMed_currentInventory.setWrapSelectorWheel(false);
 
         Intent intent = getIntent();
         medID = intent.getIntExtra("id", -1);
         mApp = (PillTimeApplication) this.getApplication();
         Med med = mApp.getMed(medID);
 
-        tv_editMed_remainingReportedAt = findViewById(R.id.tv_editMed_remainingReportedAt);
-        ll_editMed_trackRemainingDoses = findViewById(R.id.ll_editMed_trackRemainingDoses);
-        switch_editMed_trackRemainingDoses = findViewById(R.id.switch_editMed_trackRemainingDoses);
-        switch_editMed_trackRemainingDoses.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            ll_editMed_trackRemainingDoses.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            tv_editMed_remainingReportedAt.setVisibility(isChecked && med.getRemainingDosesReportedAt() > 0 ?
+        tv_editMed_inventoryReportedAt = findViewById(R.id.tv_editMed_inventoryReportedAt);
+        ll_editMed_trackInventory = findViewById(R.id.ll_editMed_trackInventory);
+        switch_editMed_trackInventory = findViewById(R.id.switch_editMed_trackInventory);
+
+        switch_editMed_trackInventory.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            ll_editMed_trackInventory.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            tv_editMed_inventoryReportedAt.setVisibility(isChecked && med != null && med.getInventoryReportedAt() > 0 ?
                     View.VISIBLE : View.GONE);
         });
 
@@ -105,34 +114,36 @@ public class EditMedActivity extends SimpleMenuActivity {
             np_editMed_maxDose.setValue(med.getMaxDose());
             if (med.getDoseHours() % 24 == 0) {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours() / 24);
-                sp_dayshours_picker.setSelection(1, false);
+                sp_editMed_daysHours.setSelection(1, false);
             } else {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours());
             }
-            if (med.isRemainingDosesTracked()) {
-                switch_editMed_trackRemainingDoses.setChecked(true);
-                ll_editMed_trackRemainingDoses.setVisibility(View.VISIBLE);
-                np_editMed_remainingDoses.setValue((int) med.getCurrentlyRemainingDoses());
-                if (med.getRemainingDosesReportedAt() > 0) {
-                    tv_editMed_remainingReportedAt.setVisibility(View.VISIBLE);
+            if (med.getIsInventoryTracked()) {
+                switch_editMed_trackInventory.setChecked(true);
+                ll_editMed_trackInventory.setVisibility(View.VISIBLE);
+                np_editMed_currentInventory.setValue((int) med.getCurrentInventory());
+                if (med.getInventoryReportedAt() > 0) {
+                    tv_editMed_inventoryReportedAt.setVisibility(View.VISIBLE);
                     List<List<ParcelableSpan>> spansList = new ArrayList<>();
                     List<ParcelableSpan> spans = new ArrayList<>();
                     spans.add(new StyleSpan(Typeface.BOLD));
                     spansList.add(spans);
-                    String unformatted = getString(R.string.remaining_doses_reported_at);
-                    String timeSpanString = Utils.getRelativeTimeSpanString(this, med.getRemainingDosesReportedAt());
-                    tv_editMed_remainingReportedAt.setText(Utils.styleString(unformatted, spansList, timeSpanString));
+                    String unformatted = getString(R.string.inventory_reported_at);
+                    String timeSpanString = Utils.getRelativeTimeSpanString(this, med.getInventoryReportedAt(), true);
+                    tv_editMed_inventoryReportedAt.setText(Utils.styleString(unformatted, spansList, timeSpanString));
                 } else {
-                    tv_editMed_remainingReportedAt.setVisibility(View.GONE);
+                    tv_editMed_inventoryReportedAt.setVisibility(View.GONE);
                 }
             } else {
-                switch_editMed_trackRemainingDoses.setChecked(false);
-                ll_editMed_trackRemainingDoses.setVisibility(View.GONE);
-                tv_editMed_remainingReportedAt.setVisibility(View.GONE);
+                switch_editMed_trackInventory.setChecked(false);
+                ll_editMed_trackInventory.setVisibility(View.GONE);
+                tv_editMed_inventoryReportedAt.setVisibility(View.GONE);
             }
             setTitle(getString(R.string.edit_med_title, "\"" + med.getName() +"\""));
             selectedColor = med.getColor();
         } else {
+            ll_editMed_trackInventory.setVisibility(View.GONE);
+            tv_editMed_inventoryReportedAt.setVisibility(View.GONE);
             int rnd = new Random().nextInt(colors.length);
             selectedColor = colors[rnd];
             setTitle(getString(R.string.new_med));
@@ -184,22 +195,20 @@ public class EditMedActivity extends SimpleMenuActivity {
                 medName = et_editMed_name.getText().toString();
                 maxDose = np_editMed_maxDose.getValue();
                 doseHours = np_editMed_doseHoursDays.getValue();
-                boolean isDays = sp_dayshours_picker.getSelectedItemPosition() == 1;
+                boolean isDays = sp_editMed_daysHours.getSelectedItemPosition() == 1;
                 if (isDays) {
                     doseHours *= 24;
                 }
-                boolean remainingDosesTracked = switch_editMed_trackRemainingDoses.isChecked();
-                int remainingDosesReported = -1;
-                long remainingDosesReportedAt = -1;
-                if (remainingDosesTracked) {
-                    remainingDosesReported = np_editMed_remainingDoses.getValue();
+                boolean isInventoryTracked = switch_editMed_trackInventory.isChecked();
+                double reportedInventory = -1d;
+                long inventoryReportedAt = -1L;
+                if (isInventoryTracked) {
+                    reportedInventory = np_editMed_currentInventory.getValue();
                     Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.SECOND, 0);
-                    calendar.set(Calendar.MILLISECOND, 0);
-                    remainingDosesReportedAt = calendar.getTimeInMillis() / 1000;
+                    inventoryReportedAt = calendar.getTimeInMillis() / 1000;
                 }
-                med1 = new Med(medID, medName, maxDose, doseHours, selectedColor, remainingDosesTracked,
-                        remainingDosesReported, remainingDosesReportedAt, EditMedActivity.this);
+                med1 = new Med(medID, medName, maxDose, doseHours, selectedColor, isInventoryTracked,
+                        reportedInventory, inventoryReportedAt, EditMedActivity.this);
             } catch (Exception e) {
                 Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();
                 return;

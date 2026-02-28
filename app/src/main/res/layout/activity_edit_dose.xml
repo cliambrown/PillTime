@@ -70,6 +70,7 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
                         android:minHeight="48dp"
+                        android:hint="@string/amount_taken"
                         android:importantForAutofill="no"
                         android:textAlignment="center"
                         android:inputType="numberDecimal"/>

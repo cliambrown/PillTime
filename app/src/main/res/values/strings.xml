@@ -34,25 +34,26 @@
         <item quantity="other">%1$s taken in past %2$d days</item>
     </plurals>
 
-    <string name="edit_dose_title">Edit %1$s-dose</string>
+    <string name="edit_dose_title">Edit %1$s dose</string>
     <string name="edit_med_title">Edit %1$s</string>
     <string name="dose_history">Dose history</string>
     <string name="dose_taken">Dose Taken</string>
     <string name="amount_taken">Amount Taken</string>
-    <string name="decrease_amount_taken">Button to decrease amount taken</string>
-    <string name="increase_amount_taken">Button to increase amount taken</string>
+    <string name="decrease_amount_taken">Decrease amount taken</string>
+    <string name="increase_amount_taken">Increase amount taken</string>
     <string name="new_dose">New Dose</string>
-    <string name="new_dose_title">New %1$s-dose</string>
+    <string name="new_dose_title">New %1$s dose</string>
     <string name="dose_taken_at">Taken at</string>
     <string name="pick_time">Select time</string>
 
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires">
-        <item quantity="one">%1$s expires: %2$s</item>
-        <item quantity="other">%1$s expire: %2$s</item>
+        <item quantity="one">%1$s expires %2$s</item>
+        <item quantity="other">%1$s expire %2$s</item>
     </plurals>
     <plurals name="expired">
-        <item quantity="other">%1$s expired: %2$s</item>
+        <item quantity="one">%1$s expired %2$s</item>
+        <item quantity="other">%1$s expired %2$s</item>
     </plurals>
     <string name="time_on_date">%1$s on %2$s</string>
     <string name="notification_public_title">A dose expired</string>
@@ -96,14 +97,15 @@
     <string name="notifications_header">Notification Defaults</string>
     <string name="notify_expiring_dose">Show a notification when dose expires</string>
     <string name="notification_sound">Make a sound with the notification</string>
-    <string name="remaining_doses_track">Track remaining doses in stock</string>
-    <string name="remaining_doses_amount">Doses currently left in stock:</string>
-    <string name="remaining_doses_reported_at">Remaining doses last reported: %1$s</string>
-    <string name="remaining_doses">Remaining: %1$s</string>
+    <string name="is_inventory_tracked">Track your personal inventory for this med?</string>
+    <string name="reported_inventory">doses currently left in stock</string>
+    <string name="inventory_reported_at">Remaining doses last recorded %1$s</string>
+    <string name="inventory">%1$s left in stock</string>
 
     <string name="toast_dose_saved">Dose saved</string>
     <string name="toast_med_saved">Med saved</string>
     <string name="toast_error_importing_database">Error importing database</string>
+    <string name="toast_data_imported">Data imported</string>
     <string name="toast_error_exporting_database">Error exporting database</string>
     <string name="toast_database_cleared">Database cleared</string>
 
@@ -114,10 +116,10 @@
     <string name="theme_entry_auto_battery">Auto battery</string>
 
     <!-- These four strings are Android constants and should not be translated -->
-    <string name="theme_value_light">MODE_NIGHT_NO</string>
-    <string name="theme_value_dark">MODE_NIGHT_YES</string>
-    <string name="theme_value_system_default">MODE_NIGHT_FOLLOW_SYSTEM</string>
-    <string name="theme_value_auto_battery">MODE_NIGHT_AUTO_BATTERY</string>
+    <string name="theme_value_light" translatable="false">MODE_NIGHT_NO</string>
+    <string name="theme_value_dark" translatable="false">MODE_NIGHT_YES</string>
+    <string name="theme_value_system_default" translatable="false">MODE_NIGHT_FOLLOW_SYSTEM</string>
+    <string name="theme_value_auto_battery" translatable="false">MODE_NIGHT_AUTO_BATTERY</string>
 
     <string name="color">Color</string>
     <string name="red">Red</string>
@@ -140,7 +142,7 @@
 
     <string name="disclaimer_title">Disclaimer</string>
     <string name="disclaimer_1">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.</string>
-    <string name="disclaimer_2">This is a simple app made by one person for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
+    <string name="disclaimer_2">This is a simple app made for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
 
     <string name="dev_decree_title">Notice</string>
     <string name="dev_decree_notice">Due to terrible new Google policies, this app may soon become difficult or impossible for you to install.\n\nGoogle plans to restrict Android devices from installing any app unless its developer has paid them a fee and submitted government identification documents.</string>
@@ -152,7 +154,7 @@
     <string name="no_doses">No doses taken.</string>
     <string name="add_dose">Add a dose</string>
     <string name="show_more">Show More</string>
-    <string name="taken">taken: %1$s</string>
+    <string name="taken">taken %1$s</string>
     <string name="channel_name">Expired Dose Notifications</string>
     <string name="channel_description">Notifications when doses expire</string>
     <string name="delete_and_older">Delete this and older</string>
@@ -162,8 +164,8 @@
     <string name="export_all_summary">Creates a file that can be imported on any device</string>
     <string name="import_data">Import data</string>
     <string name="import_from_file">Requires a text file on your device, exported from this app\n(Does NOT overwrite existing data)</string>
-    <string name="last_taken">last taken: %1$s</string>
-    <!-- Example: "last taken: never" -->
+    <string name="last_taken">last taken %1$s</string>
+    <!-- Example: "last taken never" -->
     <string name="never">never</string>
 
     <string name="about_app">About Pill Time</string>
