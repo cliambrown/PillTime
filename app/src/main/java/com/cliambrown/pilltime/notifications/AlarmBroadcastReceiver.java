@@ -24,15 +24,17 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         int doseID;
+        int medID;
         try {
             doseID = intent.getIntExtra("doseID", -1);
+            medID = intent.getIntExtra("medID", -1);
         } catch (Exception e) {
             return;
         }
-        if (doseID == -1) return;
+        if (doseID < 0 || medID < 0) return;
 
         Intent notifIntent = new Intent(context, MedActivity.class);
-        notifIntent.putExtra("id", intent.getIntExtra("medID", -1));
+        notifIntent.putExtra("id", medID);
         notifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, FLAG_IMMUTABLE);
 
@@ -46,6 +48,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
                 .setContentTitle(publicTitle)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setOngoing(false)
@@ -55,7 +58,6 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)
                 .setContentTitle(privateTitle)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setPublicVersion(publicBuilder.build())
                 .setContentIntent(pendingIntent)
