@@ -21,7 +21,7 @@
             android:id="@+id/rv_main_meds"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingBottom="64dp"
+            android:requiresFadingEdge="vertical"
             android:clipToPadding="false"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

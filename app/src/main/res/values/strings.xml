@@ -97,7 +97,7 @@
     <string name="notifications_header">Notification Defaults</string>
     <string name="notify_expiring_dose">Show a notification when dose expires</string>
     <string name="notification_sound">Make a sound with the notification</string>
-    <string name="is_inventory_tracked">Track your personal inventory for this med?</string>
+    <string name="track_inventory">Track your personal inventory for this med?</string>
     <string name="reported_inventory">doses currently left in stock</string>
     <string name="inventory_reported_at">Remaining doses last recorded %1$s</string>
     <string name="inventory">%1$s left in stock</string>

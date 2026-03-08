@@ -97,7 +97,7 @@
     <string name="notifications_header">Défauts des notifications</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
     <string name="notification_sound">Émettre un son avec la notification</string>
-    <string name="is_inventory_tracked">Suivez votre stock personnel de ce médicament ?</string>
+    <string name="track_inventory">Suivez votre stock personnel de ce médicament ?</string>
     <string name="reported_inventory">doses actuellement disponibles en stock</string>
     <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
     <string name="inventory">%1$s en stock</string>

@@ -97,7 +97,7 @@
     <string name="notifications_header">Standard für Benachrichtigungen</string>
     <string name="notify_expiring_dose">Benachrichtigen, wenn eine Dosis abläuft</string>
     <string name="notification_sound">Ton bei Benachrichtigung abspielen</string>
-    <string name="is_inventory_tracked">Dosisvorrat dieser Medikation im Blick behalten</string>
+    <string name="track_inventory">Dosisvorrat dieser Medikation im Blick behalten</string>
     <string name="reported_inventory">Dosen aktuell auf Vorrat</string>
     <string name="inventory_reported_at">Vorrat zuletzt angegeben: %1$s</string>
     <string name="inventory">Vorrat: %1$s</string>

@@ -140,9 +140,6 @@ public class Utils {
         }
         return stringBuilder.toString();
     }
-    public static SpannableString buildTakenInPastString(Context context, double takenAmount, int doseHours) {
-        return buildTakenInPastString(context, R.attr.textColorPrimary, takenAmount, doseHours);
-    }
 
     public static SpannableString buildTakenInPastString(Context context, @AttrRes int colorAttrResId, double takenAmount, int doseHours) {
         String takenInPastRaw;
