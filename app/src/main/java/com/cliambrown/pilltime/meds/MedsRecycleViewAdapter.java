@@ -32,8 +32,8 @@ import java.util.List;
 public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleViewAdapter.MedViewHolder> {
 
     List<Med> meds;
-    Context context;
-    PillTimeApplication mApp;
+    final Context context;
+    final PillTimeApplication mApp;
 
     public MedsRecycleViewAdapter(List<Med> meds, Context context, PillTimeApplication mApp) {
         this.meds = meds;
@@ -136,16 +136,16 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
     }
 
     public static class MedViewHolder extends RecyclerView.ViewHolder {
-        ImageButton btn_rvMed_add;
-        LinearLayout ll_rvMed_medInfo;
-        TextView tv_rvMed_name;
-        TextView tv_rvMed_maxDoseInfo;
-        TextView tv_rvMed_takenInPast;
-        TextView tv_rvMed_latestDoseExpiresIn;
-        TextView tv_rvMed_lastTaken;
-        LinearLayout ll_rvMed_inventory;
-        TextView tv_rvMed_inventory;
-        ImageButton btn_rvMed_more;
+        final ImageButton btn_rvMed_add;
+        final LinearLayout ll_rvMed_medInfo;
+        final TextView tv_rvMed_name;
+        final TextView tv_rvMed_maxDoseInfo;
+        final TextView tv_rvMed_takenInPast;
+        final TextView tv_rvMed_latestDoseExpiresIn;
+        final TextView tv_rvMed_lastTaken;
+        final LinearLayout ll_rvMed_inventory;
+        final TextView tv_rvMed_inventory;
+        final ImageButton btn_rvMed_more;
         Med med;
         Context context;
 

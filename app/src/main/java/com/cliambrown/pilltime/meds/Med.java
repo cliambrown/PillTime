@@ -4,21 +4,19 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("FieldMayBeFinal")
 public class Med {
 
     // Once the remaining doses ratio has fallen under this threshold,
     // the user should be warned
     public static final double INVENTORY_WARN_THRESHOLD = 0.2;
 
-    private Context context;
+    private final Context context;
     private int id;
     private String name;
     private int maxDose;

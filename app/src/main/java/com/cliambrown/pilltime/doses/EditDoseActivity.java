@@ -51,7 +51,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
     Calendar selectedDatetime;
     boolean hasManuallySelectedTime = false;
 
-    private ActivityResultLauncher<String> requestPermissionLauncher =
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (!isGranted) switch_editDose_notify.setChecked(false);
         });
@@ -134,8 +134,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
         btn_editDose_save.setOnClickListener(view -> {
 
             double count;
-            boolean notify = getDefaultNotify();
-            boolean notifySound = getDefaultNotifySound();
+            boolean notify;
+            boolean notifySound;
 
             try {
                 count = Double.parseDouble(et_editDose_count.getText().toString());

@@ -44,9 +44,6 @@ public class PillTimeApplication extends Application {
         createNotificationChannel();
     }
 
-    public PillTimeApplication() {
-    }
-
     public void loadMeds() {
         meds.clear();
         meds.addAll(dbHelper.getAllMeds());

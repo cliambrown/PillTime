@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Pill Time</string>
 
     <string name="med_name">Name</string>
@@ -12,7 +12,6 @@
         <item quantity="one">Max %1$d / Tag</item>
         <item quantity="other">Max %1$d / %2$d Tage</item>
     </plurals>
-    <string name="max_dose">Max. Dosis</string>
     <string name="every">alle</string>
     <string name="new_med">Neue Medikation</string>
     <string name="history">Verlauf</string>
@@ -37,14 +36,12 @@
     <string name="edit_dose_title">%1$s-Dosis bearbeiten</string>
     <string name="edit_med_title">%1$s bearbeiten</string>
     <string name="dose_history">Dosisverlauf</string>
-    <string name="dose_taken">Eingenommene Dosis</string>
     <string name="amount_taken">Menge eingenommen</string>
     <string name="decrease_amount_taken">Die Einnahmemenge verringern</string>
     <string name="increase_amount_taken">Die Einnahmemenge erhöhen</string>
     <string name="new_dose">Neue Dosis</string>
     <string name="new_dose_title">Neue %1$s-Dosis</string>
     <string name="dose_taken_at">Eingenommen um</string>
-    <string name="pick_time">Zeit wählen</string>
 
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires">
@@ -79,7 +76,6 @@
     <string name="years">Jahre</string>
     <string name="years_short">J</string>
 
-    <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="edit">Bearbeiten</string>
     <string name="delete">Löschen</string>

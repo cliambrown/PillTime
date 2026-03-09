@@ -12,7 +12,6 @@
         <item quantity="one">max %1$d / jour</item>
         <item quantity="other">max %1$d / %2$d jours</item>
     </plurals>
-    <string name="max_dose">Dose maximale</string>
     <string name="every">chaque</string>
     <string name="new_med">Nouveau médicament</string>
     <string name="history">Historique</string>
@@ -37,14 +36,12 @@
     <string name="edit_dose_title">Modifier dose de %1$s</string>
     <string name="edit_med_title">Modifier %1$s</string>
     <string name="dose_history">Historique des doses</string>
-    <string name="dose_taken">Dose prise</string>
     <string name="amount_taken">Quantité prise</string>
     <string name="decrease_amount_taken">Réduire la quantité prise</string>
     <string name="increase_amount_taken">Augmenter la quantité prise</string>
     <string name="new_dose">Nouvelle Dose</string>
     <string name="new_dose_title">Nouvelle dose de %1$s</string>
     <string name="dose_taken_at">Prise à</string>
-    <string name="pick_time">Choisir l\'heure</string>
 
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires" tools:ignore="MissingQuantity">
@@ -79,7 +76,6 @@
     <string name="years">ans</string>
     <string name="years_short">a</string>
 
-    <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
     <string name="edit">Modifier</string>
     <string name="delete">Supprimer</string>

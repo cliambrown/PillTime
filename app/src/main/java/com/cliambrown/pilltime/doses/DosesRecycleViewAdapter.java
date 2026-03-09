@@ -34,8 +34,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
     Med med;
     List<Dose> doses;
-    Context context;
-    PillTimeApplication mApp;
+    final Context context;
+    final PillTimeApplication mApp;
 
     public DosesRecycleViewAdapter(Med med, List<Dose> doses, Context context, PillTimeApplication mApp) {
         this.med = med;
@@ -169,15 +169,15 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     }
 
     public static class DoseViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout ll_rvDose_doseInfo;
-        ImageView iv_rvDose_clock;
-        ImageView iv_rvDose_notification;
-        TextView tv_rvDose_expires;
-        TextView tv_rvDose_expiresAt;
-        TextView tv_rvDose_taken;
-        TextView tv_rvDose_takenAt;
-        ImageButton btn_rvDose_more;
-        Button btn_med_loadMore;
+        final LinearLayout ll_rvDose_doseInfo;
+        final ImageView iv_rvDose_clock;
+        final ImageView iv_rvDose_notification;
+        final TextView tv_rvDose_expires;
+        final TextView tv_rvDose_expiresAt;
+        final TextView tv_rvDose_taken;
+        final TextView tv_rvDose_takenAt;
+        final ImageButton btn_rvDose_more;
+        final Button btn_med_loadMore;
         Dose dose;
         Med med;
         Context context;

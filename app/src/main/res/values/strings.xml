@@ -12,7 +12,6 @@
         <item quantity="one">max %1$d / day</item>
         <item quantity="other">max %1$d / %2$d days</item>
     </plurals>
-    <string name="max_dose">Max Dose</string>
     <string name="every">every</string>
     <string name="new_med">New Med</string>
     <string name="history">History</string>
@@ -37,14 +36,12 @@
     <string name="edit_dose_title">Edit %1$s dose</string>
     <string name="edit_med_title">Edit %1$s</string>
     <string name="dose_history">Dose history</string>
-    <string name="dose_taken">Dose Taken</string>
     <string name="amount_taken">Amount Taken</string>
     <string name="decrease_amount_taken">Decrease amount taken</string>
     <string name="increase_amount_taken">Increase amount taken</string>
     <string name="new_dose">New Dose</string>
     <string name="new_dose_title">New %1$s dose</string>
     <string name="dose_taken_at">Taken at</string>
-    <string name="pick_time">Select time</string>
 
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires">
@@ -79,7 +76,6 @@
     <string name="years">years</string>
     <string name="years_short">y</string>
 
-    <string name="add">Add</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>

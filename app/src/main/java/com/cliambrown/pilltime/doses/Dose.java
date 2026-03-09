@@ -11,10 +11,10 @@ public class Dose {
 
     private int id;
     private int medID;
-    private double count;
-    private long takenAt; // Unix time (s)
+    private final double count;
+    private final long takenAt; // Unix time (s)
     private boolean notify;
-    private boolean notifySound;
+    private final boolean notifySound;
     private Context context;
     boolean isActive;
     private long expiresAt; // Unix time (s)
