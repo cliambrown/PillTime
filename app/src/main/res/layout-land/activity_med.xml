@@ -6,74 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".meds.MedActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh_med"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="16dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="16dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_med_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                android:layout_weight="0"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tv_med_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_med_takenInPast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/tv_med_takenInPast"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1" />
+            <TextView
+                android:id="@+id/tv_med_maxDoseInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:singleLine="true" />
 
-                <TextView
-                    android:id="@+id/tv_med_maxDoseInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:singleLine="true" />
-
-                <TextView
-                    android:id="@+id/tv_med_inventory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    app:drawableTint="?attr/redText"
-                    android:singleLine="true"
-                    app:drawableStartCompat="@drawable/ic_warning"
-                    android:drawablePadding="4dp"
-                    android:layout_marginStart="32dp"/>
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_med_doses"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="8dp"
-                android:requiresFadingEdge="vertical"
-                android:clipToPadding="false" />
+            <TextView
+                android:id="@+id/tv_med_inventory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                app:drawableTint="?attr/redText"
+                android:singleLine="true"
+                app:drawableStartCompat="@drawable/ic_warning"
+                android:drawablePadding="4dp"
+                android:layout_marginStart="32dp"/>
 
         </LinearLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_med_doses"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:requiresFadingEdge="vertical"
+            android:clipToPadding="false" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_med_add_dose"
@@ -95,7 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swiperefresh_med">
+        app:layout_constraintTop_toBottomOf="parent">
 
         <TextView
             android:id="@+id/tv_med_no_doses"

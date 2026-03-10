@@ -26,7 +26,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cliambrown.pilltime.meds.EditMedActivity;
 import com.cliambrown.pilltime.meds.Med;
@@ -75,20 +74,6 @@ public class MainActivity extends AppCompatActivity {
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
         recyclerView.addItemDecoration(bottomOffsetDecoration);
-
-        SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swiperefresh_main);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onRefresh() {
-                mApp.loadMeds();
-                meds = mApp.getMeds();
-                mAdapter.setData(meds);
-                updateTimes();
-                onUpdateMeds();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         BroadcastReceiver br = new MainBroadcastReceiver();
         IntentFilter filter = new IntentFilter();

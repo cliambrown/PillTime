@@ -22,7 +22,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
@@ -101,21 +100,6 @@ public class MedActivity extends AppCompatActivity {
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
         recyclerView.addItemDecoration(bottomOffsetDecoration);
-
-        SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swiperefresh_med);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onRefresh() {
-                mApp.loadMeds();
-                med = mApp.getMed(medID);
-                mAdapter.setData(med);
-                onUpdateDoses();
-                updateInfo();
-                updateTimes();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         BroadcastReceiver br = new MedActivity.MedBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
