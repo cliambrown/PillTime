@@ -97,6 +97,11 @@
                 android:title="App repo on GitHub"/>
         </Preference>
 
+        <!-- Quick hacky way of adding some padding to the bottom -->
+        <Preference
+            app:selectable="false"
+            app:persistent="false"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
