@@ -296,15 +296,19 @@ public class Med {
         nextExpiringDose = null;
         latestDose = null;
         currentInventory = reportedInventory;
+        boolean finishedCountingInventory = false;
         for (Dose dose : doses) {
-            if (dose.getTakenAt() >= inventoryReportedAt && currentInventory > 0)
+            if (currentInventory > 0 && dose.getTakenAt() >= inventoryReportedAt) {
                 currentInventory -= dose.getCount();
+            } else {
+                finishedCountingInventory = true;
+            }
             if (dose.getTakenAt() > now) continue;
             if (latestDose == null) latestDose = dose;
             if (dose.getTakenAt() > earliestActiveTakenAt) {
                 activeDoseCount += dose.getCount();
                 nextExpiringDose = dose;
-            } else {
+            } else if (finishedCountingInventory) {
                 break;
             }
         }
