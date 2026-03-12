@@ -39,39 +39,40 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/tv_rvDose_expires"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:breakStrategy="balanced"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_rvDose_expiresAt"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:breakStrategy="balanced"
-                    android:textColor="?attr/lightText" />
+                    android:textColor="?attr/lightText"/>
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_rvDose_notification"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="0"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
                 android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_baseline_notifications_24"
                 app:tint="?cyanText" />
 
             <ImageButton
                 android:id="@+id/btn_rvDose_more"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:backgroundTint="#00FFFFFF"
                 app:srcCompat="@drawable/ic_baseline_more_vert_24"
@@ -82,21 +83,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:background="@drawable/bg_rounded_bottom_secondary"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/tv_rvDose_taken"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:breakStrategy="balanced" />
 
             <TextView
                 android:id="@+id/tv_rvDose_takenAt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:breakStrategy="balanced"
+                android:layout_marginStart="8dp"
                 android:textColor="?attr/lightText"/>
 
         </LinearLayout>

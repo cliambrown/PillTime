@@ -3,7 +3,6 @@ package com.cliambrown.pilltime.settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -12,8 +11,6 @@ import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,9 +21,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 
 import org.json.JSONException;
@@ -63,56 +60,60 @@ public class SettingsActivity extends AppCompatActivity
 
         exportLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() != Activity.RESULT_OK) return;
-                        Intent intent = result.getData();
-                        if (intent == null) return;
-                        Uri uri = intent.getData();
-                        if (uri == null) return;
-                        try {
-                            ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "w");
-                            assert pfd != null;
-                            FileOutputStream fileOutputStream =
-                                    new FileOutputStream(pfd.getFileDescriptor());
-                            DbHelper dbHelper = new DbHelper(SettingsActivity.this);
-                            JSONObject jsonObject = dbHelper.getExportedDb();
-                            if (jsonObject == null) {
-                                Toast.makeText(SettingsActivity.this, "Error exporting database (null JSON object)", Toast.LENGTH_SHORT).show();
-                            } else {
-                                fileOutputStream.write((jsonObject.toString()).getBytes());
-                            }
-                            fileOutputStream.close();
-                            pfd.close();
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast.makeText(SettingsActivity.this, "Error exporting database (null pointer exception)", Toast.LENGTH_SHORT).show();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                            Toast.makeText(SettingsActivity.this, "Error exporting database (file not found)", Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(SettingsActivity.this, "Error exporting database (IO exception)", Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(SettingsActivity.this, "Error exporting database (JSON exception)", Toast.LENGTH_SHORT).show();
+                result -> {
+                    if (result.getResultCode() != Activity.RESULT_OK) return;
+                    Intent intent = result.getData();
+                    if (intent == null) return;
+                    Uri uri = intent.getData();
+                    if (uri == null) return;
+                    try {
+                        ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "w");
+                        assert pfd != null;
+                        FileOutputStream fileOutputStream =
+                                new FileOutputStream(pfd.getFileDescriptor());
+                        DbHelper dbHelper = new DbHelper(SettingsActivity.this);
+                        JSONObject jsonObject = dbHelper.getExportedDb();
+                        if (jsonObject == null) {
+                            Toast.makeText(SettingsActivity.this,
+                                    getString(R.string.toast_error_exporting_database) + " (null JSON object)",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            fileOutputStream.write((jsonObject.toString()).getBytes());
                         }
+                        fileOutputStream.close();
+                        pfd.close();
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SettingsActivity.this,
+                                getString(R.string.toast_error_exporting_database) + " (null pointer exception)",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SettingsActivity.this,
+                                getString(R.string.toast_error_exporting_database) + " (file not found)",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SettingsActivity.this,
+                                getString(R.string.toast_error_exporting_database) + " (IO exception)",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SettingsActivity.this,
+                                getString(R.string.toast_error_exporting_database) + " (JSON exception)",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
         importLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() != Activity.RESULT_OK) return;
-                        Intent intent = result.getData();
-                        if (intent == null) return;
-                        Uri uri = intent.getData();
-                        PillTimeApplication mApp = (PillTimeApplication) SettingsActivity.this.getApplication();
-                        mApp.importFromUri(uri);
-                    }
+                result -> {
+                    if (result.getResultCode() != Activity.RESULT_OK) return;
+                    Intent intent = result.getData();
+                    if (intent == null) return;
+                    Uri uri = intent.getData();
+                    PillTimeApplication mApp = (PillTimeApplication) SettingsActivity.this.getApplication();
+                    mApp.importFromUri(uri);
                 });
     }
 
@@ -137,62 +138,48 @@ public class SettingsActivity extends AppCompatActivity
 
             Preference export = getPreferenceManager().findPreference("export");
             if (export != null) {
-                export.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("text/plain");
-                        Calendar c = Calendar.getInstance();
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        String dateStr = sdf.format(c.getTime());
-                        String filename = "pilltime_export_" + dateStr;
-                        intent.putExtra(Intent.EXTRA_TITLE, filename);
-                        exportLauncher.launch(intent);
-                        return true;
-                    }
+                export.setOnPreferenceClickListener(preference -> {
+                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("text/plain");
+                    Calendar c = Calendar.getInstance();
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateStr = sdf.format(c.getTime());
+                    String filename = "pilltime_export_" + dateStr;
+                    intent.putExtra(Intent.EXTRA_TITLE, filename);
+                    exportLauncher.launch(intent);
+                    return true;
                 });
             }
 
             Preference importPref = getPreferenceManager().findPreference("import");
             if (importPref != null) {
-                importPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("text/plain");
-                        importLauncher.launch(intent);
-                        return true;
-                    }
+                importPref.setOnPreferenceClickListener(preference -> {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("text/plain");
+                    importLauncher.launch(intent);
+                    return true;
                 });
             }
 
             Preference clearDB = getPreferenceManager().findPreference("clearDb");
             if (clearDB != null) {
-                clearDB.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(R.string.dialog_clear_db)
-                                .setTitle(R.string.clear_db)
-                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        SettingsActivity activity = (SettingsActivity) getActivity();
-                                        if (activity == null) return;
-                                        PillTimeApplication mApp = (PillTimeApplication) activity.getApplication();
-                                        mApp.clearMeds();
-                                        Toast.makeText(getActivity(), "DB cleared", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        builder.show();
-                        return true;
-                    }
+                clearDB.setOnPreferenceClickListener(preference -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(R.string.dialog_clear_db)
+                            .setTitle(R.string.clear_db)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                SettingsActivity activity = (SettingsActivity) getActivity();
+                                if (activity == null) return;
+                                PillTimeApplication mApp = (PillTimeApplication) activity.getApplication();
+                                mApp.clearMeds();
+                                Toast.makeText(getActivity(), getString(R.string.toast_database_cleared),
+                                        Toast.LENGTH_SHORT).show();
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
                 });
             }
         }

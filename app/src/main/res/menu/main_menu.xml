@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mi_main_add"
-        android:icon="@drawable/ic_baseline_add_24"
-        android:title="@string/add"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/mi_main_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"

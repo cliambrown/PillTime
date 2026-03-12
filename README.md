@@ -1,4 +1,4 @@
-<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_adaptive.png"></a></p>
+<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_adaptive.png" alt="PillTime app icon"></p>
 
 <h2 align="center"><b>Pill Time</b></h2>
 
@@ -13,12 +13,12 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/cliambrown/PillTime/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/cliambrown/PillTime"></a>
-    <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
+    <a href="https://github.com/cliambrown/PillTime/releases"><img src="https://img.shields.io/github/v/release/cliambrown/PillTime" alt="GitHub release"></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPLv3"></a>
 </p>
 
 <p align="center">
-    <a href="https://ko-fi.com/cliambrown" alt="Buy me a coffee"><img width="181" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/kofi.png"></a>
+    <a href="https://ko-fi.com/cliambrown"><img width="181" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/kofi.png" alt="Buy me a coffee"></a>
 </p>
 
 * No ads or trackers of any kind

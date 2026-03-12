@@ -16,12 +16,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.cliambrown.pilltime.utilities.DbHelper;
-import com.cliambrown.pilltime.utilities.ThemeHelper;
-import com.cliambrown.pilltime.utilities.Utils;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.notifications.AlarmBroadcastReceiver;
+import com.cliambrown.pilltime.utilities.DbHelper;
+import com.cliambrown.pilltime.utilities.ThemeHelper;
+import com.cliambrown.pilltime.utilities.Utils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,7 +32,7 @@ public class PillTimeApplication extends Application {
 
     private Context context;
     DbHelper dbHelper;
-    private List<Med> meds = new ArrayList<Med>();
+    private List<Med> meds = new ArrayList<>();
     public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
 
     public void onCreate() {
@@ -42,9 +42,6 @@ public class PillTimeApplication extends Application {
         loadMeds();
         AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(context));
         createNotificationChannel();
-    }
-
-    public PillTimeApplication() {
     }
 
     public void loadMeds() {
@@ -76,8 +73,7 @@ public class PillTimeApplication extends Application {
     }
 
     public Med getMed(int medID) {
-        for (int i=0; i<meds.size(); ++i) {
-            Med med = meds.get(i);
+        for (Med med : meds) {
             if (med.getId() == medID) {
                 return med;
             }
@@ -126,19 +122,20 @@ public class PillTimeApplication extends Application {
             return false;
         }
         int medID = med.getId();
-        Med listMed;
-        for (int i=0; i<meds.size(); ++i) {
-            listMed = meds.get(i);
+        for (Med listMed : meds) {
             if (listMed.getId() != medID) continue;
 
             // Check expiry times BEFORE rescheduling (use listMed, not med)
             long now = System.currentTimeMillis() * 1000L;
-            long rescheduleBeforeTakenAt = now - (listMed.getDoseHours() * 60L * 60L);
+            long rescheduleBeforeTakenAt = now - listMed.getDoseDurationInSeconds();
 
             listMed.setName(med.getName());
             listMed.setMaxDose(med.getMaxDose());
             listMed.setDoseHours(med.getDoseHours());
             listMed.setColor(med.getColor());
+            listMed.setIsInventoryTracked(med.getIsInventoryTracked());
+            listMed.setReportedInventory(med.getReportedInventory());
+            listMed.setInventoryReportedAt(med.getInventoryReportedAt());
             listMed.updateTimes();
             Intent intent = new Intent();
             intent.setAction("com.cliambrown.broadcast.MED_EDITED");
@@ -205,14 +202,15 @@ public class PillTimeApplication extends Application {
         intent.putExtra("medID", med.getId());
         intent.putExtra("medName", med.getName());
         intent.putExtra("setSilent", !dose.getNotifySound());
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
         am.cancel(pendingIntent);
-        if (!dose.getNotify() || med == null) return;
+        if (!dose.getNotify()) return;
         long now = System.currentTimeMillis();
-        long triggerAtMillis = (dose.getTakenAt() + (med.getDoseHours() * 60L * 60L)) * 1000L;
+        long triggerAtMillis = (dose.getTakenAt() + med.getDoseDurationInSeconds()) * 1000L;
         if (triggerAtMillis < now) return;
+//        Exact alarm would probably be preferred but caused too many permission complexities
 //        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+//        Instead, set an inexact alarm with 10-minute window (the minimum allowed)
         am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
     }
 
@@ -267,14 +265,15 @@ public class PillTimeApplication extends Application {
         int fromPosition = med.setDose(dose);
         int toPosition = med.repositionDose(dose, fromPosition);
         Intent intent = new Intent();
-        if (toPosition == fromPosition) {
-            intent.setAction("com.cliambrown.broadcast.DOSE_EDITED");
-            intent.putExtra("medID", med.getId());
-            intent.putExtra("doseID", dose.getId());
-        } else {
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseID", dose.getId());
+        if (toPosition != fromPosition) {
             intent.setAction("com.cliambrown.broadcast.DOSE_MOVED");
             intent.putExtra("fromPosition", fromPosition);
             intent.putExtra("toPosition", toPosition);
+            sendBroadcast(intent);
+        } else {
+            intent.setAction("com.cliambrown.broadcast.DOSE_EDITED");
         }
         sendBroadcast(intent);
         scheduleNotification(med, dose);
@@ -287,15 +286,12 @@ public class PillTimeApplication extends Application {
         int medID = dose.getMedID();
         int doseID = dose.getId();
         dbHelper.deleteDoseById(doseID);
-        Med med;
-        List<Dose> doses;
-        for (int i=0; i<meds.size(); ++i) {
-            med = meds.get(i);
+        for (Med med : meds) {
             if (med.getId() != medID) continue;
             scheduleNotification(med, dose);
-            doses = med.getDoses();
+            List<Dose> doses = med.getDoses();
             int position = -1;
-            for (int j=0; j<doses.size(); ++j) {
+            for (int j = 0; j < doses.size(); ++j) {
                 if (doses.get(j).getId() != doseID) continue;
                 position = j;
                 break;
@@ -317,7 +313,7 @@ public class PillTimeApplication extends Application {
     public void loadMoreDoses(Med med) {
         List<Dose> doses = dbHelper.loadDoses(med);
         med.setHasLoadedAllDoses(doses.size() < 21);
-        List<Integer> doseIDs = new ArrayList<Integer>();
+        List<Integer> doseIDs = new ArrayList<>();
         for (Dose dose : doses) {
             med.addDose(dose);
             doseIDs.add(dose.getId());
@@ -361,13 +357,13 @@ public class PillTimeApplication extends Application {
 
 
     public void importFromUri(Uri uri) {
-        try {
+        try (DbHelper dbHelper = new DbHelper(context)) {
             String jsonText = Utils.readTextFromUri(uri, context);
-            DbHelper dbHelper = new DbHelper(context);
             dbHelper.importFromString(jsonText);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Error importing database (IO exception)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,getString(R.string.toast_error_importing_database) + " (IO exception)",
+                    Toast.LENGTH_SHORT).show();
         }
         loadMeds();
         Intent broadcastIntent = new Intent();

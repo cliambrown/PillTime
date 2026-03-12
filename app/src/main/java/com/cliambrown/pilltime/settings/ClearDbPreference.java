@@ -13,6 +13,8 @@ import androidx.preference.PreferenceViewHolder;
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 
+import org.jspecify.annotations.NonNull;
+
 public class ClearDbPreference extends Preference {
     public ClearDbPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -31,7 +33,7 @@ public class ClearDbPreference extends Preference {
     }
 
     @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         TextView tv = (TextView) holder.findViewById(android.R.id.title);
         tv.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, getContext()));

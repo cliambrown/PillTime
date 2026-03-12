@@ -8,21 +8,27 @@
     android:focusableInTouchMode="true"
     android:focusable="true">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_main_meds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:requiresFadingEdge="vertical"
+        android:clipToPadding="false"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_main_meds"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/btn_main_add_med"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/add_med"
+            app:icon="@drawable/ic_baseline_add_24"
+            android:text="@string/add_med"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
     <LinearLayout
         android:id="@+id/ll_main_no_meds"
@@ -72,17 +78,6 @@
             android:layout_height="wrap_content"
             android:text="@string/no_meds"
             android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/btn_main_no_meds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/add_med"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_main_no_meds"
-            android:textColor="?attr/buttonText"/>
 
     </LinearLayout>
 

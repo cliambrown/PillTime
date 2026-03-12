@@ -65,14 +65,14 @@
         >
 
         <Preference
-            app:key="disclaimer"
+            app:key="disclaimer_1"
             app:iconSpaceReserved="false"
             app:selectable="false"
             app:persistent="false"
             app:summary="@string/disclaimer_1"/>
 
         <Preference
-            app:key="disclaimer"
+            app:key="disclaimer_2"
             app:iconSpaceReserved="false"
             app:selectable="false"
             app:persistent="false"
@@ -87,7 +87,7 @@
             app:summary="@string/dev_decree_notice"/>
 
         <Preference
-            app:key="export"
+            app:key="github_link"
             app:iconSpaceReserved="false"
             app:title="@string/info_link_title"
             android:summary="https://github.com/cliambrown/PillTime">
@@ -96,6 +96,11 @@
                 android:data="https://github.com/cliambrown/PillTime"
                 android:title="App repo on GitHub"/>
         </Preference>
+
+        <!-- Quick hacky way of adding some padding to the bottom -->
+        <Preference
+            app:selectable="false"
+            app:persistent="false"/>
 
     </PreferenceCategory>
 

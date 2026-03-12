@@ -4,38 +4,46 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.cliambrown.pilltime.R;
-import com.cliambrown.pilltime.utilities.Utils;
 import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("FieldMayBeFinal")
 public class Med {
 
+    // Once the remaining doses ratio has fallen under this threshold,
+    // the user should be warned
+    public static final double INVENTORY_WARN_THRESHOLD = 0.2;
+
+    private final Context context;
     private int id;
     private String name;
     private int maxDose;
     private int doseHours;
     private String color;
-    private final List<Dose> doses = new ArrayList<Dose>();
-    private Context context;
-    private boolean hasLoadedAllDoses;
+    private boolean isInventoryTracked;
+    private double reportedInventory;
+    private long inventoryReportedAt;
 
+    private final List<Dose> doses = new ArrayList<>();
+    private boolean hasLoadedAllDoses;
     Dose latestDose;
     Dose nextExpiringDose;
     double activeDoseCount;
-    String nextExpiringDoseExpiresInStr;
-    String lastTakenAtStr;
+    private double currentInventory;
 
-    public Med(int id, String name, int maxDose, int doseHours, String color, Context context) {
+    public Med(int id, String name, int maxDose, int doseHours, String color, boolean isInventoryTracked,
+               double reportedInventory, long inventoryReportedAt, Context context) {
+        this.context = context;
         this.id = id;
         this.name = name;
         this.maxDose = maxDose;
         this.doseHours = doseHours;
         this.color = color;
-        this.context = context;
+        this.isInventoryTracked = isInventoryTracked;
+        this.reportedInventory = reportedInventory;
+        this.inventoryReportedAt = inventoryReportedAt;
         this.hasLoadedAllDoses = false;
     }
 
@@ -47,6 +55,10 @@ public class Med {
                 ", name='" + name + '\'' +
                 ", maxDose=" + maxDose +
                 ", doseHours=" + doseHours +
+                ", color=" + color +
+                ", isInventoryTracked=" + isInventoryTracked +
+                ", reportedInventory=" + reportedInventory +
+                ", inventoryReportedAt=" + inventoryReportedAt +
                 ", doses=" + doses +
                 '}';
     }
@@ -83,6 +95,8 @@ public class Med {
         this.doseHours = doseHours;
     }
 
+    public long getDoseDurationInSeconds() { return doseHours * 60L * 60L; }
+
     public String getColor() {
         if (color == null) return "pink";
         return color;
@@ -92,8 +106,68 @@ public class Med {
         this.color = color;
     }
 
-    public String getMaxDoseInfo() {
-        return context.getString(R.string.max) + " " + maxDose + " / " + doseHours + " " + context.getString(R.string.hours_short);
+    /**
+     * @return boolean indicating whether the user wants the remaining doses to be tracked
+     */
+    public boolean getIsInventoryTracked() {
+        return isInventoryTracked;
+    }
+
+    /**
+     * @param isInventoryTracked boolean indicating whether the user wants the remaining doses to be tracked
+     */
+    public void setIsInventoryTracked(boolean isInventoryTracked) {
+        this.isInventoryTracked = isInventoryTracked;
+    }
+
+    /**
+     * @return timestamp in seconds since epoch, which tells us when the user has last reported their remaining doses
+     */
+    public long getInventoryReportedAt() {
+        return inventoryReportedAt;
+    }
+
+    /**
+     * @param inventoryReportedAt timestamp in seconds since epoch, which tells us when the user has last reported
+     *                                their remaining doses
+     */
+    public void setInventoryReportedAt(long inventoryReportedAt) {
+        this.inventoryReportedAt = inventoryReportedAt;
+    }
+
+    /**
+     * @return the amount of remaining doses reported by the user
+     */
+    public double getReportedInventory() {
+        return reportedInventory;
+    }
+
+    /**
+     * @param reportedInventory the amount of remaining doses reported by the user
+     */
+    public void setReportedInventory(double reportedInventory) {
+        this.reportedInventory = reportedInventory;
+    }
+
+    /**
+     * @return number that has been decremented by however many doses have been taken since last report of remaining
+     * doses. Indicates the actually still available amount of remaining doses.
+     */
+    public double getCurrentInventory() {
+        return currentInventory;
+    }
+
+    public boolean getIsInventoryLow() {
+        return this.isInventoryTracked
+                && this.currentInventory == 0
+                || (
+                    this.reportedInventory > 0
+                    && this.currentInventory / this.reportedInventory <= INVENTORY_WARN_THRESHOLD
+                );
+    }
+
+    public String getMaxDoseInfoStr() {
+        return Utils.buildMaxDosePerHourString(context, maxDose, doseHours);
     }
 
     public List<Dose> getDoses() {
@@ -128,9 +202,7 @@ public class Med {
     }
 
     public Dose getDoseById(int doseID) {
-        Dose dose;
-        for (int i=0; i<doses.size(); ++i) {
-            dose = doses.get(i);
+        for (Dose dose : doses) {
             if (dose.getId() == doseID) {
                 return dose;
             }
@@ -203,6 +275,8 @@ public class Med {
         return latestDose;
     }
 
+    public Dose getNextExpiringDose() { return nextExpiringDose; }
+
     public double getActiveDoseCount() {
         return activeDoseCount;
     }
@@ -211,54 +285,34 @@ public class Med {
         this.activeDoseCount = activeDoseCount;
     }
 
-    public String getNextExpiringDoseExpiresInStr() {
-        return nextExpiringDoseExpiresInStr;
-    }
-
-    public String getLastTakenAtStr() {
-        return lastTakenAtStr;
+    public String getInventoryStr() {
+        return (int) getCurrentInventory() + " / " + (int) getReportedInventory();
     }
 
     public void updateTimes() {
-        double doseCount = 0.0D;
         long now = System.currentTimeMillis() / 1000L;
-        long doseDuration = doseHours * 60L * 60L;
-        long earliestActiveTakenAt = now - doseDuration;
-        Dose dose;
-        Dose loopNextExpiringDose = null;
-        Dose loopLatestDose = null;
-        for (int i=0; i<doses.size(); i++) {
-            dose = doses.get(i);
-            if (dose.getTakenAt() > now) continue;
-            if (loopLatestDose == null) loopLatestDose = dose;
-            if (dose.getTakenAt() > earliestActiveTakenAt) {
-                doseCount += dose.getCount();
-                loopNextExpiringDose = dose;
+        long earliestActiveTakenAt = now - getDoseDurationInSeconds();
+        activeDoseCount = 0.0D;
+        nextExpiringDose = null;
+        latestDose = null;
+        currentInventory = reportedInventory;
+        boolean finishedCountingInventory = false;
+        for (Dose dose : doses) {
+            if (currentInventory > 0 && dose.getTakenAt() >= inventoryReportedAt) {
+                currentInventory -= dose.getCount();
             } else {
+                finishedCountingInventory = true;
+            }
+            if (dose.getTakenAt() > now) continue;
+            if (latestDose == null) latestDose = dose;
+            if (dose.getTakenAt() > earliestActiveTakenAt) {
+                activeDoseCount += dose.getCount();
+                nextExpiringDose = dose;
+            } else if (finishedCountingInventory) {
                 break;
             }
         }
-        activeDoseCount = doseCount;
-        latestDose = loopLatestDose;
-        nextExpiringDose = loopNextExpiringDose;
-
-        if (nextExpiringDose != null) {
-            double nextExpiringDoseCount = nextExpiringDose.getCount();
-            long expiresAtUnix = nextExpiringDose.getTakenAt() + doseDuration;
-            String timeAgo = Utils.getRelativeTimeSpanString(context, expiresAtUnix);
-            nextExpiringDoseExpiresInStr = context.getString(R.string.expires) + " " +
-                    timeAgo + " (" + Utils.simpleFutureTime(context, expiresAtUnix) + ")";
-            if (nextExpiringDoseCount < activeDoseCount) {
-                nextExpiringDoseExpiresInStr = "x" + Utils.getStrFromDbl(nextExpiringDoseCount)
-                        + " " + nextExpiringDoseExpiresInStr;
-            }
-        }
-
-        if (latestDose == null) {
-            lastTakenAtStr = context.getString(R.string.never);
-        } else {
-            lastTakenAtStr = Utils.getRelativeTimeSpanString(context, latestDose.getTakenAt());
-        }
+        currentInventory = Math.max(0, currentInventory);
     }
 
     public boolean hasLoadedAllDoses() {

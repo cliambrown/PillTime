@@ -1,8 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="ThemePillTime" parent="Theme.MaterialComponents">
         <item name="android:windowBackground">@color/black</item>
+        <item name="secondaryBackground">@color/gray_900</item>
+        <item name="tertiaryBackground">@color/gray_1000</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_900</item>
@@ -12,7 +14,7 @@
         <item name="colorSecondaryVariant">@color/purple_500</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColorPrimary">@color/gray_200</item>
         <item name="android:textColor">@color/gray_200</item>
@@ -22,6 +24,7 @@
         <item name="lighterText">@color/gray_500</item>
         <item name="buttonText">@color/black</item>
 
+        <item name="redTextInverse">@color/red_600</item>
         <item name="redText">@color/red_300</item>
         <item name="orangeText">@color/orange_300</item>
         <item name="amberText">@color/amber_400</item>

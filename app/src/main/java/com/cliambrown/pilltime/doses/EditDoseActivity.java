@@ -1,13 +1,5 @@
 package com.cliambrown.pilltime.doses;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -16,23 +8,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.text.format.DateFormat;
 
-import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
-import com.cliambrown.pilltime.meds.Med;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
+
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.Med;
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
 import com.cliambrown.pilltime.utilities.Utils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -46,12 +45,13 @@ public class EditDoseActivity extends SimpleMenuActivity {
     TextView tv_editDose_timezone;
     SwitchCompat switch_editDose_notify;
     SwitchCompat switch_editDose_notifySound;
-    Button btn_editDose_save;
+    ExtendedFloatingActionButton btn_editDose_save;
     PillTimeApplication mApp;
     int medID, doseID;
     Calendar selectedDatetime;
+    boolean hasManuallySelectedTime = false;
 
-    private ActivityResultLauncher<String> requestPermissionLauncher =
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (!isGranted) switch_editDose_notify.setChecked(false);
         });
@@ -89,6 +89,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         }
 
         selectedDatetime = Calendar.getInstance();
+        hasManuallySelectedTime = false;
 
         TimeZone tz = selectedDatetime.getTimeZone();
         tv_editDose_timezone.setText(tz.getDisplayName());
@@ -99,12 +100,12 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 EditDoseActivity.this.finish();
                 return;
             }
-            setTitle(getString(R.string.edit) + " " + getString(R.string.dose));
+            setTitle(getString(R.string.edit_dose_title,  "\"" + med.getName() + "\""));
             selectedDatetime.setTimeInMillis(dose.getTakenAt() * 1000L);
         } else {
             long now = System.currentTimeMillis() / 1000L;
             dose = new Dose(doseID, medID, med.getMaxDose(), now, getDefaultNotify(), getDefaultNotifySound(), EditDoseActivity.this);
-            setTitle(getString(R.string.new_dose) + " — " + med.getName());
+            setTitle(getString(R.string.new_dose_title, "\"" + med.getName() + "\""));
         }
 
         switch_editDose_notify.setChecked(dose.getNotify());
@@ -113,79 +114,60 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
         handleNotifyPermissions();
 
-        switch_editDose_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                switch_editDose_notifySound.setEnabled(isChecked);
-                handleNotifyPermissions();
-            }
+        switch_editDose_notify.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            switch_editDose_notifySound.setEnabled(isChecked);
+            handleNotifyPermissions();
         });
 
         et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
         updateTimeField();
         updateDateField();
 
-        btn_editDose_minusCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                incrementCount(-1D);
+        btn_editDose_minusCount.setOnClickListener(view -> incrementCount(-1D));
+
+        btn_editDose_plusCount.setOnClickListener(view -> incrementCount(1D));
+
+        tv_editDose_takenAtTime.setOnClickListener(this::showTimePickerDialog);
+
+        tv_editDose_takenAtDate.setOnClickListener(this::showDatePickerDialog);
+
+        btn_editDose_save.setOnClickListener(view -> {
+
+            double count;
+            boolean notify;
+            boolean notifySound;
+
+            try {
+                count = Double.parseDouble(et_editDose_count.getText().toString());
+                notify = switch_editDose_notify.isChecked();
+                notifySound = switch_editDose_notifySound.isChecked();
+            } catch (Exception e) {
+                Toast.makeText(EditDoseActivity.this, "Error saving dose: invalid data", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
 
-        btn_editDose_plusCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                incrementCount(1D);
+            // If the user has chosen the time, ignore current actual time and round to the minute
+            if (hasManuallySelectedTime) {
+                selectedDatetime.set(Calendar.SECOND, 0);
+                selectedDatetime.set(Calendar.MILLISECOND, 0);
             }
-        });
 
-        tv_editDose_takenAtTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimePickerDialog(view);
+            long unixTime = selectedDatetime.getTimeInMillis() / 1000L;
+
+            Dose dose1 = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
+
+            if (doseID > -1) {
+                boolean edited = mApp.setDose(med, dose1);
+                if (!edited) return;
+            } else {
+                boolean added = mApp.addDose(med, dose1);
+                if (!added) return;
             }
-        });
 
-        tv_editDose_takenAtDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { showDatePickerDialog(view); }
-        });
+            Toast.makeText(EditDoseActivity.this, getString(R.string.toast_dose_saved),
+                    Toast.LENGTH_SHORT).show();
 
-        btn_editDose_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                double count;
-                boolean notify = getDefaultNotify();
-                boolean notifySound = getDefaultNotifySound();
-
-                try {
-                    count = Double.parseDouble(et_editDose_count.getText().toString());
-                    notify = switch_editDose_notify.isChecked();
-                    notifySound = switch_editDose_notifySound.isChecked();
-                } catch (Exception e) {
-                    Toast.makeText(EditDoseActivity.this, "Error saving dose: invalid data", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Round down to nearest exact minute
-                selectedDatetime.set( Calendar.SECOND, 0 );
-                selectedDatetime.set( Calendar.MILLISECOND, 0 );
-                long unixTime = selectedDatetime.getTimeInMillis() / 1000L;
-                Dose dose = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
-
-                if (doseID > -1) {
-                    boolean edited = mApp.setDose(med, dose);
-                    if (!edited) return;
-                } else {
-                    boolean added = mApp.addDose(med, dose);
-                    if (!added) return;
-                }
-
-                Toast.makeText(EditDoseActivity.this, "Dose saved", Toast.LENGTH_SHORT).show();
-
-                EditDoseActivity.this.finish();
-            }
+            EditDoseActivity.this.finish();
         });
     }
 
@@ -193,7 +175,6 @@ public class EditDoseActivity extends SimpleMenuActivity {
         if (switch_editDose_notify.isChecked()) {
             boolean notificationsEnabled = mApp.areNotificationsEnabled();
             if (!notificationsEnabled) {
-                String[] permissions = {"android.permission.POST_NOTIFICATIONS"};
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
                 }
@@ -256,6 +237,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 hour = activity.selectedDatetime.get(Calendar.HOUR_OF_DAY);
                 minute = activity.selectedDatetime.get(Calendar.MINUTE);
             } else {
+                // This block may not be necessary (?)
                 final Calendar c = Calendar.getInstance();
                 hour = c.get(Calendar.HOUR_OF_DAY);
                 minute = c.get(Calendar.MINUTE);
@@ -272,6 +254,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             activity.selectedDatetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
             activity.selectedDatetime.set(Calendar.MINUTE, minute);
             activity.updateTimeField();
+            activity.hasManuallySelectedTime = true;
         }
     }
 
@@ -294,6 +277,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 month = activity.selectedDatetime.get(Calendar.MONTH);
                 day = activity.selectedDatetime.get(Calendar.DAY_OF_MONTH);
             } else {
+                // This block may not be necessary (?)
                 final Calendar c = Calendar.getInstance();
                 year = c.get(Calendar.YEAR);
                 month = c.get(Calendar.MONTH);
@@ -311,6 +295,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             activity.selectedDatetime.set(Calendar.MONTH, month);
             activity.selectedDatetime.set(Calendar.DAY_OF_MONTH, day);
             activity.updateDateField();
+            activity.hasManuallySelectedTime = true;
         }
     }
 

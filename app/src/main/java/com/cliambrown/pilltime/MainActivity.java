@@ -1,20 +1,10 @@
 package com.cliambrown.pilltime;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -22,17 +12,27 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cliambrown.pilltime.meds.EditMedActivity;
-import com.cliambrown.pilltime.settings.SettingsActivity;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
+import com.cliambrown.pilltime.settings.SettingsActivity;
+import com.cliambrown.pilltime.utilities.Utils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.List;
 import java.util.Timer;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MedsRecycleViewAdapter mAdapter;
     LinearLayout ll_main_no_meds;
-    Button btn_main_no_meds;
+    ExtendedFloatingActionButton btn_main_add_med;
 
     PillTimeApplication mApp;
     Timer timer;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ll_main_no_meds = findViewById(R.id.ll_main_no_meds);
-        btn_main_no_meds = findViewById(R.id.btn_main_no_meds);
+        btn_main_add_med = findViewById(R.id.btn_main_add_med);
 
         mApp = (PillTimeApplication) this.getApplication();
         prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -71,18 +71,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MedsRecycleViewAdapter(meds, this, mApp);
         recyclerView.setAdapter(mAdapter);
-
-        SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swiperefresh_main);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onRefresh() {
-                mApp.loadMeds();
-                mAdapter.notifyDataSetChanged();
-                onUpdateMeds();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
+        Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
+        recyclerView.addItemDecoration(bottomOffsetDecoration);
 
         BroadcastReceiver br = new MainBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -106,12 +97,9 @@ public class MainActivity extends AppCompatActivity {
             this.registerReceiver(br, filter);
         }
 
-        btn_main_no_meds.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditMedActivity.class);
-                startActivity(intent);
-            }
+        btn_main_add_med.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, EditMedActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -128,55 +116,53 @@ public class MainActivity extends AppCompatActivity {
                 onUpdateMeds();
             }
             int medID = intent.getIntExtra("medID", -1);
-            if (action.equals("com.cliambrown.broadcast.MED_ADDED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemInserted(i);
-                        recyclerView.scrollToPosition(i);
-                        onUpdateMeds();
-                        return;
+            switch (action) {
+                case "com.cliambrown.broadcast.MED_ADDED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemInserted(i);
+                            recyclerView.scrollToPosition(i);
+                            onUpdateMeds();
+                            return;
+                        }
                     }
-                }
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_EDITED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemChanged(i, "update_info");
-                        return;
+                    return;
+                case "com.cliambrown.broadcast.MED_EDITED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemChanged(i, "update_info");
+                            return;
+                        }
                     }
-                }
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_REMOVED")) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemRemoved(i);
-                        break;
+                    return;
+                case "com.cliambrown.broadcast.MED_REMOVED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemRemoved(i);
+                            break;
+                        }
                     }
-                }
-                onUpdateMeds();
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.MED_MOVED")) {
-                int fromPosition = intent.getIntExtra("fromPosition", -1);
-                int toPosition = intent.getIntExtra("toPosition", -1);
-                mAdapter.notifyItemMoved(fromPosition, toPosition);
-                return;
-            }
-            if (action.equals("com.cliambrown.broadcast.DOSE_ADDED") ||
-                    action.equals("com.cliambrown.broadcast.DOSES_ADDED") ||
-                    action.equals("com.cliambrown.broadcast.DOSE_EDITED") ||
-                    action.equals("com.cliambrown.broadcast.DOSE_REMOVED") ||
-                    action.equals("com.cliambrown.broadcast.DOSES_REMOVED")
-            ) {
-                for (int i=0; i<meds.size(); ++i) {
-                    if (meds.get(i).getId() == medID) {
-                        mAdapter.notifyItemChanged(i, "update_times");
-                        return;
+                    onUpdateMeds();
+                    return;
+                case "com.cliambrown.broadcast.MED_MOVED":
+                    int fromPosition = intent.getIntExtra("fromPosition", -1);
+                    int toPosition = intent.getIntExtra("toPosition", -1);
+                    mAdapter.notifyItemMoved(fromPosition, toPosition);
+                    return;
+                case "com.cliambrown.broadcast.DOSE_ADDED":
+                case "com.cliambrown.broadcast.DOSES_ADDED":
+                case "com.cliambrown.broadcast.DOSE_EDITED":
+                case "com.cliambrown.broadcast.DOSE_REMOVED":
+                case "com.cliambrown.broadcast.DOSES_REMOVED":
+                    for (int i = 0; i < meds.size(); ++i) {
+                        if (meds.get(i).getId() == medID) {
+                            mAdapter.notifyItemChanged(i, "update_times");
+                            mAdapter.notifyItemChanged(i, "update_info");
+                            return;
+                        }
                     }
-                }
-                return;
+                    return;
+
             }
         }
     }
@@ -198,16 +184,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startUpdateTimer() {
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
         timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        updateTimes();
-                    }
-                });
+                handler.post(() -> updateTimes());
             }
         };
         timer.schedule(doAsynchronousTask, 60000, 60000); // once every minute
@@ -226,22 +208,18 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.dev_decree_title)
                     .setMessage(R.string.dev_decree_notice)
-                    .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putBoolean("show_dev_decree_dialog", false);
-                            editor.apply();
-                            dialog.cancel();
-                        }
+                    .setPositiveButton(R.string.close, (dialog, id) -> {
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("show_dev_decree_dialog", false);
+                        editor.apply();
+                        dialog.cancel();
                     })
-                    .setNegativeButton(R.string.learn_more, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent browserIntent = new Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://f-droid.org/en/2025/09/29/google-developer-registration-decree.html")
-                            );
-                            startActivity(browserIntent);
-                        }
+                    .setNegativeButton(R.string.learn_more, (dialog, id) -> {
+                        Intent browserIntent = new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://f-droid.org/en/2025/09/29/google-developer-registration-decree.html")
+                        );
+                        startActivity(browserIntent);
                     });
             return builder.create();
         }
@@ -251,6 +229,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
         updateTimes();
+        for (int i=0; i<meds.size(); ++i) {
+            mAdapter.notifyItemChanged(i);
+        }
         startUpdateTimer();
         boolean showDevDecreeDialog = prefs.getBoolean("show_dev_decree_dialog", true);
         if (showDevDecreeDialog) {
@@ -272,11 +253,6 @@ public class MainActivity extends AppCompatActivity {
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             MainActivity.this.finish();
-            return true;
-        }
-        if (itemID == R.id.mi_main_add) {
-            intent = new Intent(MainActivity.this, EditMedActivity.class);
-            startActivity(intent);
             return true;
         }
         if (itemID == R.id.mi_main_settings) {

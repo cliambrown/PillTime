@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
+    android:layout_margin="16dp"
     android:id="@+id/layout_rvMed">
 
     <LinearLayout
@@ -20,9 +19,6 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_weight="0"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="4dp"
             app:srcCompat="@drawable/ic_baseline_add_24"
             android:background="@drawable/round_button_pink"
             app:tint="?attr/buttonText"
@@ -30,71 +26,42 @@
 
         <LinearLayout
             android:id="@+id/ll_rvMed_medInfo"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_contour_colored"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_top_tertiary"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tv_rvMed_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:breakStrategy="balanced"
+                    android:textSize="20sp"
+                    android:padding="8dp"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_rvMed_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/tv_rvMed_maxDoseInfo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:singleLine="true" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_rvMed_currentTotalDoseCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="0"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_rvMed_takenInPast"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0" />
-                    </LinearLayout>
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_rvMed_maxDoseInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:singleLine="true"
+                    android:padding="8dp"
+                    android:textSize="14sp" />
 
                 <ImageButton
                     android:id="@+id/btn_rvMed_more"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:backgroundTint="#00FFFFFF"
                     android:contentDescription="@string/more_options"
@@ -103,34 +70,61 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_rvMed_takenInPast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_middle_secondary"
+                android:breakStrategy="balanced"
+                android:paddingStart="8dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="0dp"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/tv_rvMed_latestDoseExpiresIn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_rounded_middle_secondary"
+                android:breakStrategy="balanced"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="8dp"
                 android:textSize="16sp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_rvMed_lastTaken"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_bottom_secondary"
+                android:paddingTop="8dp"
+                android:paddingHorizontal="8dp"
+                android:paddingBottom="10dp"
+                android:breakStrategy="balanced"
+                android:textSize="16sp"
+                android:textColor="?attr/lightText"
+                android:text="@string/last_taken"/>
+
+            <LinearLayout
+                android:id="@+id/ll_rvMed_inventory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical">
 
                 <TextView
+                    android:id="@+id/tv_rvMed_inventory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/last_taken"
-                    android:textColor="?attr/lightText" />
+                    app:drawableTint="?attr/buttonText"
+                    android:singleLine="true"
+                    app:drawableStartCompat="@drawable/ic_warning"
+                    android:drawablePadding="4dp"
+                    android:padding="8dp"
+                    android:breakStrategy="balanced"
+                    android:textSize="16sp"
+                    android:textColor="?attr/buttonText"
+                    android:text="@string/inventory"/>
 
-                <TextView
-                    android:id="@+id/tv_rvMed_lastTaken"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:textColor="?attr/lightText" />
             </LinearLayout>
 
         </LinearLayout>

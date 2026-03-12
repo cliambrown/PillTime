@@ -2,16 +2,19 @@ package com.cliambrown.pilltime.doses;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.format.DateUtils;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
+import android.text.ParcelableSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -20,24 +23,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
-import com.cliambrown.pilltime.meds.Med;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleViewAdapter.DoseViewHolder> {
 
     Med med;
     List<Dose> doses;
-    Context context;
-    PillTimeApplication mApp;
+    final Context context;
+    final PillTimeApplication mApp;
 
     public DosesRecycleViewAdapter(Med med, List<Dose> doses, Context context, PillTimeApplication mApp) {
         this.med = med;
         this.doses = doses;
         this.context = context;
         this.mApp = mApp;
+    }
+
+    public void setData(Med med) {
+        this.med = med;
+        this.doses = med.getDoses();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -62,98 +72,73 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
         if (position == doses.size()) {
             holder.updateLoadMore();
-            holder.btn_med_loadMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mApp.loadMoreDoses(med);
-                }
-            });
+            holder.btn_med_loadMore.setOnClickListener(view -> mApp.loadMoreDoses(med));
             return;
         }
 
-        holder.dose = doses.get(position);
+        holder.dose = doses.get(holder.getBindingAdapterPosition());
+
         long takenAt = holder.dose.getTakenAt();
+        holder.tv_rvDose_takenAt.setText(Utils.buildTimeOnDateString(context, takenAt));
 
-        holder.tv_rvDose_count.setText(Utils.getStrFromDbl(holder.dose.getCount()));
-        long takenAtMs = takenAt * 1000L;
-        String takenAtStr = DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
-                context.getString(R.string.on) + " " +
-                DateUtils.formatDateTime(context, takenAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
-        holder.tv_rvDose_takenAt.setText(takenAtStr);
-
-        long expiresAtUnix = holder.dose.getTakenAt() + (med.getDoseHours() * 60L * 60L);
-        long expiresAtMs = expiresAtUnix * 1000L;
-        String expiresAtStr = DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_SHOW_TIME).toLowerCase() + " " +
-                context.getString(R.string.on) + " " +
-                DateUtils.formatDateTime(context, expiresAtMs, DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR) + " ";
-        holder.tv_rvDose_expiresAt.setText(expiresAtStr);
+        long expiresAtUnix = holder.dose.getTakenAt() + med.getDoseDurationInSeconds();
+        holder.tv_rvDose_expiresAt.setText(Utils.buildTimeOnDateString(context, expiresAtUnix));
 
         holder.updateTimes();
 
-        holder.btn_rvDose_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvDose_more);
-                popupMenu.inflate(R.menu.dose_option_menu);
+        holder.ll_rvDose_doseInfo.setOnClickListener(view -> {
+            Intent intent = new Intent(context, EditDoseActivity.class);
+            intent.putExtra("medID", holder.dose.getMedID());
+            intent.putExtra("doseID", holder.dose.getId());
+            context.startActivity(intent);
+        });
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        AlertDialog.Builder builder;
-                        int itemID = menuItem.getItemId();
-                        if (itemID == R.id.mi_dose_option_edit) {
-                            Intent intent = new Intent(context, EditDoseActivity.class);
-                            intent.putExtra("medID", holder.dose.getMedID());
-                            intent.putExtra("doseID", holder.dose.getId());
-                            context.startActivity(intent);
-                            return true;
-                        }
-                        if (itemID == R.id.mi_dose_option_delete) {
-                            builder = new AlertDialog.Builder(context);
-                            builder.setMessage(R.string.dialog_delete_item)
-                                    .setTitle(R.string.delete)
-                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            mApp.removeDose(holder.dose);
-                                            DosesRecycleViewAdapter.this.notifyItemRemoved(holder.getAdapterPosition());
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            builder.show();
-                            return true;
-                        }
-                        if (itemID == R.id.mi_dose_option_delete_and_older) {
-                            builder = new AlertDialog.Builder(context);
-                            builder.setMessage(R.string.dialog_delete_item)
-                                    .setTitle(R.string.delete_and_older)
-                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            int position = holder.getAdapterPosition();
-                                            int itemCount = doses.size()- position;
-                                            mApp.removeDoseAndOlder(holder.med, holder.dose);
-                                            DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position, itemCount);
-                                            holder.updateLoadMore();
-                                            DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            builder.show();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
+        holder.btn_rvDose_more.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvDose_more);
+            popupMenu.inflate(R.menu.dose_option_menu);
 
-                popupMenu.show();
-            }
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                AlertDialog.Builder builder;
+                int itemID = menuItem.getItemId();
+                if (itemID == R.id.mi_dose_option_edit) {
+                    Intent intent = new Intent(context, EditDoseActivity.class);
+                    intent.putExtra("medID", holder.dose.getMedID());
+                    intent.putExtra("doseID", holder.dose.getId());
+                    context.startActivity(intent);
+                    return true;
+                }
+                if (itemID == R.id.mi_dose_option_delete) {
+                    builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_delete_dose)
+                            .setTitle(R.string.delete)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                mApp.removeDose(holder.dose);
+                                DosesRecycleViewAdapter.this.notifyItemRemoved(holder.getBindingAdapterPosition());
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
+                }
+                if (itemID == R.id.mi_dose_option_delete_and_older) {
+                    builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_delete_dose_and_older)
+                            .setTitle(R.string.delete_and_older)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                int position1 = holder.getBindingAdapterPosition();
+                                int itemCount = doses.size()- position1;
+                                mApp.removeDoseAndOlder(holder.med, holder.dose);
+                                DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position1, itemCount);
+                                holder.updateLoadMore();
+                                DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
+                }
+                return false;
+            });
+
+            popupMenu.show();
         });
     }
 
@@ -184,30 +169,28 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
     }
 
     public static class DoseViewHolder extends RecyclerView.ViewHolder {
-        ImageView iv_rvDose_clock;
-        ImageView iv_rvDose_notification;
-        TextView tv_rvDose_count;
-        TextView tv_rvDose_expires;
-        TextView tv_rvDose_expiresAt;
-        TextView tv_rvDose_expiresAtTimeAgo;
-        TextView tv_rvDose_takenAt;
-        TextView tv_rvDose_takenAtTimeAgo;
-        ImageButton btn_rvDose_more;
-        Button btn_med_loadMore;
+        final LinearLayout ll_rvDose_doseInfo;
+        final ImageView iv_rvDose_clock;
+        final ImageView iv_rvDose_notification;
+        final TextView tv_rvDose_expires;
+        final TextView tv_rvDose_expiresAt;
+        final TextView tv_rvDose_taken;
+        final TextView tv_rvDose_takenAt;
+        final ImageButton btn_rvDose_more;
+        final Button btn_med_loadMore;
         Dose dose;
         Med med;
         Context context;
 
         public DoseViewHolder(@NonNull View itemView) {
             super(itemView);
+            ll_rvDose_doseInfo = itemView.findViewById(R.id.ll_rvDose_doseInfo);
             iv_rvDose_clock = itemView.findViewById(R.id.iv_rvDose_clock);
             iv_rvDose_notification = itemView.findViewById(R.id.iv_rvDose_notification);
-            tv_rvDose_count = itemView.findViewById(R.id.tv_rvDose_count);
             tv_rvDose_expires = itemView.findViewById(R.id.tv_rvDose_expires);
             tv_rvDose_expiresAt = itemView.findViewById(R.id.tv_rvDose_expiresAt);
-            tv_rvDose_expiresAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_expiresAtTimeAgo);
+            tv_rvDose_taken = itemView.findViewById(R.id.tv_rvDose_taken);
             tv_rvDose_takenAt = itemView.findViewById(R.id.tv_rvDose_takenAt);
-            tv_rvDose_takenAtTimeAgo = itemView.findViewById(R.id.tv_rvDose_takenAtTimeAgo);
             btn_rvDose_more = itemView.findViewById(R.id.btn_rvDose_more);
             btn_med_loadMore = itemView.findViewById(R.id.btn_med_loadMore);
         }
@@ -221,38 +204,58 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             int notifTextColor;
             int notifIconID;
             if (dose.isActive()) {
-                clockIconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_filled_24", "drawable");
+                clockIconID = R.drawable.ic_baseline_access_time_filled_24;
                 clockTextColor = ThemeHelper.getThemeAttr(R.attr.greenText, context);
                 if (dose.getNotify()) {
                     notifTextColor = ThemeHelper.getThemeAttr(R.attr.cyanText, context);
                     if (dose.getNotifySound()) {
-                        notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_active_24", "drawable");
+                        notifIconID = R.drawable.ic_baseline_notifications_active_24;
                     } else {
-                        notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_24", "drawable");
+                        notifIconID = R.drawable.ic_baseline_notifications_24;
                     }
                 } else {
                     notifTextColor = ThemeHelper.getThemeAttr(R.attr.lightText, context);
-                    notifIconID = Utils.getResourceIdentifier(context, "ic_baseline_notifications_off_24", "drawable");
+                    notifIconID = R.drawable.ic_baseline_notifications_off_24;
                 }
                 iv_rvDose_notification.setImageResource(notifIconID);
                 iv_rvDose_notification.setColorFilter(notifTextColor);
                 iv_rvDose_notification.setVisibility(View.VISIBLE);
             } else {
-                clockIconID = Utils.getResourceIdentifier(context, "ic_baseline_access_time_24", "drawable");
+                clockIconID = R.drawable.ic_baseline_access_time_24;
                 clockTextColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
-                tv_rvDose_expires.setText(context.getString(R.string.expired));
                 iv_rvDose_notification.setVisibility(View.GONE);
-            }
-            long now = System.currentTimeMillis() / 1000L;
-            if (dose.getExpiresAt() > now) {
-                tv_rvDose_expires.setText(context.getString(R.string.expires));
-            } else {
-                tv_rvDose_expires.setText(context.getString(R.string.expired));
             }
             iv_rvDose_clock.setImageResource(clockIconID);
             iv_rvDose_clock.setColorFilter(clockTextColor);
-            tv_rvDose_takenAtTimeAgo.setText(dose.getTakenAtTimeAgo());
-            tv_rvDose_expiresAtTimeAgo.setText(dose.getExpiresAtTimeAgo());
+
+            String colorName = med.getColor();
+            int attrResourceID = Utils.getResourceIdentifier(context, colorName + "Text", "attr");
+            int textColor = ThemeHelper.getThemeAttr(attrResourceID, context);
+            ll_rvDose_doseInfo.getBackground().setColorFilter(
+                    new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
+
+            String countString = Utils.getStrFromDbl(dose.getCount());
+            List<List<ParcelableSpan>> spansList = new ArrayList<>();
+            List<ParcelableSpan> spans = new ArrayList<>();
+            spans.add(new StyleSpan(Typeface.BOLD));
+            spansList.add(spans);
+            spans = new ArrayList<>();
+            spans.add(new StyleSpan(Typeface.BOLD));
+            spansList.add(spans);
+            String unformatted;
+            if (dose.getExpiresAt() > System.currentTimeMillis() / 1000L) {
+                unformatted = context.getResources().getQuantityString(R.plurals.expires, (int) dose.getCount());
+            } else {
+                unformatted = context.getResources().getQuantityString(R.plurals.expired, (int) dose.getCount());
+            }
+            tv_rvDose_expires.setText(Utils.styleString(unformatted, spansList, countString, dose.getExpiresAtTimeAgo()));
+
+            spansList = new ArrayList<>();
+            spans = new ArrayList<>();
+            spans.add(new StyleSpan(Typeface.BOLD));
+            spansList.add(spans);
+            unformatted = context.getString(R.string.taken);
+            tv_rvDose_taken.setText(Utils.styleString(unformatted, spansList, dose.getTakenAtTimeAgo()));
         }
 
         public void updateLoadMore() {

@@ -1,0 +1,18 @@
+<i>Pill Time</i> ist eine einfache Android-App, die dir hilft, die Übersicht über Medikamente zu behalten, die je nach Bedarf eingenommen werden können (nicht zu einer festen Uhrzeit).
+
+* <b>Gib deine Medikamente ein:</b> Wähle einen Namen, eine Farbe und eine maximale Dosis (z.B. max. 2 alle 6 Stunden).
+* <b>Gib deine Dosen ein</b> (Uhrzeit, Datum und Menge).
+* Erhalte eine Benachrichtigung, wenn eine Dosis abläuft.
+
+Auf dem Hauptbildschirm der App siehst du den aktuellen Status jedes Medikaments, einschließlich der gesamten aktuellen Dosis, der letzten Einnahmezeit und der verbleibenden Zeit bis zum Ablauf der nächsten Dosis.
+
+* Keine Werbung oder Tracker
+* Hell- und Dunkelmodus
+
+<br><b>HAFTUNGSAUSSCHLUSS:</b>
+
+Diese App gibt keine medizinischen Ratschläge, weder implizit noch anderweitig. Alle von der App bereitgestellten Informationen basieren ausschließlich auf Benutzereingaben und stellen keine Empfehlung dar. Medizinische Entscheidungen sollten stets in Absprache mit medizinischem Fachpersonal getroffen werden.
+
+Dies ist eine einfache App, die von einer einzelnen Person für den persönlichen Gebrauch erstellt wurde. Es darf sich nicht auf diese App für gesundheitliche Zwecke verlassen werden. Aufgrund technischer Einschränkungen und bekannter Probleme kann nicht garantiert werden, dass Benachrichtigungen zu bestimmten Zeiten erfolgen. (Beispielsweise kann ein Neustart des Telefons geplante Benachrichtigungen dieser App deaktivieren.)
+
+Diese App ist nicht für Medikamente geeignet, die regelmäßig nach festem Zeitplan eingenommen werden müssen. Sie wurde entwickelt, um die Übersicht über Medikamente zu behalten, die bei Bedarf, jedoch in begrenzten Mengen, eingenommen werden können.
