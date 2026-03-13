@@ -1,4 +1,4 @@
-<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/ic_adaptive.png" alt="PillTime app icon"></p>
+<p align="center"><img width="96" src="https://raw.githubusercontent.com/cliambrown/PillTime/main/ic_adaptive.png" alt="PillTime app icon"></p>
 
 <h2 align="center"><b>Pill Time</b></h2>
 
@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-    <a href="https://ko-fi.com/cliambrown"><img width="181" src="https://raw.githubusercontent.com/cliambrown/PillTime/master/kofi.png" alt="Buy me a coffee"></a>
+    <a href="https://ko-fi.com/cliambrown"><img width="181" src="https://raw.githubusercontent.com/cliambrown/PillTime/main/kofi.png" alt="Buy me a coffee"></a>
 </p>
 
 * No ads or trackers of any kind
@@ -42,7 +42,7 @@ This app is not appropriate for meds that need to be taken regularly on a set sc
 
 This app does not contain any ads or trackers. It does not ever connect to the internet. Users can export, import, or delete their data at any time from within the app.
 
-The full privacy policy is available <a href="https://github.com/cliambrown/PillTime/blob/master/PRIVACY.md">here</a>.
+The full privacy policy is available <a href="https://github.com/cliambrown/PillTime/blob/main/PRIVACY.md">here</a>.
 
 ## Screenshots
 
