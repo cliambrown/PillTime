@@ -131,7 +131,7 @@
     <string name="rose">Rouge pâle</string>
 
     <string name="disclaimer_title">Avertissement</string>
-    <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des professionnels de santé.</string>
+    <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des spécialistes de santé.</string>
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
 
     <string name="dev_decree_title">Attention</string>

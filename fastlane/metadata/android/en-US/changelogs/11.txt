@@ -1,0 +1,10 @@
+- Added the ability to track remaining inventory
+- Improved design of meds and doses
+- Improved layout of med history page for landscape views
+- add German translation
+- Add French translation
+- Clicking a dose now leads to the dose edit screen
+- Allow setting max doses per days instead of per hours
+- Increase max dose expiry time (previously 100 hours, now 100 days)
+- Fix notification clicks not leading to correct med
+- Various other visual and performance improvements and minor bugfixes

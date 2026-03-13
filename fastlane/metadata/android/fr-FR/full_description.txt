@@ -1,0 +1,20 @@
+<i>Pill Time</i> est une application Android simple qui vous aide à suivre les médicaments pouvant être pris selon les besoins (et non à une heure précise).
+
+* <b>Saisissez vos médicaments :</b> choisissez un nom, une couleur et une posologie maximale (par exemple, 2 doses maximum toutes les 6 heures).
+* <b>Saisissez vos doses</b> (heure, date et quantité).
+* Recevez une notification lorsqu'une dose arrive à expiration.
+* Suivez le stock restant de vos médicaments.
+
+Depuis l'écran principal de l'application, consultez l'état actuel de chaque médicament, y compris la dose totale actuelle, la dernière prise, le temps restant avant l'expiration de la prochaine dose et le stock restant.
+
+* Aucune publicité ni traceur
+* Thèmes clairs et sombres
+
+<br><b>AVERTISSEMENT :</b>
+
+
+Cette application ne fournit aucun conseil médical, implicite ou autre. Toutes les informations fournies par l'application sont basées uniquement sur les données saisies par l'utilisateur et ne constituent en aucun cas une recommandation. Toutes les décisions médicales doivent toujours être prises en consultation avec des spécialistes de santé.
+
+Il s'agit d'une application simple conçue pour un usage personnel. Elle ne peut être considérée comme fiable à des fins liées à la santé. En raison de limitations techniques et de problèmes connus, il n'est pas garanti qu'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées de cette application.)
+
+Cette application n'est pas adaptée aux médicaments qui doivent être pris régulièrement selon un horaire fixe. Elle a été conçue pour suivre les médicaments qui peuvent être pris en cas de besoin, mais en quantités limitées.
