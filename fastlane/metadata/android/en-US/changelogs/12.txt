@@ -1,0 +1,2 @@
+- Added a pop-up message to indicate successful database exports
+- (Also check out the many features added in the previous update, including inventory management!)
