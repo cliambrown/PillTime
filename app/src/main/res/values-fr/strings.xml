@@ -103,6 +103,7 @@
     <string name="toast_error_importing_database">Erreur d\'importation de la base de données</string>
     <string name="toast_data_imported">Données importées</string>
     <string name="toast_error_exporting_database">Erreur d\'exportation de la base de données</string>
+    <string name="toast_data_exported">Données exportées</string>
     <string name="toast_database_cleared">Base de données effacée</string>
 
     <string name="theme_header">Thème</string>

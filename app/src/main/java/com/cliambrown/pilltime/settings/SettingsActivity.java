@@ -79,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             fileOutputStream.write((jsonObject.toString()).getBytes());
+                            Toast.makeText(SettingsActivity.this, R.string.toast_data_exported, Toast.LENGTH_SHORT).show();
                         }
                         fileOutputStream.close();
                         pfd.close();
