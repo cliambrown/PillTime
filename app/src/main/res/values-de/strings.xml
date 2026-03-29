@@ -14,7 +14,7 @@
     </plurals>
     <string name="every">alle</string>
     <string name="hour_or_day">Stunde oder Tag</string>
-    <string name="default_doses">Die üblicherweise eingenommene Menge:</string>
+    <string name="default_doses">Üblicherweise eingenommene Menge:</string>
     <string name="new_med">Neue Medikation</string>
     <string name="history">Verlauf</string>
     <!-- Example: "[X] meds taken in [the] past [Y] hours" -->
@@ -117,7 +117,7 @@
     <string name="theme_entry_auto_battery">Automatisch (Akku)</string>
 
     <string name="color">Farbe</string>
-    <string name="set_med_color">Setz die Farbe der Medikamente auf</string>
+    <string name="set_med_color">Lege die Farbe des Medikaments fest</string>
     <string name="red">Rot</string>
     <string name="orange">Orange</string>
     <string name="amber">Bernstein</string>
