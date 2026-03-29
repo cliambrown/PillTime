@@ -141,7 +141,7 @@
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
 
     <string name="dev_decree_title">Attention</string>
-    <string name="dev_decree_notice">Google essaie de vous empêcher d'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
+    <string name="dev_decree_notice">Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
     <string name="learn_more">En apprendre davantage</string>
     <string name="keep_android_open">keepandroidopen.org</string>
     <string name="close">Fermer</string>
@@ -172,6 +172,6 @@
     <string name="welcome_dialog_content">
         Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
         \nVous pouvez également définir la quantité standard à utiliser pour chaque médicament sur l\'écran d\'édition.\n
-        \nATTENTION : Google essaie de vous empêcher d'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
+        \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
     </string>
 </resources>

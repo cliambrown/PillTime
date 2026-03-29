@@ -81,8 +81,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         });
 
         holder.btn_rvMed_add.setOnLongClickListener(view -> {
-            double count = (double) holder.med.getDefaultDoseCount();
-            if (count <= 0.0) count = 1.0;
+            double count = holder.med.getDefaultDoseCount();
             long takenAt = System.currentTimeMillis() / 1000L;
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean notify = prefs.getBoolean("notify_default", false);

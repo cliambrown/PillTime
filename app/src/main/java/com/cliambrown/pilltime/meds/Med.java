@@ -138,7 +138,11 @@ public class Med {
         this.inventoryReportedAt = inventoryReportedAt;
     }
 
-    public int getDefaultDoseCount() { return defaultDoseCount; }
+    public int getDefaultDoseCount() {
+        // defaultDoseCount may be zero for meds saved before v13
+        // previous pre-filled dose count value was = maxDose
+        return defaultDoseCount <= 0 ? maxDose : defaultDoseCount;
+    }
 
     public void setDefaultDoseCount(int defaultDoseCount) {
         this.defaultDoseCount = defaultDoseCount;
