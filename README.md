@@ -5,7 +5,7 @@
 <h4 align="center">A simple Android app to help you keep track of meds that can be taken as needed (not at a specific time).</h4>
 
 <p>
-    <strong>NOTE:</strong> Google is changing the way you install apps like this one on your device. Visit <a href="https://keepandroidopen.org/">keepandroidopen.org</a> to learn more.
+    <strong>NOTE:</strong> Google is trying to stop you from installing apps like this one on your device. Visit <a href="https://keepandroidopen.org/">keepandroidopen.org</a> to learn more.
 </p>
 
 <p align="center">

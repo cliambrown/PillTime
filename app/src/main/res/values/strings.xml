@@ -147,7 +147,7 @@
     <string name="disclaimer_2">This is a simple app made for personal use. It cannot be relied upon for any health-related purposes. Because of technical limitations and known issues, it cannot be guaranteed to provide notifications at specific times. (For example, restarting the phone may disable scheduled notifications from this app.)</string>
 
     <string name="dev_decree_title">Notice</string>
-    <string name="dev_decree_notice">Google is changing the way you install apps like this one on your device. Visit keepandroidopen.org to learn more.</string>
+    <string name="dev_decree_notice">Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.</string>
     <string name="keep_android_open">keepandroidopen.org</string>
     <string name="learn_more">Learn More</string>
     <string name="close">Close</string>
@@ -176,8 +176,8 @@
 
     <string name="welcome_dialog_title">New Features</string>
     <string name="welcome_dialog_content">
-        You can now long-press the add dose button on the main screen to quickly add a new dose.\n
+        You can now long-press the + button next to each med on the main screen to quickly add a new dose.\n
         \nYou can also set the standard dose amount to use for each med on the edit screen.\n
-        \nNOTE: Google is changing the way you install apps like this one on your device. Visit keepandroidopen.org to learn more.
+        \nNOTE: Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.
     </string>
 </resources>
