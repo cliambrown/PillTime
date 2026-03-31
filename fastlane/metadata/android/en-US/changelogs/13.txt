@@ -1,2 +1,2 @@
-- You can now long-press the add dose button on the main screen to quickly add a dose
+- You can now long-press the + button next to each med on the main screen to quickly add a new dose
 - You can also set the standard dose amount to use for each med on the edit screen
