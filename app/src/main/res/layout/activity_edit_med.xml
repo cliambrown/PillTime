@@ -122,16 +122,30 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_editMed_showDayDoseCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:switchPadding="12dp"
+                android:text="@string/show_day_dose_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_editMed_defaultDoseCount" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editMed_trackInventory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                app:switchPadding="12dp"
                 android:text="@string/track_inventory"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_editMed_defaultDoseCount" />
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_showDayDoseCount" />
 
             <LinearLayout
                 android:id="@+id/ll_editMed_trackInventory"

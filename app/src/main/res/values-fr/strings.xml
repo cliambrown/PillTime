@@ -31,8 +31,8 @@
     </plurals>
     <!-- Example: "[X] meds taken in [the] past [Y] days" -->
     <plurals name="taken_in_past_days" tools:ignore="MissingQuantity">
-        <item quantity="one">%1$s au cours de la dernière journée</item>
-        <item quantity="other">%1$s prises dans les %2$d journées</item>
+        <item quantity="one">%1$s au cours du dernier jour</item>
+        <item quantity="other">%1$s prises au cours des %2$d derniers jours</item>
     </plurals>
 
     <string name="edit_dose_title">Modifier dose de %1$s</string>
@@ -97,6 +97,7 @@
     <string name="notifications_header">Défauts des notifications</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
     <string name="notification_sound">Émettre un son avec la notification</string>
+    <string name="show_day_dose_count">Afficher aussi le nombre de doses prises au cours des dernières 24 heures sur la pgae d\'historique de ce médicament ?</string>
     <string name="track_inventory">Suivez votre stock personnel de ce médicament ?</string>
     <string name="reported_inventory">doses actuellement disponibles en stock</string>
     <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
@@ -170,8 +171,10 @@
 
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
     <string name="welcome_dialog_content">
-        Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
+        NOUVEAUTÉ dans la v14 : Sur l\'écran d\'édition, vous pouvez choisir d\'afficher la quantité prise au cours des dernières 24 heures (en plus de la quantité prise pendant la période de dosage).\n
+        \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
         \nVous pouvez également définir la quantité standard à utiliser pour chaque médicament sur l\'écran d\'édition.\n
+        \nNOUVEAUTÉ dans la v14 : sur l\'écran d\'édition, vous pouvez choisir d\'afficher la quantité prise au cours des dernières 24 heures (en plus de la quantité prise pendant la période de dosage).\n
         \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
     </string>
 </resources>

@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.welcome_dialog_content)
                     .setPositiveButton(R.string.close, (dialog, id) -> {
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("show_v13_dialog", false);
+                        editor.putBoolean("show_v14_dialog", false);
                         editor.apply();
                         dialog.cancel();
                     })
@@ -241,7 +241,8 @@ public class MainActivity extends AppCompatActivity {
         // Previous welcome dialog prefs:
         // show_dev_decree_dialog
         // show_v13_dialog
-        boolean showWelcomeDialog = prefs.getBoolean("show_v13_dialog", true);
+        // show_v14_dialog
+        boolean showWelcomeDialog = prefs.getBoolean("show_v14_dialog", true);
         if (showWelcomeDialog) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             new welcomeDialogFragment().show(fragmentManager, "WELCOME_DIALOG");

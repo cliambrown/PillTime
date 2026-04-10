@@ -24,7 +24,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "pilltime.db";
-    public static final int DB_VERSION = 5;
+    public static final int DB_VERSION = 6;
 
     public static final String MEDS_TABLE = "meds";
     public static final String MEDS_COL_NAME = "name";
@@ -35,6 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String MEDS_COL_REPORTED_INVENTORY = "reported_inventory";
     public static final String MEDS_COL_INVENTORY_REPORTED_AT = "inventory_reported_at";
     public static final String MEDS_COL_DEFAULT_DOSE_COUNT = "default_dose_count";
+    public static final String MEDS_COL_SHOW_DAY_DOSE_COUNT = "show_day_dose_count";
 
     public static final String DOSES_TABLE = "doses";
     public static final String DOSES_COL_MED_ID = "med_id";
@@ -72,7 +73,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MEDS_COL_IS_INVENTORY_TRACKED + " INTEGER," +
                 MEDS_COL_REPORTED_INVENTORY + " REAL," +
                 MEDS_COL_INVENTORY_REPORTED_AT + " REAL," +
-                MEDS_COL_DEFAULT_DOSE_COUNT + " INTEGER)";
+                MEDS_COL_DEFAULT_DOSE_COUNT + " INTEGER," +
+                MEDS_COL_SHOW_DAY_DOSE_COUNT + " INTEGER)";
         db.execSQL(stmt);
         String stmt2 = "CREATE TABLE IF NOT EXISTS " + DOSES_TABLE + " " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -101,6 +103,9 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 5) {
             db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_DEFAULT_DOSE_COUNT + " INTEGER");
         }
+        if (oldVersion < 6) {
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_SHOW_DAY_DOSE_COUNT + " INTEGER");
+        }
     }
 
     public List<Med> getAllMeds() {
@@ -126,6 +131,7 @@ public class DbHelper extends SQLiteOpenHelper {
             int col_reportedInventory = cursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
             int col_inventoryReportedAt = cursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
             int col_defaultDoseCount = cursor.getColumnIndex(MEDS_COL_DEFAULT_DOSE_COUNT);
+            int col_showDayDoseCount = cursor.getColumnIndex(MEDS_COL_SHOW_DAY_DOSE_COUNT);
 
             do {
                 int medID = cursor.getInt(col_id);
@@ -137,8 +143,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 double reportedInventory = cursor.getDouble(col_reportedInventory);
                 long inventoryReportedAt = cursor.getLong(col_inventoryReportedAt);
                 int defaultDoseCount = cursor.getInt(col_defaultDoseCount);
+                boolean showDayDoseCount = cursor.getInt(col_showDayDoseCount) != 0;
                 returnList.add(new Med(medID, medName, maxDose, doseHours, color, isInventoryTracked,
-                        reportedInventory, inventoryReportedAt, defaultDoseCount, context));
+                        reportedInventory, inventoryReportedAt, defaultDoseCount, showDayDoseCount, context));
             } while (cursor.moveToNext());
         }
 
@@ -164,6 +171,7 @@ public class DbHelper extends SQLiteOpenHelper {
         int col_reportedInventory = cursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
         int col_inventoryReportedAt = cursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
         int col_defaultDoseCount = cursor.getColumnIndex(MEDS_COL_DEFAULT_DOSE_COUNT);
+        int col_showDayDoseCount = cursor.getColumnIndex(MEDS_COL_SHOW_DAY_DOSE_COUNT);
         String medName = cursor.getString(col_name);
         int maxDose = cursor.getInt(col_maxDose);
         int doseHours = cursor.getInt(col_doseHours);
@@ -172,8 +180,9 @@ public class DbHelper extends SQLiteOpenHelper {
         double reportedInventory = cursor.getDouble(col_reportedInventory);
         long inventoryReportedAt = cursor.getLong(col_inventoryReportedAt);
         int defaultDoseCount = cursor.getInt(col_defaultDoseCount);
+        boolean showDayDoseCount = cursor.getInt(col_showDayDoseCount) != 0;
         Med med = new Med(medID, medName, maxDose, doseHours, color, isInventoryTracked, reportedInventory,
-                inventoryReportedAt, defaultDoseCount, context);
+                inventoryReportedAt, defaultDoseCount, showDayDoseCount, context);
 
         long now = System.currentTimeMillis() / 1000L;
         long startTime = now - med.getDoseDurationInSeconds();
@@ -224,6 +233,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_REPORTED_INVENTORY, med.getReportedInventory());
         cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, med.getDefaultDoseCount());
+        cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, med.getShowDayDoseCount());
         long insertID = db.insert(MEDS_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -241,6 +251,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_REPORTED_INVENTORY, med.getReportedInventory());
         cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, med.getDefaultDoseCount());
+        cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, med.getShowDayDoseCount());
         String[] whereArgs = new String[]{String.valueOf(med.getId())};
         int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
         db.close();
@@ -434,6 +445,7 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesMap.put(MEDS_COL_REPORTED_INVENTORY, "m6");
         colCodesMap.put(MEDS_COL_INVENTORY_REPORTED_AT, "m7");
         colCodesMap.put(MEDS_COL_DEFAULT_DOSE_COUNT, "m8");
+        colCodesMap.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, "m9");
         colCodesMap.put(DOSES_COL_COUNT, "d1");
         colCodesMap.put(DOSES_COL_TAKEN_AT, "d2");
         colCodesMap.put(DOSES_COL_NOTIFY, "d3");
@@ -448,6 +460,7 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesObject.put(MEDS_COL_REPORTED_INVENTORY, colCodesMap.get(MEDS_COL_REPORTED_INVENTORY));
         colCodesObject.put(MEDS_COL_INVENTORY_REPORTED_AT, colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT));
         colCodesObject.put(MEDS_COL_DEFAULT_DOSE_COUNT, colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT));
+        colCodesObject.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT));
         colCodesObject.put(DOSES_COL_COUNT, colCodesMap.get(DOSES_COL_COUNT));
         colCodesObject.put(DOSES_COL_TAKEN_AT, colCodesMap.get(DOSES_COL_TAKEN_AT));
         colCodesObject.put(DOSES_COL_NOTIFY, colCodesMap.get(DOSES_COL_NOTIFY));
@@ -470,6 +483,7 @@ public class DbHelper extends SQLiteOpenHelper {
             int col_reportedInventory = medCursor.getColumnIndex(MEDS_COL_REPORTED_INVENTORY);
             int col_inventoryReportedAt = medCursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
             int col_defaultDoseCount = medCursor.getColumnIndex(MEDS_COL_DEFAULT_DOSE_COUNT);
+            int col_showDayDoseCount = medCursor.getColumnIndex(MEDS_COL_SHOW_DAY_DOSE_COUNT);
             do {
                 int medID = medCursor.getInt(col_id);
                 String medName = medCursor.getString(col_name);
@@ -480,6 +494,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 double reportedInventory = medCursor.getDouble(col_reportedInventory);
                 long inventoryReportedAt = medCursor.getLong(col_inventoryReportedAt);
                 int defaultDoseCount = medCursor.getInt(col_defaultDoseCount);
+                boolean showDayDoseCount = medCursor.getInt(col_showDayDoseCount) > 0;
                 JSONObject medObject = new JSONObject();
                 medObject.put(colCodesMap.get(MEDS_COL_NAME), medName);
                 medObject.put(colCodesMap.get(MEDS_COL_MAX_DOSE), maxDose);
@@ -489,6 +504,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 medObject.put(colCodesMap.get(MEDS_COL_REPORTED_INVENTORY), reportedInventory);
                 medObject.put(colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT), inventoryReportedAt);
                 medObject.put(colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT), defaultDoseCount);
+                medObject.put(colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT), showDayDoseCount);
 
                 JSONArray dosesArray = new JSONArray();
                 String doseStmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ?";
@@ -574,6 +590,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 int defaultDoseCount = colCodesMap.containsKey(MEDS_COL_DEFAULT_DOSE_COUNT)
                         ? medObject.getInt(colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT))
                         : 1;
+                boolean showDayDoseCount = colCodesMap.containsKey(MEDS_COL_SHOW_DAY_DOSE_COUNT)
+                        && medObject.getBoolean(colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT));
 
                 int medID;
                 String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
@@ -592,6 +610,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 cv.put(MEDS_COL_REPORTED_INVENTORY, reportedInventory);
                 cv.put(MEDS_COL_INVENTORY_REPORTED_AT, inventoryReportedAt);
                 cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, defaultDoseCount);
+                cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, showDayDoseCount);
                 if (cursor.moveToFirst()) {
                     int col_id = cursor.getColumnIndex("id");
                     medID = cursor.getInt(col_id);

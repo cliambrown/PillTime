@@ -143,12 +143,11 @@ public class Utils {
 
     public static SpannableString buildTakenInPastString(Context context, @AttrRes int colorAttrResId, double takenAmount, int doseHours) {
         String takenInPastRaw;
-        int dose = doseHours;
         if (doseHours % 24 == 0) {
-            dose /= 24;
-            takenInPastRaw = context.getResources().getQuantityString(R.plurals.taken_in_past_days, dose);
+            doseHours /= 24;
+            takenInPastRaw = context.getResources().getQuantityString(R.plurals.taken_in_past_days, doseHours);
         } else {
-            takenInPastRaw = context.getResources().getQuantityString(R.plurals.taken_in_past_hours, dose);
+            takenInPastRaw = context.getResources().getQuantityString(R.plurals.taken_in_past_hours, doseHours);
         }
 
         String takenAmountString = Utils.getStrFromDbl(takenAmount);
@@ -160,7 +159,7 @@ public class Utils {
         spans.add(new ForegroundColorSpan(color));
         spans.add(new StyleSpan(Typeface.BOLD));
         spansList.add(spans);
-        return styleString(takenInPastRaw, spansList, takenAmountString, dose);
+        return styleString(takenInPastRaw, spansList, takenAmountString, doseHours);
     }
 
     /**

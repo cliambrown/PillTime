@@ -43,6 +43,7 @@ public class MedActivity extends AppCompatActivity {
     TextView tv_med_name;
     TextView tv_med_maxDoseInfo;
     TextView tv_med_takenInPast;
+    TextView tv_med_takenInPastDay;
 
     TextView tv_med_inventory;
     LinearLayout ll_med_no_doses;
@@ -71,6 +72,7 @@ public class MedActivity extends AppCompatActivity {
         tv_med_name = findViewById(R.id.tv_med_name);
         tv_med_maxDoseInfo = findViewById(R.id.tv_med_maxDoseInfo);
         tv_med_takenInPast = findViewById(R.id.tv_med_takenInPast);
+        tv_med_takenInPastDay = findViewById(R.id.tv_med_takenInPastDay);
         tv_med_inventory = findViewById(R.id.tv_med_inventory);
         ll_med_no_doses = findViewById(R.id.ll_med_no_doses);
         btn_med_add_dose = findViewById(R.id.btn_med_add_dose);
@@ -266,6 +268,14 @@ public class MedActivity extends AppCompatActivity {
         }
         tv_med_takenInPast.setText(Utils.buildTakenInPastString(this, colorAttrResId, med.getActiveDoseCount(),
                 med.getDoseHours()));
+        if (!med.getShowDayDoseCount() || med.getDoseHours() == 24) {
+            tv_med_takenInPastDay.setVisibility(View.GONE);
+        } else {
+            tv_med_takenInPastDay.setText(
+                    getResources().getQuantityString(R.plurals.taken_in_past_days, 1, Utils.getStrFromDbl(med.getPastDayDoseCount()))
+            );
+            tv_med_takenInPastDay.setVisibility(View.VISIBLE);
+        }
         for (int i=0; i<med.getDoses().size(); ++i) {
             mAdapter.notifyItemChanged(i, "update_times");
         }

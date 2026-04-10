@@ -26,16 +26,18 @@ public class Med {
     private double reportedInventory;
     private long inventoryReportedAt;
     private int defaultDoseCount;
+    private boolean showDayDoseCount;
 
     private final List<Dose> doses = new ArrayList<>();
     private boolean hasLoadedAllDoses;
     Dose latestDose;
     Dose nextExpiringDose;
     double activeDoseCount;
+    double pastDayDoseCount;
     private double currentInventory;
 
     public Med(int id, String name, int maxDose, int doseHours, String color, boolean isInventoryTracked,
-               double reportedInventory, long inventoryReportedAt, int defaultDoseCount, Context context) {
+               double reportedInventory, long inventoryReportedAt, int defaultDoseCount, boolean showDayDoseCount, Context context) {
         this.context = context;
         this.id = id;
         this.name = name;
@@ -46,6 +48,7 @@ public class Med {
         this.reportedInventory = reportedInventory;
         this.inventoryReportedAt = inventoryReportedAt;
         this.defaultDoseCount = defaultDoseCount;
+        this.showDayDoseCount = showDayDoseCount;
         this.hasLoadedAllDoses = false;
     }
 
@@ -62,6 +65,7 @@ public class Med {
                 ", reportedInventory=" + reportedInventory +
                 ", inventoryReportedAt=" + inventoryReportedAt +
                 ", defaultDoseCount=" + defaultDoseCount +
+                ", showDayDoseCount=" + showDayDoseCount +
                 ", doses=" + doses +
                 '}';
     }
@@ -138,16 +142,6 @@ public class Med {
         this.inventoryReportedAt = inventoryReportedAt;
     }
 
-    public int getDefaultDoseCount() {
-        // defaultDoseCount may be zero for meds saved before v13
-        // previous pre-filled dose count value was = maxDose
-        return defaultDoseCount <= 0 ? maxDose : defaultDoseCount;
-    }
-
-    public void setDefaultDoseCount(int defaultDoseCount) {
-        this.defaultDoseCount = defaultDoseCount;
-    }
-
     /**
      * @return the amount of remaining doses reported by the user
      */
@@ -160,6 +154,22 @@ public class Med {
      */
     public void setReportedInventory(double reportedInventory) {
         this.reportedInventory = reportedInventory;
+    }
+
+    public int getDefaultDoseCount() {
+        // defaultDoseCount may be zero for meds saved before v13
+        // previous pre-filled dose count value was = maxDose
+        return defaultDoseCount <= 0 ? maxDose : defaultDoseCount;
+    }
+
+    public void setDefaultDoseCount(int defaultDoseCount) {
+        this.defaultDoseCount = defaultDoseCount;
+    }
+
+    public boolean getShowDayDoseCount() { return showDayDoseCount; }
+
+    public void setShowDayDoseCount(boolean showDayDoseCount) {
+        this.showDayDoseCount = showDayDoseCount;
     }
 
     /**
@@ -298,6 +308,12 @@ public class Med {
         this.activeDoseCount = activeDoseCount;
     }
 
+    public double getPastDayDoseCount() { return pastDayDoseCount; }
+
+    public void setPastDayDoseCount(double pastDayDoseCount) {
+        this.pastDayDoseCount = pastDayDoseCount;
+    }
+
     public String getInventoryStr() {
         return (int) getCurrentInventory() + " / " + (int) getReportedInventory();
     }
@@ -305,11 +321,15 @@ public class Med {
     public void updateTimes() {
         long now = System.currentTimeMillis() / 1000L;
         long earliestActiveTakenAt = now - getDoseDurationInSeconds();
+        long oneDayAgo = now - 86400;
         activeDoseCount = 0.0D;
+        pastDayDoseCount = 0.0D;
         nextExpiringDose = null;
         latestDose = null;
         currentInventory = reportedInventory;
         boolean finishedCountingInventory = false;
+        boolean finishedCountingActiveDoses = false;
+        boolean finishedCountingPastDayDoses = false;
         for (Dose dose : doses) {
             if (currentInventory > 0 && dose.getTakenAt() >= inventoryReportedAt) {
                 currentInventory -= dose.getCount();
@@ -321,7 +341,15 @@ public class Med {
             if (dose.getTakenAt() > earliestActiveTakenAt) {
                 activeDoseCount += dose.getCount();
                 nextExpiringDose = dose;
-            } else if (finishedCountingInventory) {
+            } else {
+                finishedCountingActiveDoses = true;
+            }
+            if (dose.getTakenAt() > oneDayAgo) {
+                pastDayDoseCount += dose.getCount();
+            } else {
+                finishedCountingPastDayDoses = true;
+            }
+            if (finishedCountingInventory && finishedCountingActiveDoses && finishedCountingPastDayDoses) {
                 break;
             }
         }

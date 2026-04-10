@@ -43,6 +43,7 @@ public class EditMedActivity extends SimpleMenuActivity {
     AppCompatSpinner sp_editMed_daysHours;
     NumberPicker np_editMed_defaultDoseCount;
     SwitchCompat switch_editMed_trackInventory;
+    SwitchCompat switch_editMed_showDayDoseCount;
     LinearLayout ll_editMed_trackInventory;
     NumberPicker np_editMed_currentInventory;
     TextView tv_editMed_inventoryReportedAt;
@@ -64,6 +65,11 @@ public class EditMedActivity extends SimpleMenuActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        Intent intent = getIntent();
+        medID = intent.getIntExtra("id", -1);
+        mApp = (PillTimeApplication) this.getApplication();
+        Med med = mApp.getMed(medID);
+
         cl_editMed_parent = findViewById(R.id.cl_editMed_parent);
         et_editMed_name = findViewById(R.id.et_editMed_name);
         flow_editMed_colors = findViewById(R.id.flow_editMed_colors);
@@ -71,12 +77,12 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         np_editMed_maxDose = findViewById(R.id.np_editMed_maxDose);
         np_editMed_maxDose.setMinValue(1);
-        np_editMed_maxDose.setMaxValue(100);
+        np_editMed_maxDose.setMaxValue(1000);
         np_editMed_maxDose.setWrapSelectorWheel(false);
 
         np_editMed_defaultDoseCount = findViewById(R.id.np_editMed_defaultDoseCount);
         np_editMed_defaultDoseCount.setMinValue(1);
-        np_editMed_defaultDoseCount.setMaxValue(100);
+        np_editMed_defaultDoseCount.setMaxValue(1000);
         np_editMed_defaultDoseCount.setWrapSelectorWheel(false);
 
         np_editMed_doseHoursDays = findViewById(R.id.np_editMed_doseHoursDays);
@@ -93,15 +99,12 @@ public class EditMedActivity extends SimpleMenuActivity {
         // Apply the adapter to the spinner.
         sp_editMed_daysHours.setAdapter(adapter);
 
+        switch_editMed_showDayDoseCount = findViewById(R.id.switch_editMed_showDayDoseCount);
+
         np_editMed_currentInventory = findViewById(R.id.np_editMed_currentInventory);
         np_editMed_currentInventory.setMinValue(0);
         np_editMed_currentInventory.setMaxValue(1000);
         np_editMed_currentInventory.setWrapSelectorWheel(false);
-
-        Intent intent = getIntent();
-        medID = intent.getIntExtra("id", -1);
-        mApp = (PillTimeApplication) this.getApplication();
-        Med med = mApp.getMed(medID);
 
         tv_editMed_inventoryReportedAt = findViewById(R.id.tv_editMed_inventoryReportedAt);
         ll_editMed_trackInventory = findViewById(R.id.ll_editMed_trackInventory);
@@ -125,6 +128,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours());
             }
             np_editMed_defaultDoseCount.setValue(med.getDefaultDoseCount());
+            switch_editMed_showDayDoseCount.setChecked(med.getShowDayDoseCount());
             if (med.getIsInventoryTracked()) {
                 switch_editMed_trackInventory.setChecked(true);
                 ll_editMed_trackInventory.setVisibility(View.VISIBLE);
@@ -209,6 +213,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                     doseHours *= 24;
                 }
                 defaultDoseCount = np_editMed_defaultDoseCount.getValue();
+                boolean showDayDoseCount = switch_editMed_showDayDoseCount.isChecked();
                 boolean isInventoryTracked = switch_editMed_trackInventory.isChecked();
                 double reportedInventory = -1d;
                 long inventoryReportedAt = -1L;
@@ -218,7 +223,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                     inventoryReportedAt = calendar.getTimeInMillis() / 1000;
                 }
                 med1 = new Med(medID, medName, maxDose, doseHours, selectedColor, isInventoryTracked,
-                        reportedInventory, inventoryReportedAt, defaultDoseCount, EditMedActivity.this);
+                        reportedInventory, inventoryReportedAt, defaultDoseCount, showDayDoseCount, EditMedActivity.this);
             } catch (Exception e) {
                 Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();
                 return;
