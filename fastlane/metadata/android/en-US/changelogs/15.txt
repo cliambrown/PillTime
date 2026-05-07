@@ -1,0 +1,1 @@
+- Fix minor visual glitch on med page
