@@ -53,8 +53,9 @@
             android:summary="@string/import_from_file" />
 
         <com.cliambrown.pilltime.settings.ClearDbPreference
+            android:icon="@drawable/baseline_delete_24"
+            android:summary="@string/clear_meds_and_doses"
             app:key="clearDb"
-            app:iconSpaceReserved="false"
             app:title="@string/clear_db" />
 
     </PreferenceCategory>

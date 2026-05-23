@@ -87,13 +87,14 @@
     <string name="cancel">Abbrechen</string>
     <string name="more_options">Weitere Optionen</string>
 
-    <string name="dialog_clear_db">Die gesamte Datenbank wirklich bereinigen? Dies kann nicht rückgängig gemacht werden.</string>
-    <string name="dialog_delete_medication">Diese Medikation wirklich löschen? Dies löscht auch alle Benutzereingaben bezüglich dieser Medikation. Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="dialog_clear_db">Sind Sie sicher, dass Sie alle Medikamente und die Dosierungshistorie dauerhaft löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="dialog_delete_medication">Diese Medikation wirklich löschen? Dadurch werden auch alle für dieses Medikament eingegebenen Dosen gelöscht. Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose">Diese Dosis wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose_and_older">Diese Dosis und alle älteren wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
 
     <string name="settings">Einstellungen</string>
     <string name="clear_db">Alle Daten löschen</string>
+    <string name="clear_meds_and_doses">Löscht alle Medikamente und den Dosierungsverlauf von Ihrem Gerät</string>
     <string name="notifications_header">Standard für Benachrichtigungen</string>
     <string name="notify_expiring_dose">Benachrichtigen, wenn eine Dosis abläuft</string>
     <string name="notification_sound">Ton bei Benachrichtigung abspielen</string>

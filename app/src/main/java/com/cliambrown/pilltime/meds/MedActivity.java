@@ -249,7 +249,7 @@ public class MedActivity extends AppCompatActivity {
     // Update Med values that change over time
     public void updateTimes() {
         if (med == null) return;
-        med.updateTimes();
+        med.updateTimes(mApp.getDbHelper());
         if (mAdapter == null) return;
         if (med.getIsInventoryTracked()) {
             if (med.getIsInventoryLow()) {

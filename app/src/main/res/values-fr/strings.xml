@@ -87,13 +87,14 @@
     <string name="cancel">Annuler</string>
     <string name="more_options">Plus d\'options</string>
 
-    <string name="dialog_clear_db">Êtes-vous certain de vouloir effacer la totalité de la base de données ? Cette opération est irréversible.</string>
-    <string name="dialog_delete_medication">Souhaitez-vous vraiment supprimer ce médicament ? Cela supprimera également toutes les données que vous avez saisies concernant ce médicament. Cette action est irréversible.</string>
-    <string name="dialog_delete_dose">Êtes-vous certain de vouloir supprimer cette dose ? Cette action est irréversible.</string>
-    <string name="dialog_delete_dose_and_older">Souhaitez-vous vraiment supprimer cette dose et toutes les doses antérieures ? Cette action est irréversible.</string>
+    <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
+    <string name="dialog_delete_medication">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
+    <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
+    <string name="dialog_delete_dose_and_older">Êtes-vous sûr de vouloir supprimer cette dose ainsi que toutes les précédentes pour ce médicament ? Cette action est irréversible.</string>
 
     <string name="settings">Paramètres</string>
     <string name="clear_db">Effacer toutes les données</string>
+    <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
     <string name="notifications_header">Défauts des notifications</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
     <string name="notification_sound">Émettre un son avec la notification</string>

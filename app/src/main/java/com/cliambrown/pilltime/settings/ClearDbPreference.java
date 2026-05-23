@@ -3,8 +3,6 @@ package com.cliambrown.pilltime.settings;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.preference.Preference;
@@ -38,13 +36,5 @@ public class ClearDbPreference extends Preference {
         TextView tv = (TextView) holder.findViewById(android.R.id.title);
         tv.setTextColor(ThemeHelper.getThemeAttr(R.attr.redText, getContext()));
         tv.setTypeface(null, Typeface.BOLD);
-        int dp12 = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                12,
-                getContext().getResources().getDisplayMetrics()
-        );
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tv.getLayoutParams();
-        params.topMargin = dp12;
-        tv.setLayoutParams(params);
     }
 }

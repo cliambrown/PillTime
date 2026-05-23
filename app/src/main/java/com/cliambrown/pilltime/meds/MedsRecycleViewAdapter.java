@@ -1,5 +1,6 @@
 package com.cliambrown.pilltime.meds;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -44,17 +45,13 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         this.mApp = mApp;
     }
 
-    public void setData(List<Med> meds) {
-        this.meds = meds;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public MedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_med, parent, false);
         MedViewHolder holder = new MedViewHolder(view);
         holder.context = parent.getContext();
+        holder.mApp = mApp;
         return holder;
     }
 
@@ -169,11 +166,12 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         final TextView tv_rvMed_takenInPast;
         final TextView tv_rvMed_latestDoseExpiresIn;
         final TextView tv_rvMed_lastTaken;
-        final LinearLayout ll_rvMed_inventory;
+        final LinearLayout ll_rvMed_footer;
         final TextView tv_rvMed_inventory;
         final ImageButton btn_rvMed_more;
         Med med;
         Context context;
+        PillTimeApplication mApp;
 
         public MedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -184,14 +182,14 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             tv_rvMed_takenInPast = itemView.findViewById(R.id.tv_rvMed_takenInPast);
             tv_rvMed_latestDoseExpiresIn = itemView.findViewById(R.id.tv_rvMed_latestDoseExpiresIn);
             tv_rvMed_lastTaken = itemView.findViewById(R.id.tv_rvMed_lastTaken);
-            ll_rvMed_inventory = itemView.findViewById(R.id.ll_rvMed_inventory);
+            ll_rvMed_footer = itemView.findViewById(R.id.ll_rvMed_footer);
             tv_rvMed_inventory = itemView.findViewById(R.id.tv_rvMed_inventory);
             btn_rvMed_more = itemView.findViewById(R.id.btn_rvMed_more);
         }
 
         public void updateTimes() {
             if (med == null) return;
-            med.updateTimes();
+            med.updateTimes(mApp.getDbHelper());
             double currentTotalDoseCount = med.getActiveDoseCount();
             Dose latestDose = med.getLatestDose();
             Dose nextExpiringDose = med.getNextExpiringDose();
@@ -235,6 +233,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                     med.getDoseHours()));
         }
 
+        @SuppressLint("DefaultLocale")
         public void updateInfo() {
             tv_rvMed_name.setText(med.getName());
             String colorName = med.getColor();
@@ -258,10 +257,12 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                 } else {
                     tv_rvMed_inventory.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 }
-                ll_rvMed_inventory.setVisibility(View.VISIBLE);
+//                ll_rvMed_footer.setVisibility(View.VISIBLE);
                 tv_rvMed_inventory.setText(context.getString(R.string.inventory, med.getInventoryStr()));
+                tv_rvMed_inventory.setVisibility(View.VISIBLE);
             } else {
-                ll_rvMed_inventory.setVisibility(View.GONE);
+//                ll_rvMed_footer.setVisibility(View.GONE);
+                tv_rvMed_inventory.setVisibility(View.GONE);
             }
         }
     }

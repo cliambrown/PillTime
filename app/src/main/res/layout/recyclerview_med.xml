@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="10dp"
     android:id="@+id/layout_rvMed">
 
     <LinearLayout
@@ -48,15 +49,6 @@
                     android:breakStrategy="balanced"
                     android:textSize="20sp"
                     android:padding="8dp"/>
-
-                <TextView
-                    android:id="@+id/tv_rvMed_maxDoseInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:singleLine="true"
-                    android:padding="8dp"
-                    android:textSize="14sp" />
 
                 <ImageButton
                     android:id="@+id/btn_rvMed_more"
@@ -106,14 +98,16 @@
                 android:text="@string/last_taken"/>
 
             <LinearLayout
-                android:id="@+id/ll_rvMed_inventory"
+                android:id="@+id/ll_rvMed_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end|center_vertical">
+                android:gravity="end|center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_rvMed_inventory"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     app:drawableTint="?attr/buttonText"
                     android:singleLine="true"
@@ -124,6 +118,15 @@
                     android:textSize="16sp"
                     android:textColor="?attr/buttonText"
                     android:text="@string/inventory"/>
+
+                <TextView
+                    android:id="@+id/tv_rvMed_maxDoseInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/buttonText"
+                    android:singleLine="true"
+                    android:padding="8dp"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

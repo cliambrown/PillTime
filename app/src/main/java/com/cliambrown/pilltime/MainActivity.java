@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < meds.size(); ++i) {
                         if (meds.get(i).getId() == medID) {
                             mAdapter.notifyItemChanged(i, "doses_edited");
-                            recyclerView.scrollToPosition(i);
+//                            recyclerView.scrollToPosition(i);
                             return;
                         }
                     }

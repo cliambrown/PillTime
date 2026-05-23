@@ -25,6 +25,7 @@ public class BootReceiver extends BroadcastReceiver {
                 AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 for (Dose dose : activeDoses) {
                     Med med = dbHelper.getMedById(dose.getMedID());
+                    if (med == null) continue;
                     Intent alarmIntent = new Intent(context, AlarmBroadcastReceiver.class);
                     alarmIntent.putExtra("doseID", dose.getId());
                     alarmIntent.putExtra("medID", med.getId());

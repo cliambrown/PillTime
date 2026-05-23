@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 
 import java.util.ArrayList;
@@ -180,6 +181,10 @@ public class Med {
         return currentInventory;
     }
 
+    public void setCurrentInventory(double currentInventory) {
+        this.currentInventory = currentInventory;
+    }
+
     public boolean getIsInventoryLow() {
         return this.isInventoryTracked
                 && this.currentInventory == 0
@@ -298,7 +303,11 @@ public class Med {
         return latestDose;
     }
 
+    public void setLatestDose(Dose dose) { this.latestDose = dose; }
+
     public Dose getNextExpiringDose() { return nextExpiringDose; }
+
+    public void setNextExpiringDose(Dose dose) { this.nextExpiringDose = dose; }
 
     public double getActiveDoseCount() {
         return activeDoseCount;
@@ -318,42 +327,8 @@ public class Med {
         return (int) getCurrentInventory() + " / " + (int) getReportedInventory();
     }
 
-    public void updateTimes() {
-        long now = System.currentTimeMillis() / 1000L;
-        long earliestActiveTakenAt = now - getDoseDurationInSeconds();
-        long oneDayAgo = now - 86400;
-        activeDoseCount = 0.0D;
-        pastDayDoseCount = 0.0D;
-        nextExpiringDose = null;
-        latestDose = null;
-        currentInventory = reportedInventory;
-        boolean finishedCountingInventory = false;
-        boolean finishedCountingActiveDoses = false;
-        boolean finishedCountingPastDayDoses = false;
-        for (Dose dose : doses) {
-            if (currentInventory > 0 && dose.getTakenAt() >= inventoryReportedAt) {
-                currentInventory -= dose.getCount();
-            } else {
-                finishedCountingInventory = true;
-            }
-            if (dose.getTakenAt() > now) continue;
-            if (latestDose == null) latestDose = dose;
-            if (dose.getTakenAt() > earliestActiveTakenAt) {
-                activeDoseCount += dose.getCount();
-                nextExpiringDose = dose;
-            } else {
-                finishedCountingActiveDoses = true;
-            }
-            if (dose.getTakenAt() > oneDayAgo) {
-                pastDayDoseCount += dose.getCount();
-            } else {
-                finishedCountingPastDayDoses = true;
-            }
-            if (finishedCountingInventory && finishedCountingActiveDoses && finishedCountingPastDayDoses) {
-                break;
-            }
-        }
-        currentInventory = Math.max(0, currentInventory);
+    public void updateTimes(DbHelper dbHelper) {
+        dbHelper.updateMedTimes(this);
     }
 
     public boolean hasLoadedAllDoses() {
