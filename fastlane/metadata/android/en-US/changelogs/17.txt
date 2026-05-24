@@ -1,0 +1,2 @@
+- Fixed checking inventory, latest dose, and next expiring dose in certain cases
+- Minor main page redesign
