@@ -9,12 +9,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.meds.Med;
@@ -34,6 +36,7 @@ public class PillTimeApplication extends Application {
     DbHelper dbHelper;
     private List<Med> meds = new ArrayList<>();
     public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
+    public String medSort;
 
     public DbHelper getDbHelper() { return dbHelper; }
 
@@ -41,6 +44,8 @@ public class PillTimeApplication extends Application {
         super.onCreate();
         context = getApplicationContext();
         dbHelper = new DbHelper(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        medSort = prefs.getString("med_sort", context.getString(R.string.med_sort_value_latest));
         loadMeds();
         AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(context));
         createNotificationChannel();
@@ -50,7 +55,7 @@ public class PillTimeApplication extends Application {
         meds.clear();
         meds.addAll(dbHelper.getAllMeds());
         for (Med med : meds) {
-            List<Dose> doses = dbHelper.loadDoses(med);
+            List<Dose> doses = dbHelper.getDoses(med);
             med.setHasLoadedAllDoses(doses.size() < 21);
             int doseCount = 0;
             for (Dose dose : doses) {
@@ -96,7 +101,7 @@ public class PillTimeApplication extends Application {
         int position = -1;
         for (int i=0; i<meds.size(); ++i) {
             listMed = meds.get(i);
-            if (med.sortBefore(listMed)) {
+            if (med.sortBefore(listMed, medSort, context)) {
                 position = i;
                 break;
             }
@@ -177,6 +182,12 @@ public class PillTimeApplication extends Application {
         }
     }
 
+    public void sortMeds() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        medSort = prefs.getString("med_sort", context.getString(R.string.med_sort_value_latest));
+        loadMeds();
+    }
+
     public boolean addDose(Med med, Dose dose) {
         int insertID = dbHelper.insertDose(dose);
         if (insertID < 0) {
@@ -238,7 +249,7 @@ public class PillTimeApplication extends Application {
         medsSize = meds.size();
         for (int j=0; j<medsSize; ++j) {
             listMed = meds.get(j);
-            if (med.sortBefore(listMed)) {
+            if (med.sortBefore(listMed, medSort, context)) {
                 newPosition = j;
                 break;
             }
@@ -315,7 +326,7 @@ public class PillTimeApplication extends Application {
     }
 
     public void loadMoreDoses(Med med) {
-        List<Dose> doses = dbHelper.loadDoses(med);
+        List<Dose> doses = dbHelper.getDoses(med);
         med.setHasLoadedAllDoses(doses.size() < 21);
         List<Integer> doseIDs = new ArrayList<>();
         for (Dose dose : doses) {

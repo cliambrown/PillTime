@@ -1,15 +1,11 @@
 package com.cliambrown.pilltime.meds;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.ParcelableSpan;
 import android.text.style.StyleSpan;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,18 +16,15 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.cliambrown.pilltime.MainActivity;
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
-import com.cliambrown.pilltime.settings.SettingsActivity;
+import com.cliambrown.pilltime.utilities.SimpleMenuActivity;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -41,7 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EditMedActivity extends AppCompatActivity {
+public class EditMedActivity extends SimpleMenuActivity {
 
     ConstraintLayout cl_editMed_parent;
     EditText et_editMed_name;
@@ -258,42 +251,5 @@ public class EditMedActivity extends AppCompatActivity {
         } else {
             btn.setImageResource(0);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_med_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
-        int itemID = item.getItemId();
-        if (itemID == android.R.id.home) {
-            EditMedActivity.this.finish();
-            return true;
-        }
-        if (itemID == R.id.mi_edit_med_delete) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_delete_medication)
-                    .setTitle(R.string.delete)
-                    .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        mApp.removeMedById(medID);
-                        Intent homeIntent = new Intent(EditMedActivity.this, MainActivity.class);
-                        startActivity(homeIntent);
-                        EditMedActivity.this.finish();
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
-            builder.show();
-            return true;
-        }
-        if (itemID == R.id.mi_edit_med_settings) {
-            intent = new Intent(EditMedActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

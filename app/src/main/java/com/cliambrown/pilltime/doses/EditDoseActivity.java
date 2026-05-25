@@ -48,6 +48,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
     ExtendedFloatingActionButton btn_editDose_save;
     PillTimeApplication mApp;
     int medID, doseID;
+    Med med = null;
+    Dose dose = null;
     Calendar selectedDatetime;
     boolean hasManuallySelectedTime = false;
 
@@ -80,8 +82,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         medID = intent.getIntExtra("medID", -1);
         doseID = intent.getIntExtra("doseID", -1);
         mApp = (PillTimeApplication) this.getApplication();
-        Med med = mApp.getMed(medID);
-        Dose dose;
+        med = mApp.getMed(medID);
 
         if (med == null) {
             EditDoseActivity.this.finish();

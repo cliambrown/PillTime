@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/mi_med_delete"
+        android:icon="@drawable/baseline_delete_24"
+        android:title="@string/delete"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/mi_med_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"

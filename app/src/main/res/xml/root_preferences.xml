@@ -23,7 +23,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/theme_header">
+        app:title="@string/interface_header">
 
         <ListPreference
             app:entries="@array/themes_entries"
@@ -31,6 +31,15 @@
             app:key="theme"
             app:defaultValue="@string/theme_value_system_default"
             app:title="@string/theme_header"
+            app:iconSpaceReserved="false"
+            app:summary="%s"/>
+
+        <ListPreference
+            app:entries="@array/med_sort_entries"
+            app:entryValues="@array/med_sort_values"
+            app:key="med_sort"
+            app:defaultValue="@string/med_sort_value_latest"
+            app:title="@string/med_sort_header"
             app:iconSpaceReserved="false"
             app:summary="%s"/>
 

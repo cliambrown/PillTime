@@ -38,6 +38,7 @@
     <string name="edit_dose_title">Edit %1$s dose</string>
     <string name="edit_med_title">Edit %1$s</string>
     <string name="dose_history">Dose history</string>
+    <string name="med">Med</string>
     <string name="amount_taken">Amount Taken</string>
     <string name="decrease_amount_taken">Decrease amount taken</string>
     <string name="increase_amount_taken">Increase amount taken</string>
@@ -112,6 +113,8 @@
     <string name="toast_data_exported">Data exported</string>
     <string name="toast_database_cleared">Database cleared</string>
 
+    <string name="interface_header">Interface</string>
+
     <string name="theme_header">Theme</string>
     <string name="theme_entry_light">Light</string>
     <string name="theme_entry_dark">Dark</string>
@@ -123,6 +126,14 @@
     <string name="theme_value_dark" translatable="false">MODE_NIGHT_YES</string>
     <string name="theme_value_system_default" translatable="false">MODE_NIGHT_FOLLOW_SYSTEM</string>
     <string name="theme_value_auto_battery" translatable="false">MODE_NIGHT_AUTO_BATTERY</string>
+
+    <string name="med_sort_header">Med Sort Order</string>
+    <string name="med_sort_entry_latest">Last Taken</string>
+    <string name="med_sort_entry_alpha">Alphabetical</string>
+
+    <!-- These four strings are Android constants and should not be translated -->
+    <string name="med_sort_value_latest" translatable="false">latest</string>
+    <string name="med_sort_value_alpha" translatable="false">alpha</string>
 
     <string name="color">Color</string>
     <string name="set_med_color">Set med color</string>
@@ -178,7 +189,7 @@
 
     <string name="welcome_dialog_title">New Features</string>
     <string name="welcome_dialog_content">
-        NEW in v14: On the edit screen, choose whether to show the amount taken over the past 24 hours (in addition to the amount taken over the dosage period).\n
+        NEW in v18: Sort meds by date taken or in alphabetical order. (See Settings page)\n
         \nFrom v13: You can now long-press the + button next to each med on the main screen to quickly add a new dose.\n
         \nYou can also set the standard dose amount to use for each med on the edit screen.\n
         \nNOTE: Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.

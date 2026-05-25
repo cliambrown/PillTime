@@ -38,6 +38,7 @@
     <string name="edit_dose_title">Modifier dose de %1$s</string>
     <string name="edit_med_title">Modifier %1$s</string>
     <string name="dose_history">Historique des doses</string>
+    <string name="med">Médicament</string>
     <string name="amount_taken">Quantité prise</string>
     <string name="decrease_amount_taken">Réduire la quantité prise</string>
     <string name="increase_amount_taken">Augmenter la quantité prise</string>
@@ -112,11 +113,17 @@
     <string name="toast_data_exported">Données exportées</string>
     <string name="toast_database_cleared">Base de données effacée</string>
 
+    <string name="interface_header">Interface</string>
+
     <string name="theme_header">Thème</string>
     <string name="theme_entry_light">Clair</string>
     <string name="theme_entry_dark">Sombre</string>
     <string name="theme_entry_system_default">Défaut du système</string>
     <string name="theme_entry_auto_battery">Automatique - batterie</string>
+
+    <string name="med_sort_header">Ordre de tri des médicaments</string>
+    <string name="med_sort_entry_latest">Le plus récemment pris</string>
+    <string name="med_sort_entry_alpha">Alphabétique</string>
 
     <string name="color">Couleur</string>
     <string name="set_med_color">Mets ce médicament en</string>
@@ -172,7 +179,7 @@
 
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
     <string name="welcome_dialog_content">
-        NOUVEAUTÉ dans la v14 : Sur l\'écran d\'édition, vous pouvez choisir d\'afficher la quantité prise au cours des dernières 24 heures (en plus de la quantité prise pendant la période de dosage).\n
+        NOUVEAUTÉ dans la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
         \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
         \nVous pouvez également définir la quantité standard à utiliser pour chaque médicament sur l\'écran d\'édition.\n
         \nNOUVEAUTÉ dans la v14 : sur l\'écran d\'édition, vous pouvez choisir d\'afficher la quantité prise au cours des dernières 24 heures (en plus de la quantité prise pendant la période de dosage).\n

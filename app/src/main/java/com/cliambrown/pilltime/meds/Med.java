@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.Utils;
@@ -277,26 +278,31 @@ public class Med {
         return newPosition;
     }
 
-    public boolean sortBefore(Med compareMed) {
-        long lastTakenAt = -1;
-        int lastTakenId = -1;
-        Dose latestDose = getLatestDose();
-        if (latestDose != null) {
-            lastTakenAt = latestDose.getTakenAt();
-            lastTakenId = latestDose.getId();
+    public boolean sortBefore(Med compareMed, String medSort, Context context) {
+        if (medSort.equals(context.getString(R.string.med_sort_value_latest))) {
+            long lastTakenAt = -1;
+            int lastTakenId = -1;
+            Dose latestDose = getLatestDose();
+            if (latestDose != null) {
+                lastTakenAt = latestDose.getTakenAt();
+                lastTakenId = latestDose.getId();
+            }
+            long compareLastTakenAt = -1;
+            int compareLastTakenId = -1;
+            Dose compareLatestDose = compareMed.getLatestDose();
+            if (compareLatestDose != null) {
+                compareLastTakenAt = compareLatestDose.getTakenAt();
+                compareLastTakenId = compareLatestDose.getId();
+            }
+            if (lastTakenAt > compareLastTakenAt) return true;
+            if (lastTakenAt < compareLastTakenAt) return false;
+            if (lastTakenId > compareLastTakenId) return true;
+            if (lastTakenId < compareLastTakenId) return false;
+            return (this.id > compareMed.getId());
         }
-        long compareLastTakenAt = -1;
-        int compareLastTakenId = -1;
-        Dose compareLatestDose = compareMed.getLatestDose();
-        if (compareLatestDose != null) {
-            compareLastTakenAt = compareLatestDose.getTakenAt();
-            compareLastTakenId = compareLatestDose.getId();
-        }
-        if (lastTakenAt > compareLastTakenAt) return true;
-        if (lastTakenAt < compareLastTakenAt) return false;
-        if (lastTakenId > compareLastTakenId) return true;
-        if (lastTakenId < compareLastTakenId) return false;
-        return (id > compareMed.getId());
+        // Sort by name
+        if (this.name.equals(compareMed.getName())) return (this.id < compareMed.getId());
+        return (this.name.compareToIgnoreCase(compareMed.getName()) < 0);
     }
 
     public Dose getLatestDose() {

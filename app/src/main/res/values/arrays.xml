@@ -13,6 +13,16 @@
         <item>@string/theme_value_auto_battery</item>
     </string-array>
 
+    <string-array name="med_sort_entries">
+        <item>@string/med_sort_entry_latest</item>
+        <item>@string/med_sort_entry_alpha</item>
+    </string-array>
+
+    <string-array name="med_sort_values">
+        <item>@string/med_sort_value_latest</item>
+        <item>@string/med_sort_value_alpha</item>
+    </string-array>
+
     <string-array name="color_options">
         <item>orange</item>
         <item>amber</item>

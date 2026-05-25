@@ -2,10 +2,13 @@ package com.cliambrown.pilltime.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
@@ -188,14 +191,24 @@ public class DbHelper extends SQLiteOpenHelper {
         List<Med> returnList = new ArrayList<>();
 
         long now = System.currentTimeMillis() / 1000L;
-        String stmt = "SELECT * FROM " + MEDS_TABLE +
-                " LEFT JOIN ("
+        String stmt;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String medSortLatest = context.getString(R.string.med_sort_value_latest);
+        String medSort = prefs.getString("med_sort", medSortLatest);
+        if (medSort.equals(medSortLatest)) {
+            stmt = "SELECT * FROM " + MEDS_TABLE
+                    + " LEFT JOIN ("
                     + "SELECT id AS dose_id, " + DOSES_COL_MED_ID + ", MAX(" + DOSES_COL_TAKEN_AT + ") AS last_taken_at"
                     + " FROM " + DOSES_TABLE
                     + " WHERE " + DOSES_COL_TAKEN_AT + " <= " + now
                     + " GROUP BY " + DOSES_COL_MED_ID
-                + ") AS D ON " + MEDS_TABLE + ".id = D." + DOSES_COL_MED_ID
-                + " ORDER BY last_taken_at DESC, dose_id DESC, id DESC";
+                    + ") AS D ON " + MEDS_TABLE + ".id = D." + DOSES_COL_MED_ID
+                    + " ORDER BY last_taken_at DESC, dose_id DESC, id DESC";
+        } else {
+            stmt = "SELECT * FROM " + MEDS_TABLE
+                    + " ORDER BY " + MEDS_COL_NAME + " ASC, id ASC";
+        }
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(stmt, null);
@@ -330,7 +343,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<Dose> loadDoses(Med med) {
+    public List<Dose> getDoses(Med med) {
         List<Dose> returnList = new ArrayList<>();
         String stmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ? ";
         List<Integer> doseIDs = new ArrayList<>();

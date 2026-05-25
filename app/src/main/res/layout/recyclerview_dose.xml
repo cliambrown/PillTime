@@ -5,7 +5,7 @@
     android:id="@+id/layout_rvDose"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_margin="12dp"
     android:orientation="horizontal"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintStart_toStartOf="parent"

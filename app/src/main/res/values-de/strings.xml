@@ -38,6 +38,7 @@
     <string name="edit_dose_title">%1$s-Dosis bearbeiten</string>
     <string name="edit_med_title">%1$s bearbeiten</string>
     <string name="dose_history">Dosisverlauf</string>
+    <string name="med">Medikation</string>
     <string name="amount_taken">Menge eingenommen</string>
     <string name="decrease_amount_taken">Die Einnahmemenge verringern</string>
     <string name="increase_amount_taken">Die Einnahmemenge erhöhen</string>
@@ -112,11 +113,17 @@
     <string name="toast_data_exported">Die Daten wurden exportiert</string>
     <string name="toast_database_cleared">Datenbank geleert</string>
 
+    <string name="interface_header">Bedienoberfläche</string>
+
     <string name="theme_header">Design</string>
     <string name="theme_entry_light">Hell</string>
     <string name="theme_entry_dark">Dunkel</string>
     <string name="theme_entry_system_default">Systemstandard</string>
     <string name="theme_entry_auto_battery">Automatisch (Akku)</string>
+
+    <string name="med_sort_header">Reihenfolge zum Sortieren der Medikamente</string>
+    <string name="med_sort_entry_latest">Zuletzt eingenommen</string>
+    <string name="med_sort_entry_alpha">Alphabetisch</string>
 
     <string name="color">Farbe</string>
     <string name="set_med_color">Lege die Farbe des Medikaments fest</string>
@@ -172,7 +179,7 @@
 
     <string name="welcome_dialog_title">Neue Funktionen</string>
     <string name="welcome_dialog_content">
-        NEU in Version 14: Wählen Sie auf dem Bearbeitungsbildschirm aus, ob die in den letzten 24 Stunden eingenommene Menge (zusätzlich zur über den Dosierungszeitraum eingenommenen Menge) angezeigt werden soll.\n
+        NEU in Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n
         \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n
         \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n
         \nHINWEIS: Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.

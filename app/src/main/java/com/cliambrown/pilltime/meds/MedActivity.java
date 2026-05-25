@@ -1,6 +1,7 @@
 package com.cliambrown.pilltime.meds;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cliambrown.pilltime.MainActivity;
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
@@ -87,7 +89,7 @@ public class MedActivity extends AppCompatActivity {
             return;
         }
 
-        setTitle(getString(R.string.dose_history));
+        setTitle(getString(R.string.med));
 
         updateInfo();
         updateTimes();
@@ -326,6 +328,20 @@ public class MedActivity extends AppCompatActivity {
             intent = new Intent(MedActivity.this, EditMedActivity.class);
             intent.putExtra("id", medID);
             startActivity(intent);
+            return true;
+        }
+        if (itemID == R.id.mi_med_delete) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_delete_medication)
+                    .setTitle(R.string.delete)
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        mApp.removeMedById(medID);
+                        Intent homeIntent = new Intent(MedActivity.this, MainActivity.class);
+                        startActivity(homeIntent);
+                        MedActivity.this.finish();
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+            builder.show();
             return true;
         }
         if (itemID == R.id.mi_med_settings) {

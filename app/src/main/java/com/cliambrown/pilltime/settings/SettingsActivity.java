@@ -127,8 +127,12 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if ("theme".equals(key)) {
+        if (key == null) return;
+        if (key.equals("theme")) {
             AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(SettingsActivity.this));
+        } else if (key.equals("med_sort")) {
+            PillTimeApplication mApp = (PillTimeApplication) SettingsActivity.this.getApplication();
+            mApp.sortMeds();
         }
     }
 
