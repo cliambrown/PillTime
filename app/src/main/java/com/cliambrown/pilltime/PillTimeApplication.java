@@ -151,6 +151,9 @@ public class PillTimeApplication extends Application {
             intent.putExtra("medID", medID);
             sendBroadcast(intent);
 
+            if (medSort.equals(context.getString(R.string.med_sort_value_alpha)))
+                repositionMed(listMed);
+
             List<Dose> doses = listMed.getDoses();
             for (Dose dose : doses) {
                 if (dose.getTakenAt() <= rescheduleBeforeTakenAt) break;

@@ -207,7 +207,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     + " ORDER BY last_taken_at DESC, dose_id DESC, id DESC";
         } else {
             stmt = "SELECT * FROM " + MEDS_TABLE
-                    + " ORDER BY " + MEDS_COL_NAME + " ASC, id ASC";
+                    + " ORDER BY LOWER(" + MEDS_COL_NAME + ") ASC, id ASC";
         }
 
         SQLiteDatabase db = this.getReadableDatabase();
