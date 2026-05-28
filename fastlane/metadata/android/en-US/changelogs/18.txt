@@ -1,0 +1,1 @@
+- New setting to choose to sort meds by name or by last date taken
