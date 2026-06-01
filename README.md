@@ -15,6 +15,7 @@
 <p align="center">
     <a href="https://github.com/cliambrown/PillTime/releases"><img src="https://img.shields.io/github/v/release/cliambrown/PillTime" alt="GitHub release"></a>
     <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPLv3"></a>
+    <a href="https://hosted.weblate.org/engage/pilltime/"><img src="https://hosted.weblate.org/widget/pilltime/svg-badge.svg" alt="Translation status"></a>
 </p>
 
 <p align="center">
@@ -29,6 +30,10 @@
 * Light and dark themes
 
 Made by [C. Liam Brown](https://cliambrown.com) with notable contributions from [@mrmaffen](https://github.com/mrmaffen).
+
+## Translations
+
+Contribute to translating this app on Weblate: [hosted.weblate.org/engage/pilltime](https://hosted.weblate.org/engage/pilltime)
 
 ## Disclaimer
 
