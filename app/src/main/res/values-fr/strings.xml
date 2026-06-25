@@ -97,9 +97,11 @@
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
     <string name="notifications_header">Défauts des notifications</string>
+    <string name="notifications_description">Vous pouvez également définir des préférences de notification par défaut pour chaque médicament, et modifier les paramètres de notification pour chaque dose.</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
     <string name="notification_sound">Émettre un son avec la notification</string>
     <string name="show_day_dose_count">Afficher aussi le nombre de doses prises au cours des dernières 24 heures sur la pgae d\'historique de ce médicament ?</string>
+    <string name="override_global_notify_defaults">Utiliser des préférences de notification par défaut spécifiques pour ce médicament ? (Vous pouvez toujours modifier les paramètres de notification pour chaque dose.)</string>
     <string name="track_inventory">Suivez votre stock personnel de ce médicament ?</string>
     <string name="reported_inventory">doses actuellement disponibles en stock</string>
     <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
@@ -175,14 +177,14 @@
     <string name="never">jamais</string>
 
     <string name="about_app">À propos de Pill Time</string>
+    <string name="changelog_title">Nouveautés</string>
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
 
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
     <string name="welcome_dialog_content">
-        NOUVEAUTÉ dans la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
+        NOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
+        \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
         \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
-        \nVous pouvez également définir la quantité standard à utiliser pour chaque médicament sur l\'écran d\'édition.\n
-        \nNOUVEAUTÉ dans la v14 : sur l\'écran d\'édition, vous pouvez choisir d\'afficher la quantité prise au cours des dernières 24 heures (en plus de la quantité prise pendant la période de dosage).\n
         \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
     </string>
 </resources>

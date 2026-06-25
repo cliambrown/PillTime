@@ -44,6 +44,9 @@ public class EditMedActivity extends SimpleMenuActivity {
     NumberPicker np_editMed_defaultDoseCount;
     SwitchCompat switch_editMed_trackInventory;
     SwitchCompat switch_editMed_showDayDoseCount;
+    SwitchCompat switch_editMed_overrideGlobalNotifyDefaults;
+    SwitchCompat switch_editMed_notifyDefault;
+    SwitchCompat switch_editMed_notifySoundDefault;
     LinearLayout ll_editMed_trackInventory;
     NumberPicker np_editMed_currentInventory;
     TextView tv_editMed_inventoryReportedAt;
@@ -101,6 +104,18 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         switch_editMed_showDayDoseCount = findViewById(R.id.switch_editMed_showDayDoseCount);
 
+        switch_editMed_overrideGlobalNotifyDefaults = findViewById(R.id.switch_editMed_overrideGlobalNotifyDefaults);
+        switch_editMed_notifyDefault = findViewById(R.id.switch_editMed_notifyDefault);
+        switch_editMed_notifySoundDefault = findViewById(R.id.switch_editMed_notifySoundDefault);
+
+        switch_editMed_overrideGlobalNotifyDefaults.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            switch_editMed_notifyDefault.setEnabled(isChecked);
+            switch_editMed_notifySoundDefault.setEnabled(isChecked && switch_editMed_notifyDefault.isChecked());
+        });
+        switch_editMed_notifyDefault.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            switch_editMed_notifySoundDefault.setEnabled(isChecked && switch_editMed_overrideGlobalNotifyDefaults.isChecked());
+        });
+
         np_editMed_currentInventory = findViewById(R.id.np_editMed_currentInventory);
         np_editMed_currentInventory.setMinValue(0);
         np_editMed_currentInventory.setMaxValue(1000);
@@ -129,6 +144,16 @@ public class EditMedActivity extends SimpleMenuActivity {
             }
             np_editMed_defaultDoseCount.setValue(med.getDefaultDoseCount());
             switch_editMed_showDayDoseCount.setChecked(med.getShowDayDoseCount());
+
+            switch_editMed_overrideGlobalNotifyDefaults.setChecked(med.getOverrideGlobalNotifyDefaults());
+            switch_editMed_notifyDefault.setChecked(med.getNotifyDefault());
+            switch_editMed_notifyDefault.setEnabled(med.getOverrideGlobalNotifyDefaults());
+            switch_editMed_notifySoundDefault.setChecked(med.getNotifySoundDefault());
+            switch_editMed_notifySoundDefault.setEnabled(
+                    med.getOverrideGlobalNotifyDefaults()
+                    && med.getNotifyDefault()
+            );
+
             if (med.getIsInventoryTracked()) {
                 switch_editMed_trackInventory.setChecked(true);
                 ll_editMed_trackInventory.setVisibility(View.VISIBLE);
@@ -214,6 +239,9 @@ public class EditMedActivity extends SimpleMenuActivity {
                 }
                 defaultDoseCount = np_editMed_defaultDoseCount.getValue();
                 boolean showDayDoseCount = switch_editMed_showDayDoseCount.isChecked();
+                boolean overrideGlobalNotifyDefaults = switch_editMed_overrideGlobalNotifyDefaults.isChecked();
+                boolean notifyDefault = switch_editMed_notifyDefault.isChecked();
+                boolean notifySoundDefault = switch_editMed_notifySoundDefault.isChecked();
                 boolean isInventoryTracked = switch_editMed_trackInventory.isChecked();
                 double reportedInventory = -1d;
                 long inventoryReportedAt = -1L;
@@ -223,7 +251,9 @@ public class EditMedActivity extends SimpleMenuActivity {
                     inventoryReportedAt = calendar.getTimeInMillis() / 1000;
                 }
                 med1 = new Med(medID, medName, maxDose, doseHours, selectedColor, isInventoryTracked,
-                        reportedInventory, inventoryReportedAt, defaultDoseCount, showDayDoseCount, EditMedActivity.this);
+                        reportedInventory, inventoryReportedAt, defaultDoseCount, showDayDoseCount,
+                        overrideGlobalNotifyDefaults, notifyDefault, notifySoundDefault,
+                        EditMedActivity.this);
             } catch (Exception e) {
                 Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();
                 return;

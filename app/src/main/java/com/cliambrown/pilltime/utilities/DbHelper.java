@@ -27,7 +27,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "pilltime.db";
-    public static final int DB_VERSION = 6;
+    public static final int DB_VERSION = 7;
 
     public static final String MEDS_TABLE = "meds";
     public static final String MEDS_COL_NAME = "name";
@@ -39,6 +39,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String MEDS_COL_INVENTORY_REPORTED_AT = "inventory_reported_at";
     public static final String MEDS_COL_DEFAULT_DOSE_COUNT = "default_dose_count";
     public static final String MEDS_COL_SHOW_DAY_DOSE_COUNT = "show_day_dose_count";
+    public static final String MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS = "override_global_notify_defaults";
+    public static final String MEDS_COL_NOTIFY_DEFAULT = "notify_default";
+    public static final String MEDS_COL_NOTIFY_SOUND_DEFAULT = "notify_sound_default";
 
     public static final String DOSES_TABLE = "doses";
     public static final String DOSES_COL_MED_ID = "med_id";
@@ -65,6 +68,9 @@ public class DbHelper extends SQLiteOpenHelper {
         int col_inventoryReportedAt;
         int col_defaultDoseCount;
         int col_showDayDoseCount;
+        int col_overrideGlobalNotifyDefaults;
+        int col_notifyDefault;
+        int col_notifySoundDefault;
 
         MedCursorParser(Cursor cursor) {
             col_id = cursor.getColumnIndex("id");
@@ -77,6 +83,9 @@ public class DbHelper extends SQLiteOpenHelper {
             col_inventoryReportedAt = cursor.getColumnIndex(MEDS_COL_INVENTORY_REPORTED_AT);
             col_defaultDoseCount = cursor.getColumnIndex(MEDS_COL_DEFAULT_DOSE_COUNT);
             col_showDayDoseCount = cursor.getColumnIndex(MEDS_COL_SHOW_DAY_DOSE_COUNT);
+            col_overrideGlobalNotifyDefaults = cursor.getColumnIndex(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS);
+            col_notifyDefault = cursor.getColumnIndex(MEDS_COL_NOTIFY_DEFAULT);
+            col_notifySoundDefault = cursor.getColumnIndex(MEDS_COL_NOTIFY_SOUND_DEFAULT);
         }
 
         public Med getMedAtCursor(Cursor cursor, Context context) {
@@ -91,6 +100,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     cursor.getLong(col_inventoryReportedAt),
                     cursor.getInt(col_defaultDoseCount),
                     cursor.getInt(col_showDayDoseCount) != 0,
+                    cursor.getInt(col_overrideGlobalNotifyDefaults) != 0,
+                    cursor.getInt(col_notifyDefault) != 0,
+                    cursor.getInt(col_notifySoundDefault) != 0,
                     context
             );
         }
@@ -184,6 +196,11 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 6) {
             db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_SHOW_DAY_DOSE_COUNT + " INTEGER");
         }
+        if (oldVersion < 7) {
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS + " INTEGER");
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_NOTIFY_DEFAULT + " INTEGER");
+            db.execSQL("ALTER TABLE " + MEDS_TABLE + " ADD COLUMN " + MEDS_COL_NOTIFY_SOUND_DEFAULT + " INTEGER");
+        }
     }
 
     public List<Med> getAllMeds() {
@@ -267,6 +284,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, med.getDefaultDoseCount());
         cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, med.getShowDayDoseCount());
+        cv.put(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS, med.getOverrideGlobalNotifyDefaults());
+        cv.put(MEDS_COL_NOTIFY_DEFAULT, med.getNotifyDefault());
+        cv.put(MEDS_COL_NOTIFY_SOUND_DEFAULT, med.getNotifySoundDefault());
         long insertID = db.insert(MEDS_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -285,6 +305,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(MEDS_COL_INVENTORY_REPORTED_AT, med.getInventoryReportedAt());
         cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, med.getDefaultDoseCount());
         cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, med.getShowDayDoseCount());
+        cv.put(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS, med.getOverrideGlobalNotifyDefaults());
+        cv.put(MEDS_COL_NOTIFY_DEFAULT, med.getNotifyDefault());
+        cv.put(MEDS_COL_NOTIFY_SOUND_DEFAULT, med.getNotifySoundDefault());
         String[] whereArgs = new String[]{String.valueOf(med.getId())};
         int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
         db.close();
@@ -520,6 +543,9 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesMap.put(MEDS_COL_INVENTORY_REPORTED_AT, "m7");
         colCodesMap.put(MEDS_COL_DEFAULT_DOSE_COUNT, "m8");
         colCodesMap.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, "m9");
+        colCodesMap.put(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS, "m10");
+        colCodesMap.put(MEDS_COL_NOTIFY_DEFAULT, "m11");
+        colCodesMap.put(MEDS_COL_NOTIFY_SOUND_DEFAULT, "m12");
         colCodesMap.put(DOSES_COL_COUNT, "d1");
         colCodesMap.put(DOSES_COL_TAKEN_AT, "d2");
         colCodesMap.put(DOSES_COL_NOTIFY, "d3");
@@ -535,6 +561,9 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesObject.put(MEDS_COL_INVENTORY_REPORTED_AT, colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT));
         colCodesObject.put(MEDS_COL_DEFAULT_DOSE_COUNT, colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT));
         colCodesObject.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT));
+        colCodesObject.put(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS, colCodesMap.get(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS));
+        colCodesObject.put(MEDS_COL_NOTIFY_DEFAULT, colCodesMap.get(MEDS_COL_NOTIFY_DEFAULT));
+        colCodesObject.put(MEDS_COL_NOTIFY_SOUND_DEFAULT, colCodesMap.get(MEDS_COL_NOTIFY_SOUND_DEFAULT));
         colCodesObject.put(DOSES_COL_COUNT, colCodesMap.get(DOSES_COL_COUNT));
         colCodesObject.put(DOSES_COL_TAKEN_AT, colCodesMap.get(DOSES_COL_TAKEN_AT));
         colCodesObject.put(DOSES_COL_NOTIFY, colCodesMap.get(DOSES_COL_NOTIFY));
@@ -556,11 +585,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 medObject.put(colCodesMap.get(MEDS_COL_MAX_DOSE), med.getMaxDose());
                 medObject.put(colCodesMap.get(MEDS_COL_DOSE_HOURS), med.getDoseHours());
                 medObject.put(colCodesMap.get(MEDS_COL_COLOR), med.getColor());
-                medObject.put(colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED), med.getIsInventoryTracked());
+                medObject.put(colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED), (med.getIsInventoryTracked() ? 1 : 0));
                 medObject.put(colCodesMap.get(MEDS_COL_REPORTED_INVENTORY), med.getReportedInventory());
                 medObject.put(colCodesMap.get(MEDS_COL_INVENTORY_REPORTED_AT), med.getInventoryReportedAt());
                 medObject.put(colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT), med.getDefaultDoseCount());
-                medObject.put(colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT), med.getShowDayDoseCount());
+                medObject.put(colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT), (med.getShowDayDoseCount() ? 1 : 0));
+                medObject.put(colCodesMap.get(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS), (med.getOverrideGlobalNotifyDefaults() ? 1 : 0));
+                medObject.put(colCodesMap.get(MEDS_COL_NOTIFY_DEFAULT), (med.getNotifyDefault() ? 1 : 0));
+                medObject.put(colCodesMap.get(MEDS_COL_NOTIFY_SOUND_DEFAULT), (med.getNotifySoundDefault() ? 1 : 0));
 
                 JSONArray dosesArray = new JSONArray();
                 String doseStmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + DOSES_COL_MED_ID + " = ?";
@@ -574,8 +606,8 @@ public class DbHelper extends SQLiteOpenHelper {
                         JSONObject doseObject = new JSONObject();
                         doseObject.put(colCodesMap.get(DOSES_COL_COUNT), dose.getCount());
                         doseObject.put(colCodesMap.get(DOSES_COL_TAKEN_AT), dose.getTakenAt());
-                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY), dose.getNotify());
-                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY_SOUND), dose.getNotifySound());
+                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY), (dose.getNotify() ? 1 : 0));
+                        doseObject.put(colCodesMap.get(DOSES_COL_NOTIFY_SOUND), (dose.getNotifySound() ? 1 : 0));
                         dosesArray.put(j, doseObject);
                         ++j;
                     } while (doseCursor.moveToNext());
@@ -592,6 +624,21 @@ public class DbHelper extends SQLiteOpenHelper {
         medCursor.close();
         db.close();
         return rootJsonObject;
+    }
+
+    // Depending on version, exported booleans may be ints or actual booleans
+    private boolean getBoolFromJsonObj(JSONObject jsonObj, String colKey) {
+        try {
+            Object valObj = jsonObj.get(colKey);
+            if (valObj instanceof Integer || valObj instanceof Long) {
+                return ((Number) valObj).intValue() == 1;
+            } else if (valObj instanceof Boolean) {
+                return (Boolean) valObj;
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+        return false;
     }
 
     public void importFromString(String jsonText) {
@@ -630,7 +677,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String color = medObject.getString(colCodesMap.get(MEDS_COL_COLOR));
 
                 boolean isInventoryTracked = colCodesMap.containsKey(MEDS_COL_IS_INVENTORY_TRACKED)
-                        && medObject.getBoolean(colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED));
+                        && getBoolFromJsonObj(medObject, colCodesMap.get(MEDS_COL_IS_INVENTORY_TRACKED));
                 double reportedInventory = (isInventoryTracked && colCodesMap.containsKey(MEDS_COL_REPORTED_INVENTORY))
                         ? medObject.getDouble(colCodesMap.get(MEDS_COL_REPORTED_INVENTORY))
                         : 0d;
@@ -641,7 +688,13 @@ public class DbHelper extends SQLiteOpenHelper {
                         ? medObject.getInt(colCodesMap.get(MEDS_COL_DEFAULT_DOSE_COUNT))
                         : 1;
                 boolean showDayDoseCount = colCodesMap.containsKey(MEDS_COL_SHOW_DAY_DOSE_COUNT)
-                        && medObject.getBoolean(colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT));
+                        && getBoolFromJsonObj(medObject, colCodesMap.get(MEDS_COL_SHOW_DAY_DOSE_COUNT));
+                boolean overrideGlobalNotifyDefaults = colCodesMap.containsKey(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS)
+                        && getBoolFromJsonObj(medObject, colCodesMap.get(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS));
+                boolean notifyDefault = colCodesMap.containsKey(MEDS_COL_NOTIFY_DEFAULT)
+                        && getBoolFromJsonObj(medObject, colCodesMap.get(MEDS_COL_NOTIFY_DEFAULT));
+                boolean notifySoundDefault = colCodesMap.containsKey(MEDS_COL_NOTIFY_SOUND_DEFAULT)
+                        && getBoolFromJsonObj(medObject, colCodesMap.get(MEDS_COL_NOTIFY_SOUND_DEFAULT));
 
                 int medID;
                 String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
@@ -661,6 +714,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 cv.put(MEDS_COL_INVENTORY_REPORTED_AT, inventoryReportedAt);
                 cv.put(MEDS_COL_DEFAULT_DOSE_COUNT, defaultDoseCount);
                 cv.put(MEDS_COL_SHOW_DAY_DOSE_COUNT, showDayDoseCount);
+                cv.put(MEDS_COL_OVERRIDE_GLOBAL_NOTIFY_DEFAULTS, overrideGlobalNotifyDefaults);
+                cv.put(MEDS_COL_NOTIFY_DEFAULT, notifyDefault);
+                cv.put(MEDS_COL_NOTIFY_SOUND_DEFAULT, notifySoundDefault);
                 if (cursor.moveToFirst()) {
                     int col_id = cursor.getColumnIndex("id");
                     medID = cursor.getInt(col_id);
@@ -678,8 +734,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     JSONObject doseObject = dosesArray.getJSONObject(j);
                     double count = doseObject.getDouble(colCodesMap.get(DOSES_COL_COUNT));
                     long takenAt = doseObject.getLong(colCodesMap.get(DOSES_COL_TAKEN_AT));
-                    boolean notify = doseObject.getInt(colCodesMap.get(DOSES_COL_NOTIFY)) == 1;
-                    boolean notifySound = doseObject.getInt(colCodesMap.get(DOSES_COL_NOTIFY_SOUND)) == 1;
+                    boolean notify = getBoolFromJsonObj(doseObject, colCodesMap.get(DOSES_COL_NOTIFY));
+                    boolean notifySound = getBoolFromJsonObj(doseObject, colCodesMap.get(DOSES_COL_NOTIFY_SOUND));
                     cv = new ContentValues();
                     cv.put(DOSES_COL_MED_ID, medID);
                     cv.put(DOSES_COL_COUNT, count);

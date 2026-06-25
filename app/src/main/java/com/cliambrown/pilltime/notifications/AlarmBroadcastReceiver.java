@@ -36,7 +36,12 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         Intent notifIntent = new Intent(context, MedActivity.class);
         notifIntent.putExtra("id", medID);
         notifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                doseID,
+                notifIntent,
+                FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+        );
 
         String publicTitle = context.getString(R.string.app_name) + ": " +
                 context.getString(R.string.notification_public_title);

@@ -5,6 +5,13 @@
         app:iconSpaceReserved="false"
         app:title="@string/notifications_header">
 
+        <Preference
+            app:key="notifications_description"
+            app:iconSpaceReserved="false"
+            app:selectable="false"
+            app:persistent="false"
+            app:summary="@string/notifications_description"/>
+
         <SwitchPreferenceCompat
             app:key="notify_default"
             app:title="@string/notify_expiring_dose"
@@ -87,6 +94,17 @@
             app:selectable="false"
             app:persistent="false"
             app:summary="@string/disclaimer_2"/>
+
+        <Preference
+            app:key="changelog_link"
+            app:iconSpaceReserved="false"
+            app:title="@string/changelog_title"
+            android:summary="https://github.com/cliambrown/PillTime/releases">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/cliambrown/PillTime/releases"
+                android:title="Releases page on GitHub"/>
+        </Preference>
 
         <Preference
             app:key="github_link"

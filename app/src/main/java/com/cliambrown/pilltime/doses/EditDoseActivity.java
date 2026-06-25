@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -24,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
@@ -105,7 +103,10 @@ public class EditDoseActivity extends SimpleMenuActivity {
             selectedDatetime.setTimeInMillis(dose.getTakenAt() * 1000L);
         } else {
             long now = System.currentTimeMillis() / 1000L;
-            dose = new Dose(doseID, medID, med.getDefaultDoseCount(), now, getDefaultNotify(), getDefaultNotifySound(), EditDoseActivity.this);
+            dose = new Dose(doseID, medID, med.getDefaultDoseCount(), now,
+                    med.getNetNotifyDefault(EditDoseActivity.this),
+                    med.getNetNotifySoundDefault(EditDoseActivity.this),
+                    EditDoseActivity.this);
             setTitle(getString(R.string.new_dose_title, "\"" + med.getName() + "\""));
         }
 
@@ -193,16 +194,6 @@ public class EditDoseActivity extends SimpleMenuActivity {
         count = count + changeBy;
         if (count < 0D) count = 0D;
         et_editDose_count.setText(Utils.getStrFromDbl(count));
-    }
-
-    private boolean getDefaultNotify() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(EditDoseActivity.this);
-        return prefs.getBoolean("notify_default", false);
-    }
-
-    private boolean getDefaultNotifySound() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(EditDoseActivity.this);
-        return prefs.getBoolean("notify_sound_default", false);
     }
 
     private void updateTimeField() {

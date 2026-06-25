@@ -97,9 +97,11 @@
     <string name="clear_db">Alle Daten löschen</string>
     <string name="clear_meds_and_doses">Löscht alle Medikamente und den Dosierungsverlauf von Ihrem Gerät</string>
     <string name="notifications_header">Standard für Benachrichtigungen</string>
+    <string name="notifications_description">Sie können außerdem für jedes Medikament Standardbenachrichtigungseinstellungen festlegen und die Benachrichtigungseinstellungen für jede einzelne Dosis ändern.</string>
     <string name="notify_expiring_dose">Benachrichtigen, wenn eine Dosis abläuft</string>
     <string name="notification_sound">Ton bei Benachrichtigung abspielen</string>
     <string name="show_day_dose_count">Zeigen Sie auf der Verlaufsseite für dieses Medikament auch die Anzahl der in den letzten 24 Stunden eingenommenen Dosen an</string>
+    <string name="override_global_notify_defaults">Möchten Sie für dieses Medikament benutzerdefinierte Standard-Benachrichtigungseinstellungen verwenden? (Sie können die Benachrichtigungseinstellungen für jede einzelne Dosis weiterhin ändern.)</string>
     <string name="track_inventory">Dosisvorrat dieser Medikation im Blick behalten</string>
     <string name="reported_inventory">Dosen aktuell auf Vorrat</string>
     <string name="inventory_reported_at">Vorrat zuletzt angegeben: %1$s</string>
@@ -175,11 +177,13 @@
     <string name="never">nie</string>
 
     <string name="about_app">Über Pill Time</string>
+    <string name="changelog_title">Neue Funktionen</string>
     <string name="info_link_title">Quellcode und weitere Informationen auf GitHub verfügbar</string>
 
     <string name="welcome_dialog_title">Neue Funktionen</string>
     <string name="welcome_dialog_content">
-        NEU in Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n
+        NEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n
+        \nAb Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n
         \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n
         \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n
         \nHINWEIS: Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.

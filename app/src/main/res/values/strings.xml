@@ -97,9 +97,11 @@
     <string name="clear_db">Clear all data</string>
     <string name="clear_meds_and_doses">Deletes all meds and dose history from your device</string>
     <string name="notifications_header">Notification Defaults</string>
+    <string name="notifications_description">You can also set default notification preferences for each med, and you can change the notification settings for each dose.</string>
     <string name="notify_expiring_dose">Show a notification when dose expires</string>
     <string name="notification_sound">Make a sound with the notification</string>
     <string name="show_day_dose_count">Also show the number of doses taken over the past 24 hours on the history page for this med?</string>
+    <string name="override_global_notify_defaults">Use custom default notification preferences for this med? (You can still change the notification settings for each dose.)</string>
     <string name="track_inventory">Track your personal inventory for this med?</string>
     <string name="reported_inventory">doses currently left in stock</string>
     <string name="inventory_reported_at">Remaining doses last recorded %1$s</string>
@@ -185,13 +187,14 @@
     <string name="never">never</string>
 
     <string name="about_app">About Pill Time</string>
+    <string name="changelog_title">What\'s New</string>
     <string name="info_link_title">Source code and more info available on GitHub</string>
 
     <string name="welcome_dialog_title">New Features</string>
     <string name="welcome_dialog_content">
-        NEW in v18: Sort meds by date taken or in alphabetical order. (See Settings page)\n
+        NEW in v19: You can now set notification defaults for each med.\n
+        \nFrom v18: Sort meds by date taken or in alphabetical order. (See Settings page)\n
         \nFrom v13: You can now long-press the + button next to each med on the main screen to quickly add a new dose.\n
-        \nYou can also set the standard dose amount to use for each med on the edit screen.\n
         \nNOTE: Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.
     </string>
 </resources>

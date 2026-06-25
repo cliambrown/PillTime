@@ -1,8 +1,10 @@
 package com.cliambrown.pilltime.meds;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
@@ -29,6 +31,9 @@ public class Med {
     private long inventoryReportedAt;
     private int defaultDoseCount;
     private boolean showDayDoseCount;
+    private boolean overrideGlobalNotifyDefaults;
+    private boolean notifyDefault;
+    private boolean notifySoundDefault;
 
     private final List<Dose> doses = new ArrayList<>();
     private boolean hasLoadedAllDoses;
@@ -38,8 +43,13 @@ public class Med {
     double pastDayDoseCount;
     private double currentInventory;
 
-    public Med(int id, String name, int maxDose, int doseHours, String color, boolean isInventoryTracked,
-               double reportedInventory, long inventoryReportedAt, int defaultDoseCount, boolean showDayDoseCount, Context context) {
+    public Med(
+            int id, String name, int maxDose, int doseHours, String color,
+            boolean isInventoryTracked, double reportedInventory, long inventoryReportedAt,
+            int defaultDoseCount, boolean showDayDoseCount, boolean overrideGlobalNotifyDefaults,
+            boolean notifyDefault, boolean notifySoundDefault,
+            Context context
+    ) {
         this.context = context;
         this.id = id;
         this.name = name;
@@ -51,6 +61,9 @@ public class Med {
         this.inventoryReportedAt = inventoryReportedAt;
         this.defaultDoseCount = defaultDoseCount;
         this.showDayDoseCount = showDayDoseCount;
+        this.overrideGlobalNotifyDefaults = overrideGlobalNotifyDefaults;
+        this.notifyDefault = notifyDefault;
+        this.notifySoundDefault = notifySoundDefault;
         this.hasLoadedAllDoses = false;
     }
 
@@ -359,5 +372,41 @@ public class Med {
             doses.remove(doses.size() - 1);
         }
         this.hasLoadedAllDoses = true;
+    }
+
+    public boolean getOverrideGlobalNotifyDefaults() {
+        return overrideGlobalNotifyDefaults;
+    }
+
+    public void setOverrideGlobalNotifyDefaults(boolean overrideGlobalNotifyDefaults) {
+        this.overrideGlobalNotifyDefaults = overrideGlobalNotifyDefaults;
+    }
+
+    public boolean getNotifyDefault() {
+        return notifyDefault;
+    }
+
+    public void setNotifyDefault(boolean notifyDefault) {
+        this.notifyDefault = notifyDefault;
+    }
+
+    public boolean getNotifySoundDefault() {
+        return notifySoundDefault;
+    }
+
+    public void setNotifySoundDefault(boolean notifySoundDefault) {
+        this.notifySoundDefault = notifySoundDefault;
+    }
+
+    public boolean getNetNotifyDefault(Context context) {
+        if (this.overrideGlobalNotifyDefaults) return  this.notifyDefault;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("notify_default", false);
+    }
+
+    public boolean getNetNotifySoundDefault(Context context) {
+        if (this.overrideGlobalNotifyDefaults) return  this.notifySoundDefault;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("notify_sound_default", false);
     }
 }

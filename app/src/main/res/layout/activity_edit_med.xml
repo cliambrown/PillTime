@@ -135,6 +135,45 @@
                 app:layout_constraintTop_toBottomOf="@id/ll_editMed_defaultDoseCount" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_editMed_overrideGlobalNotifyDefaults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:switchPadding="12dp"
+                android:text="@string/override_global_notify_defaults"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_showDayDoseCount" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_editMed_notifyDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:switchPadding="12dp"
+                android:text="@string/notify_expiring_dose"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_overrideGlobalNotifyDefaults" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_editMed_notifySoundDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:switchPadding="12dp"
+                android:text="@string/notification_sound"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_notifyDefault" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editMed_trackInventory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +184,7 @@
                 android:text="@string/track_inventory"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/switch_editMed_showDayDoseCount" />
+                app:layout_constraintTop_toBottomOf="@id/switch_editMed_notifySoundDefault" />
 
             <LinearLayout
                 android:id="@+id/ll_editMed_trackInventory"

@@ -83,7 +83,10 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean notify = prefs.getBoolean("notify_default", false);
             boolean notifySound = prefs.getBoolean("notify_sound_default", false);
-            Dose dose1 = new Dose(-1, medID, count, takenAt, notify, notifySound, context);
+            Dose dose1 = new Dose(-1, medID, count, takenAt,
+                    holder.med.getNetNotifyDefault(context),
+                    holder.med.getNetNotifySoundDefault(context),
+                    context);
             boolean added = mApp.addDose(holder.med, dose1);
             if (added) {
                 Toast.makeText(context, R.string.toast_dose_saved,
@@ -257,11 +260,9 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                 } else {
                     tv_rvMed_inventory.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 }
-//                ll_rvMed_footer.setVisibility(View.VISIBLE);
                 tv_rvMed_inventory.setText(context.getString(R.string.inventory, med.getInventoryStr()));
                 tv_rvMed_inventory.setVisibility(View.VISIBLE);
             } else {
-//                ll_rvMed_footer.setVisibility(View.GONE);
                 tv_rvMed_inventory.setVisibility(View.GONE);
             }
         }

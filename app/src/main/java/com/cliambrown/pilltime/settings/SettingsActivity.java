@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -140,6 +141,18 @@ public class SettingsActivity extends AppCompatActivity
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            Preference notifyDefault = getPreferenceManager().findPreference("notify_default");
+            Preference notifySoundDefault = getPreferenceManager().findPreference("notify_sound_default");
+            if (notifyDefault != null && notifySoundDefault != null) {
+                notifySoundDefault.setVisible(
+                        Objects.requireNonNull(getPreferenceManager().getSharedPreferences())
+                                .getBoolean("notify_default", false));
+                notifyDefault.setOnPreferenceChangeListener((preference, isChecked) -> {
+                    notifySoundDefault.setVisible((Boolean) isChecked);
+                    return true;
+                });
+            }
 
             Preference export = getPreferenceManager().findPreference("export");
             if (export != null) {
