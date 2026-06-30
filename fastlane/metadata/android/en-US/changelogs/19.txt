@@ -1,0 +1,4 @@
+- You can now set default notification preferences for each med
+- New fix for notifications not leading to correct med page
+- Fix boolean errors when importing data
+- Contribute to translating Pill Time! See the project readme
