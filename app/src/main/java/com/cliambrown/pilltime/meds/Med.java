@@ -12,6 +12,7 @@ import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Med {
@@ -81,8 +82,27 @@ public class Med {
                 ", inventoryReportedAt=" + inventoryReportedAt +
                 ", defaultDoseCount=" + defaultDoseCount +
                 ", showDayDoseCount=" + showDayDoseCount +
+                ", notifyDefault=" + notifyDefault +
+                ", notifySoundDefault=" + notifySoundDefault +
                 ", doses=" + doses +
                 '}';
+    }
+
+    public void checkValidity() {
+        if (this.getName() == null || this.getName().trim().isEmpty())
+            throw new InvalidMedException(context.getString(R.string.name_required));
+        if (this.getMaxDose() < 1)
+            throw new InvalidMedException(context.getString(R.string.invalid_max_dose));
+        if (this.getDoseHours() < 1)
+            throw new InvalidMedException(context.getString(R.string.invalid_dose_hours));
+        if (this.getColor() == null)
+            throw new InvalidMedException(context.getString(R.string.color_required));
+        if (!Arrays.asList(context.getResources().getStringArray(R.array.color_options)).contains(this.getColor()))
+            throw new InvalidMedException(context.getString(R.string.color_not_found));
+        if (this.getIsInventoryTracked() && this.getReportedInventory() < 0)
+            throw new InvalidMedException(context.getString(R.string.invalid_reported_inventory));
+        if (this.getDefaultDoseCount() <= 0)
+            throw new InvalidMedException(context.getString(R.string.invalid_default_dose_count));
     }
 
     public int getId() {
@@ -399,13 +419,13 @@ public class Med {
     }
 
     public boolean getNetNotifyDefault(Context context) {
-        if (this.overrideGlobalNotifyDefaults) return  this.notifyDefault;
+        if (this.overrideGlobalNotifyDefaults) return this.notifyDefault;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("notify_default", false);
     }
 
     public boolean getNetNotifySoundDefault(Context context) {
-        if (this.overrideGlobalNotifyDefaults) return  this.notifySoundDefault;
+        if (this.overrideGlobalNotifyDefaults) return this.notifySoundDefault;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("notify_sound_default", false);
     }

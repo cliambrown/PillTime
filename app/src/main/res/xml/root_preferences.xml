@@ -74,6 +74,12 @@
             app:key="clearDb"
             app:title="@string/clear_db" />
 
+        <Preference
+            android:icon="@android:drawable/ic_menu_manage"
+            android:summary="@string/repair_db_description"
+            app:key="repairDb"
+            app:title="@string/repair_db" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -103,7 +109,7 @@
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/cliambrown/PillTime/releases"
-                android:title="Releases page on GitHub"/>
+                android:title="@string/changelog_title"/>
         </Preference>
 
         <Preference
@@ -114,7 +120,18 @@
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/cliambrown/PillTime"
-                android:title="App repo on GitHub"/>
+                android:title="@string/info_link_title"/>
+        </Preference>
+
+        <Preference
+            app:key="translation_link"
+            app:iconSpaceReserved="false"
+            app:title="@string/translation_link_title"
+            android:summary="https://hosted.weblate.org/engage/pilltime">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://hosted.weblate.org/engage/pilltime"
+                android:title="@string/translation_link_title"/>
         </Preference>
 
         <Preference

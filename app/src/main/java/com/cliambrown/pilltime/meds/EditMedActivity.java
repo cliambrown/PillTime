@@ -224,20 +224,14 @@ public class EditMedActivity extends SimpleMenuActivity {
         btn_editMed_save.setOnClickListener(view -> {
 
             Med med1;
-            String medName;
-            int maxDose;
-            int doseHours;
-            int defaultDoseCount;
 
             try {
-                medName = et_editMed_name.getText().toString();
-                maxDose = np_editMed_maxDose.getValue();
-                doseHours = np_editMed_doseHoursDays.getValue();
+                String medName = et_editMed_name.getText().toString();
+                int maxDose = np_editMed_maxDose.getValue();
+                int doseHours = np_editMed_doseHoursDays.getValue();
                 boolean isDays = sp_editMed_daysHours.getSelectedItemPosition() == 1;
-                if (isDays) {
-                    doseHours *= 24;
-                }
-                defaultDoseCount = np_editMed_defaultDoseCount.getValue();
+                if (isDays)doseHours *= 24;
+                int defaultDoseCount = np_editMed_defaultDoseCount.getValue();
                 boolean showDayDoseCount = switch_editMed_showDayDoseCount.isChecked();
                 boolean overrideGlobalNotifyDefaults = switch_editMed_overrideGlobalNotifyDefaults.isChecked();
                 boolean notifyDefault = switch_editMed_notifyDefault.isChecked();
@@ -255,7 +249,11 @@ public class EditMedActivity extends SimpleMenuActivity {
                         overrideGlobalNotifyDefaults, notifyDefault, notifySoundDefault,
                         EditMedActivity.this);
             } catch (Exception e) {
-                Toast.makeText(EditMedActivity.this, "Error saving med: invalid data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        EditMedActivity.this,
+                        getString(R.string.med_save_error) + " " + getString(R.string.invalid_data),
+                        Toast.LENGTH_SHORT
+                ).show();
                 return;
             }
 

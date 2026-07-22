@@ -144,7 +144,11 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 notify = switch_editDose_notify.isChecked();
                 notifySound = switch_editDose_notifySound.isChecked();
             } catch (Exception e) {
-                Toast.makeText(EditDoseActivity.this, "Error saving dose: invalid data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        EditDoseActivity.this,
+                        getString(R.string.dose_save_error) + " " + getString(R.string.invalid_data),
+                        Toast.LENGTH_SHORT
+                ).show();
                 return;
             }
 

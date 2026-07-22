@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
@@ -19,6 +20,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.doses.Dose;
+import com.cliambrown.pilltime.doses.InvalidDoseException;
+import com.cliambrown.pilltime.meds.InvalidMedException;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.notifications.AlarmBroadcastReceiver;
 import com.cliambrown.pilltime.utilities.DbHelper;
@@ -51,6 +54,34 @@ public class PillTimeApplication extends Application {
         createNotificationChannel();
     }
 
+    public void handleDbError(String introMessage, String message) {
+        Toast.makeText(context, introMessage + " " + message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void handleDbError(String introMessage, Exception e) {
+        Throwable cause = e.getCause();
+        String message;
+        if (cause != null) message = cause.getLocalizedMessage();
+        else message = e.getLocalizedMessage();
+        handleDbError(introMessage, message);
+    }
+
+    public void handleMedSaveError(String message) {
+        handleDbError(context.getString(R.string.med_save_error), message);
+    }
+
+    public void handleMedSaveError(Exception e) {
+        handleDbError(context.getString(R.string.med_save_error), e);
+    }
+
+    public void handleDoseSaveError(String message) {
+        handleDbError(context.getString(R.string.dose_save_error), message);
+    }
+
+    public void handleDoseSaveError(Exception e) {
+        handleDbError(context.getString(R.string.dose_save_error), e);
+    }
+
     public void loadMeds() {
         meds.clear();
         meds.addAll(dbHelper.getAllMeds());
@@ -75,6 +106,10 @@ public class PillTimeApplication extends Application {
         sendBroadcast(intent);
     }
 
+    public void repairDb() {
+        dbHelper.repairDb();
+    }
+
     public List<Med> getMeds() {
         return meds;
     }
@@ -89,11 +124,17 @@ public class PillTimeApplication extends Application {
     }
 
     public boolean addMed(Med med) {
-        int insertID = dbHelper.insertMed(med);
+        int insertID;
+        try {
+            insertID = dbHelper.insertMed(med);
+        } catch (InvalidMedException | SQLException e) {
+            handleMedSaveError(e);
+            return false;
+        }
         if (insertID >= 0) {
             med.setId(insertID);
         } else {
-            Toast.makeText(context, "Error saving med", Toast.LENGTH_SHORT).show();
+            handleMedSaveError(context.getString(R.string.database_error));
             return false;
         }
         med.updateTimes(dbHelper);
@@ -123,9 +164,15 @@ public class PillTimeApplication extends Application {
     }
 
     public boolean setMed(Med med) {
-        boolean updated = dbHelper.updateMed(med);
+        boolean updated;
+        try {
+            updated = dbHelper.updateMed(med);
+        } catch (InvalidMedException | SQLException e) {
+            handleMedSaveError(e);
+            return false;
+        }
         if (!updated) {
-            Toast.makeText(context, "Error updating med", Toast.LENGTH_SHORT).show();
+            handleMedSaveError(context.getString(R.string.database_error));
             return false;
         }
         int medID = med.getId();
@@ -195,9 +242,15 @@ public class PillTimeApplication extends Application {
     }
 
     public boolean addDose(Med med, Dose dose) {
-        int insertID = dbHelper.insertDose(dose);
+        int insertID;
+        try {
+            insertID = dbHelper.insertDose(dose);
+        } catch (InvalidDoseException | SQLException e) {
+            handleDoseSaveError(e);
+            return false;
+        }
         if (insertID < 0) {
-            Toast.makeText(context, "Error saving dose", Toast.LENGTH_SHORT).show();
+            handleDoseSaveError(context.getString(R.string.database_error));
             return false;
         }
         dose.setId(insertID);
@@ -276,11 +329,19 @@ public class PillTimeApplication extends Application {
     }
 
     public boolean setDose(Med med, Dose dose) {
-        boolean updated = dbHelper.updateDose(dose);
-        if (!updated) {
-            Toast.makeText(context, "Error updating dose", Toast.LENGTH_SHORT).show();
+
+        boolean updated;
+        try {
+            updated = dbHelper.updateDose(dose);
+        } catch (InvalidDoseException | SQLException e) {
+            handleDoseSaveError(e);
             return false;
         }
+        if (!updated) {
+            handleDoseSaveError(context.getString(R.string.database_error));
+            return false;
+        }
+
         med.updateTimes(dbHelper);
         dose.updateTimes(med);
         int fromPosition = med.setDose(dose);
@@ -375,7 +436,6 @@ public class PillTimeApplication extends Application {
         sendBroadcast(intent);
         repositionMed(med);
     }
-
 
     public void importFromUri(Uri uri) {
         try (DbHelper dbHelper = new DbHelper(context)) {

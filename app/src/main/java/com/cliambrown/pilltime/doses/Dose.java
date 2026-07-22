@@ -4,8 +4,12 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.InvalidMedException;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.utilities.Utils;
+
+import java.util.Arrays;
 
 public class Dose {
 
@@ -42,6 +46,15 @@ public class Dose {
                 ", notify=" + notify +
                 ", notifySound=" + notifySound +
                 '}';
+    }
+
+    public void checkValidity() {
+        if (this.getMedID() <= 0)
+            throw new InvalidDoseException(context.getString(R.string.invalid_med_id));
+        if (this.getCount() <= 0)
+            throw new InvalidDoseException(context.getString(R.string.invalid_dose_count));
+        if (this.getTakenAt() <= 0)
+            throw new InvalidDoseException(context.getString(R.string.invalid_dose_hours));
     }
 
     public int getId() {

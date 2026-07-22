@@ -200,6 +200,26 @@ public class SettingsActivity extends AppCompatActivity
                     return true;
                 });
             }
+
+            Preference repairDb = getPreferenceManager().findPreference("repairDb");
+            if (repairDb != null) {
+                repairDb.setOnPreferenceClickListener(preference -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(R.string.dialog_repair_db)
+                            .setTitle(R.string.repair_db)
+                            .setPositiveButton(R.string.repair, (dialog, id) -> {
+                                SettingsActivity activity = (SettingsActivity) getActivity();
+                                if (activity == null) return;
+                                PillTimeApplication mApp = (PillTimeApplication) activity.getApplication();
+                                mApp.repairDb();
+                                Toast.makeText(getActivity(), getString(R.string.toast_database_repaired),
+                                        Toast.LENGTH_SHORT).show();
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
+                });
+            }
         }
     }
 
