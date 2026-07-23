@@ -97,7 +97,7 @@
     <string name="settings">Settings</string>
     <string name="repair">Repair</string>
     <string name="repair_db">Repair database</string>
-    <string name="repair_db_description">Can be used if errors appear when saving data</string>
+    <string name="repair_db_description">Can be used if errors appear when using the app</string>
     <string name="clear_db">Clear all data</string>
     <string name="clear_meds_and_doses">Deletes all meds and dose history from your device</string>
     <string name="notifications_header">Notification Defaults</string>
@@ -198,7 +198,8 @@
 
     <string name="welcome_dialog_title">New Features</string>
     <string name="welcome_dialog_content">
-        NEW in v19: You can now set notification defaults for each med.\n
+        v20: If you see errors, try repairing your db on the Settings page.\n
+        \nNEW in v19: You can now set notification defaults for each med.\n
         \nFrom v18: Sort meds by date taken or in alphabetical order. (See Settings page)\n
         \nFrom v13: You can now long-press the + button next to each med on the main screen to quickly add a new dose.\n
         \nNOTE: Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.
@@ -213,7 +214,7 @@
     <string name="invalid_max_dose">Invalid max dose</string>
     <string name="invalid_dose_hours">Invalid dose period</string>
     <string name="color_required">Color required</string>
-    <string name="color_not_found">Color not found</string>
+    <string name="color_not_found">Invalid color</string>
     <string name="invalid_reported_inventory">Invalid reported inventory</string>
     <string name="invalid_default_dose_count">Invalid default dose amount</string>
 

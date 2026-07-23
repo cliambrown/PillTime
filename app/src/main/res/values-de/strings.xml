@@ -89,6 +89,7 @@
     <string name="more_options">Weitere Optionen</string>
 
     <string name="dialog_clear_db">Sind Sie sicher, dass Sie alle Medikamente und die Dosierungshistorie dauerhaft löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="dialog_repair_db">Bevor du versuchst, deine Datenbank zu reparieren, solltest du deine Daten mithilfe der Exportfunktion sichern. Klicke auf „Abbrechen“, um zurückzugehen, oder auf „Reparieren“, um die Datenbank jetzt zu reparieren.</string>
     <string name="dialog_delete_medication">Diese Medikation wirklich löschen? Dadurch werden auch alle für dieses Medikament eingegebenen Dosen gelöscht. Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose">Diese Dosis wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose_and_older">Diese Dosis und alle älteren wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
@@ -180,9 +181,11 @@
     <string name="changelog_title">Neue Funktionen</string>
     <string name="info_link_title">Quellcode und weitere Informationen auf GitHub verfügbar</string>
 
+    <string name="translation_link_title">Hilf mit, diese App zu übersetzen</string>
     <string name="welcome_dialog_title">Neue Funktionen</string>
     <string name="welcome_dialog_content">
-        NEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n
+        Version 20: Wenn du Fehler siehst, versuch doch mal, deine Datenbank auf der Seite „Einstellungen“ zu reparieren.\n
+        \nNEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n
         \nAb Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n
         \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n
         \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n

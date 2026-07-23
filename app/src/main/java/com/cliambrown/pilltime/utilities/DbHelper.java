@@ -216,6 +216,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void repairDb(SQLiteDatabase db) {
 
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + MEDS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + DOSES_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT)");
+
         for (DbCol dbCol : medCols) {
             dbCol.existsInDb = false;
         }

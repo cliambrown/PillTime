@@ -89,11 +89,13 @@
     <string name="more_options">Plus d\'options</string>
 
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
+    <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
     <string name="dialog_delete_medication">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
     <string name="dialog_delete_dose_and_older">Êtes-vous sûr de vouloir supprimer cette dose ainsi que toutes les précédentes pour ce médicament ? Cette action est irréversible.</string>
 
     <string name="settings">Paramètres</string>
+    <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
     <string name="notifications_header">Défauts des notifications</string>
@@ -115,6 +117,7 @@
     <string name="toast_data_exported">Données exportées</string>
     <string name="toast_database_cleared">Base de données effacée</string>
 
+    <string name="toast_database_repaired">Base de données réparée</string>
     <string name="interface_header">Interface</string>
 
     <string name="theme_header">Thème</string>
@@ -180,11 +183,30 @@
     <string name="changelog_title">Nouveautés</string>
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
 
+    <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
     <string name="welcome_dialog_content">
-        NOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
+        v20 : Si vous voyez des erreurs, essayez de réparer votre base de données sur la page « Paramètres ».\n
+        \nNOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
         \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
         \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
         \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
     </string>
+    <string name="repair">Réparer</string>
+    <string name="repair_db">Réparer la base de données</string>
+    <string name="error_intro">Erreur :</string>
+    <string name="database_error">Impossible d\'enregistrer dans la base de données</string>
+    <string name="invalid_data">Données invalides</string>
+    <string name="med_save_error">Erreur de sauvegarde du médicament :</string>
+    <string name="name_required">Un nom est requis</string>
+    <string name="invalid_max_dose">Le dosage maximal est invalide</string>
+    <string name="invalid_dose_hours">La période de dosage est invalide</string>
+    <string name="color_required">Une couleur est requise</string>
+    <string name="color_not_found">La couleur n\'est pas valide</string>
+    <string name="invalid_reported_inventory">Le stock est invalide</string>
+    <string name="invalid_default_dose_count">Le dosage par défaut est invalide</string>
+    <string name="dose_save_error">Erreur de sauvegarde de dose :</string>
+    <string name="invalid_med_id">ID du médicament invalide</string>
+    <string name="invalid_dose_count">Montant de dose invalide</string>
+    <string name="invalid_dose_datetime">Date invalide</string>
 </resources>
