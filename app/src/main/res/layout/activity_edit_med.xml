@@ -149,6 +149,7 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editMed_notifyDefault"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
@@ -162,6 +163,7 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editMed_notifySoundDefault"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"

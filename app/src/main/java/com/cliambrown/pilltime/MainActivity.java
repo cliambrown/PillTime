@@ -154,14 +154,12 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(toPosition);
                     return;
                 case "com.cliambrown.broadcast.DOSE_ADDED":
-                case "com.cliambrown.broadcast.DOSES_ADDED":
                 case "com.cliambrown.broadcast.DOSE_EDITED":
                 case "com.cliambrown.broadcast.DOSE_REMOVED":
                 case "com.cliambrown.broadcast.DOSES_REMOVED":
                     for (int i = 0; i < meds.size(); ++i) {
                         if (meds.get(i).getId() == medID) {
                             mAdapter.notifyItemChanged(i, "doses_edited");
-//                            recyclerView.scrollToPosition(i);
                             return;
                         }
                     }

@@ -44,15 +44,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         this.mApp = mApp;
     }
 
-    public void setData(Med med) {
-        this.med = med;
-        this.doses = med.getDoses();
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemViewType(int position) {
-
         return (position == doses.size()) ? R.layout.recyclerview_load_more_doses : R.layout.recyclerview_dose;
     }
 
@@ -125,11 +118,9 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                             .setTitle(R.string.delete_and_older)
                             .setPositiveButton(R.string.yes, (dialog, id) -> {
                                 int position1 = holder.getBindingAdapterPosition();
-                                int itemCount = doses.size()- position1;
+                                int itemCount = doses.size() - position1;
                                 mApp.removeDoseAndOlder(holder.med, holder.dose);
                                 DosesRecycleViewAdapter.this.notifyItemRangeRemoved(position1, itemCount);
-                                holder.updateLoadMore();
-                                DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
                             })
                             .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
                     builder.show();
@@ -156,7 +147,6 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         }
         if (payloadStr.equals("update_show_more_btn")) {
             holder.updateLoadMore();
-            DosesRecycleViewAdapter.this.notifyItemChanged(doses.size());
         }
         if (payloadStr.equals("update_times")) {
             holder.updateTimes();

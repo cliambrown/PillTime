@@ -1,0 +1,2 @@
+- Fix for a minor bug where the "Show More" button did not disappear as intended
+- Upgraded some dependencies

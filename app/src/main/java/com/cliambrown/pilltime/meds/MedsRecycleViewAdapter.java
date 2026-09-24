@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
@@ -80,9 +78,6 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         holder.btn_rvMed_add.setOnLongClickListener(view -> {
             double count = holder.med.getDefaultDoseCount();
             long takenAt = System.currentTimeMillis() / 1000L;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean notify = prefs.getBoolean("notify_default", false);
-            boolean notifySound = prefs.getBoolean("notify_sound_default", false);
             Dose dose1 = new Dose(-1, medID, count, takenAt,
                     holder.med.getNetNotifyDefault(context),
                     holder.med.getNetNotifySoundDefault(context),

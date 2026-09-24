@@ -393,17 +393,17 @@ public class PillTimeApplication extends Application {
     }
 
     public void loadMoreDoses(Med med) {
-        List<Dose> doses = dbHelper.getDoses(med);
-        med.setHasLoadedAllDoses(doses.size() < 21);
+        List<Dose> moreDoses = dbHelper.getDoses(med);
+        med.setHasLoadedAllDoses(moreDoses.size() < 21);
         List<Integer> doseIDs = new ArrayList<>();
-        for (Dose dose : doses) {
+        for (Dose dose : moreDoses) {
             med.addDose(dose);
             doseIDs.add(dose.getId());
             if (doseIDs.size() >= 20) break;
         }
         med.updateTimes(dbHelper);
         Intent intent = new Intent();
-        intent.setAction("com.cliambrown.broadcast.DOSES_ADDED");
+        intent.setAction("com.cliambrown.broadcast.DOSES_LOADED");
         intent.putExtra("medID", med.getId());
         intent.putExtra("doseIDs", (Serializable) doseIDs);
         sendBroadcast(intent);

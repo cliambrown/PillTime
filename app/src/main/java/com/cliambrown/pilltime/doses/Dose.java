@@ -5,11 +5,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.cliambrown.pilltime.R;
-import com.cliambrown.pilltime.meds.InvalidMedException;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.utilities.Utils;
-
-import java.util.Arrays;
 
 public class Dose {
 

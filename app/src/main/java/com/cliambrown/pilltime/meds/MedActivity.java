@@ -109,7 +109,7 @@ public class MedActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
-        filter.addAction("com.cliambrown.broadcast.DOSES_ADDED");
+        filter.addAction("com.cliambrown.broadcast.DOSES_LOADED");
         filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
@@ -134,7 +134,7 @@ public class MedActivity extends AppCompatActivity {
     }
 
     public class MedBroadcastReceiver extends BroadcastReceiver {
-        @SuppressWarnings({"unchecked", "UnnecessaryReturnStatement"})
+        @SuppressWarnings({"UnnecessaryReturnStatement"})
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -164,9 +164,9 @@ public class MedActivity extends AppCompatActivity {
 
             List<Dose> doses = med.getDoses();
 
-            if (action.equals("com.cliambrown.broadcast.DOSES_ADDED")) {
+            if (action.equals("com.cliambrown.broadcast.DOSES_LOADED")) {
                 try {
-                    List<Integer> doseIDs = (List<Integer>) intent.getSerializableExtra("doseIDs");
+                    List<Integer> doseIDs = intent.getIntegerArrayListExtra("doseIDs");
                     for (int doseID : Objects.requireNonNull(doseIDs)) {
                         for (int i=0; i<doses.size(); ++i) {
                             if (doses.get(i).getId() == doseID) {
@@ -230,7 +230,7 @@ public class MedActivity extends AppCompatActivity {
         if (!med.getDoses().isEmpty()) {
             ll_med_no_doses.setVisibility(View.GONE);
             if (mAdapter != null) {
-                mAdapter.notifyItemChanged(0, "update_show_more_btn");
+                mAdapter.notifyItemChanged(mAdapter.getItemCount() - 1, "update_show_more_btn");
             }
         } else {
             ll_med_no_doses.setVisibility(View.VISIBLE);
