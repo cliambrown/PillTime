@@ -179,10 +179,4 @@
     <string name="invalid_med_id">ID du médicament invalide</string>
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
-    <string name="med_sort_value_alpha" translatable="false"></string>
-    <string name="theme_value_auto_battery" translatable="false"></string>
-    <string name="med_sort_value_latest" translatable="false"></string>
-    <string name="theme_value_dark" translatable="false"></string>
-    <string name="theme_value_system_default" translatable="false"></string>
-    <string name="theme_value_light" translatable="false"></string>
 </resources>

@@ -177,10 +177,4 @@
     <string name="invalid_med_id">Identificador de medicamento inválido</string>
     <string name="invalid_dose_count">Cantidad de dosis inválida</string>
     <string name="invalid_dose_datetime">Fecha inválida</string>
-    <string name="med_sort_value_alpha" translatable="false"></string>
-    <string name="theme_value_auto_battery" translatable="false"></string>
-    <string name="med_sort_value_latest" translatable="false"></string>
-    <string name="theme_value_dark" translatable="false"></string>
-    <string name="theme_value_system_default" translatable="false"></string>
-    <string name="theme_value_light" translatable="false"></string>
 </resources>

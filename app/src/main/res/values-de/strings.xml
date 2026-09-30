@@ -160,29 +160,4 @@
     <string name="translation_link_title">Hilf mit, diese App zu übersetzen</string>
     <string name="welcome_dialog_title">Neue Funktionen</string>
     <string name="welcome_dialog_content">Version 20: Wenn du Fehler siehst, versuch doch mal, deine Datenbank auf der Seite „Einstellungen“ zu reparieren.\n \nNEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n \nAb Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n \nHINWEIS: Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.</string>
-    <string name="invalid_dose_count"></string>
-    <string name="repair_db"></string>
-    <string name="med_sort_value_alpha" translatable="false"></string>
-    <string name="database_error"></string>
-    <string name="theme_value_auto_battery" translatable="false"></string>
-    <string name="invalid_dose_hours"></string>
-    <string name="invalid_med_id"></string>
-    <string name="toast_database_repaired"></string>
-    <string name="error_intro"></string>
-    <string name="invalid_max_dose"></string>
-    <string name="med_sort_value_latest" translatable="false"></string>
-    <string name="invalid_reported_inventory"></string>
-    <string name="theme_value_dark" translatable="false"></string>
-    <string name="repair"></string>
-    <string name="med_save_error"></string>
-    <string name="invalid_data"></string>
-    <string name="theme_value_system_default" translatable="false"></string>
-    <string name="color_not_found"></string>
-    <string name="dose_save_error"></string>
-    <string name="repair_db_description"></string>
-    <string name="color_required"></string>
-    <string name="invalid_dose_datetime"></string>
-    <string name="theme_value_light" translatable="false"></string>
-    <string name="name_required"></string>
-    <string name="invalid_default_dose_count"></string>
 </resources>
