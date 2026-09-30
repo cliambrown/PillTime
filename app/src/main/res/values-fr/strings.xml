@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Pill Time</string>
-
     <string name="med_name">Nom</string>
     <!-- "max" as in maximum, shortened to save space -->
     <string name="max">max</string>
@@ -19,13 +19,6 @@
     <string name="history">Historique</string>
     <!-- Example: "[X] meds taken in [the] past [Y] hours" -->
     <plurals name="taken_in_past_hours" tools:ignore="MissingQuantity">
-        <!--
-             As a developer, you should always supply "one" and "other"
-             strings. Your translators will know which strings are actually
-             needed for their language. Always include %d in "one" because
-             translators will need to use %d for languages where "one"
-             doesn't mean 1 (as explained above).
-          -->
         <item quantity="one">%1$s prises durant la dernière heure</item>
         <item quantity="other">%1$s prises dans les %2$d dernières heures</item>
     </plurals>
@@ -34,7 +27,6 @@
         <item quantity="one">%1$s au cours du dernier jour</item>
         <item quantity="other">%1$s prises au cours des %2$d derniers jours</item>
     </plurals>
-
     <string name="edit_dose_title">Modifier dose de %1$s</string>
     <string name="edit_med_title">Modifier %1$s</string>
     <string name="dose_history">Historique des doses</string>
@@ -47,7 +39,6 @@
     <string name="dose_taken_at">Prise à</string>
     <string name="dose_taken_at_time">Heure prise</string>
     <string name="dose_taken_on_date">Date prise</string>
-
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires" tools:ignore="MissingQuantity">
         <item quantity="one">%1$s expire %2$s</item>
@@ -61,7 +52,6 @@
     <string name="notification_public_title">Une dose a expiré</string>
     <!-- "<user-picked med name> dose expired" - Example: "Greenpill dose expired"-->
     <string name="notification_private_title">Dose de %1$s expirée</string>
-
     <!-- Example: "expired 10m 43s ago" -->
     <!-- Example: "expires in 10M 2w" -->
     <string name="time_past_ago">il y a %1$s</string>
@@ -80,20 +70,17 @@
     <string name="months_short">M</string>
     <string name="years">ans</string>
     <string name="years_short">a</string>
-
     <string name="save">Enregistrer</string>
     <string name="edit">Modifier</string>
     <string name="delete">Supprimer</string>
     <string name="yes">Oui</string>
     <string name="cancel">Annuler</string>
     <string name="more_options">Plus d\'options</string>
-
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
     <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
     <string name="dialog_delete_medication">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
     <string name="dialog_delete_dose_and_older">Êtes-vous sûr de vouloir supprimer cette dose ainsi que toutes les précédentes pour ce médicament ? Cette action est irréversible.</string>
-
     <string name="settings">Paramètres</string>
     <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
@@ -108,7 +95,6 @@
     <string name="reported_inventory">doses actuellement disponibles en stock</string>
     <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
     <string name="inventory">%1$s en stock</string>
-
     <string name="toast_dose_saved">Dose sauvegardée</string>
     <string name="toast_med_saved">Médicament sauvegardé</string>
     <string name="toast_error_importing_database">Erreur d\'importation de la base de données</string>
@@ -116,20 +102,16 @@
     <string name="toast_error_exporting_database">Erreur d\'exportation de la base de données</string>
     <string name="toast_data_exported">Données exportées</string>
     <string name="toast_database_cleared">Base de données effacée</string>
-
     <string name="toast_database_repaired">Base de données réparée</string>
     <string name="interface_header">Interface</string>
-
     <string name="theme_header">Thème</string>
     <string name="theme_entry_light">Clair</string>
     <string name="theme_entry_dark">Sombre</string>
     <string name="theme_entry_system_default">Défaut du système</string>
     <string name="theme_entry_auto_battery">Automatique - batterie</string>
-
     <string name="med_sort_header">Ordre de tri des médicaments</string>
     <string name="med_sort_entry_latest">Le plus récemment pris</string>
     <string name="med_sort_entry_alpha">Alphabétique</string>
-
     <string name="color">Couleur</string>
     <string name="set_med_color">Mets ce médicament en</string>
     <string name="red">Rouge</string>
@@ -149,17 +131,14 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Rose</string>
     <string name="rose">Rouge pâle</string>
-
     <string name="disclaimer_title">Avertissement</string>
     <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des spécialistes de santé.</string>
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
-
     <string name="dev_decree_title">Attention</string>
     <string name="dev_decree_notice">Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
     <string name="learn_more">En apprendre davantage</string>
     <string name="keep_android_open">keepandroidopen.org</string>
     <string name="close">Fermer</string>
-
     <string name="no_meds">Aucun médicament trouvé</string>
     <string name="add_med">Ajouter un médicament</string>
     <string name="no_doses">Aucune dose prise.</string>
@@ -169,7 +148,6 @@
     <string name="channel_name">Notifications de doses expirées</string>
     <string name="channel_description">Des notifications lorsque les doses s\'expirent</string>
     <string name="delete_and_older">Supprimer celle-ci et et celles antérieures</string>
-
     <string name="data">Données</string>
     <string name="export_all">Exporter toutes les données</string>
     <string name="export_all_summary">Cela permet de créer un fichier qui peut être importé sur n\'importe quel appareil</string>
@@ -178,20 +156,12 @@
     <string name="last_taken">dernière dose %1$s</string>
     <!-- Example: "last taken never" -->
     <string name="never">jamais</string>
-
     <string name="about_app">À propos de Pill Time</string>
     <string name="changelog_title">Nouveautés</string>
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
-
     <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
-    <string name="welcome_dialog_content">
-        v20 : Si vous voyez des erreurs, essayez de réparer votre base de données sur la page « Paramètres ».\n
-        \nNOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
-        \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
-        \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n
-        \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
-    </string>
+    <string name="welcome_dialog_content">v20 : Si vous voyez des erreurs, essayez de réparer votre base de données sur la page « Paramètres ».\n \nNOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
     <string name="repair">Réparer</string>
     <string name="repair_db">Réparer la base de données</string>
     <string name="error_intro">Erreur :</string>
@@ -209,4 +179,10 @@
     <string name="invalid_med_id">ID du médicament invalide</string>
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
+    <string name="med_sort_value_alpha" translatable="false"></string>
+    <string name="theme_value_auto_battery" translatable="false"></string>
+    <string name="med_sort_value_latest" translatable="false"></string>
+    <string name="theme_value_dark" translatable="false"></string>
+    <string name="theme_value_system_default" translatable="false"></string>
+    <string name="theme_value_light" translatable="false"></string>
 </resources>
