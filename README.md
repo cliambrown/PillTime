@@ -10,7 +10,7 @@
 
 <p align="center">
     <a href="https://f-droid.org/packages/com.cliambrown.pilltime/"><img alt="Get it on F-Droid" width="200px" src="https://f-droid.org/badge/get-it-on.png"/></a>
-    <a href="https://apt.izzysoft.de/packages/com.cliambrown.pilltime"><img alt="Get it on IzzyOnDroid" width="200px" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png"/></a>
+    <a href="https://apt.izzysoft.de/packages/com.cliambrown.pilltime"><img alt="Get it on IzzyOnDroid" width="180px" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png" style="padding:12px;"/></a>
 </p>
 
 <p align="center">
@@ -35,6 +35,9 @@ Made by [C. Liam Brown](https://cliambrown.com) with notable contributions from 
 ## Translations
 
 Contribute to translating this app on Weblate: [hosted.weblate.org/engage/pilltime](https://hosted.weblate.org/engage/pilltime)
+
+- Thanks to @Robangsan for Spanish translations
+- Thanks to @the.yourdoom for Dutch translations
 
 ## Disclaimer
 

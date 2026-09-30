@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pill Time</string>
+    <string name="med_name">Naam</string>
+    <string name="max">max</string>
+    <plurals name="max_dose_per_hour">
+        <item quantity="one">max %1$d / u</item>
+        <item quantity="other">max %1$d / %2$d u</item>
+    </plurals>
+    <plurals name="max_dose_per_day">
+        <item quantity="one">max %1$d / dag</item>
+        <item quantity="other">max %1$d / %2$d dagen</item>
+    </plurals>
+    <string name="every">iedere</string>
+    <string name="hour_or_day">uur of dag</string>
+    <string name="default_doses">Hoeveelheid normaal ingenomen:</string>
+    <string name="new_med">Nieuw Medicijn</string>
+    <string name="history">Geschiedenis</string>
+    <plurals name="taken_in_past_hours">
+        <item quantity="one">%1$s genomen in het laatte uur</item>
+        <item quantity="other">%1$s genomen in de laaste %2$d uren</item>
+    </plurals>
+    <plurals name="taken_in_past_days">
+        <item quantity="one">%1$s genomen over de laatste dag</item>
+        <item quantity="other">%1$s genomen over de laatset %2$d dagen</item>
+    </plurals>
+    <string name="edit_dose_title">Bewerk %1$s dosis</string>
+    <string name="edit_med_title">Bewerk %1$s</string>
+    <string name="dose_history">Dosis geschiedenis</string>
+    <string name="med">Medicijn</string>
+    <string name="amount_taken">Hoeveelheid genomen</string>
+    <string name="decrease_amount_taken">Verminder hoeveelheid genomen</string>
+    <string name="increase_amount_taken">Verhoog hoeveelheid genomen</string>
+    <string name="new_dose">Nieuwe dosis</string>
+    <string name="new_dose_title">Nieuwe %1$s dosis</string>
+    <string name="dose_taken_at">Genomen op</string>
+    <string name="dose_taken_at_time">Genomen op tijd</string>
+    <string name="dose_taken_on_date">Genomen op datum</string>
+    <plurals name="expires">
+        <item quantity="one">%1$s verloopt %2$s</item>
+        <item quantity="other">%1$s verlopen %2$s</item>
+    </plurals>
+</resources>
