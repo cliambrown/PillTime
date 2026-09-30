@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pill Time</string>
-
     <string name="med_name">Name</string>
     <!-- "max" as in maximum, shortened to save space -->
     <string name="max">max</string>
@@ -19,13 +19,6 @@
     <string name="history">Verlauf</string>
     <!-- Example: "[X] meds taken in [the] past [Y] hours" -->
     <plurals name="taken_in_past_hours">
-        <!--
-             As a developer, you should always supply "one" and "other"
-             strings. Your translators will know which strings are actually
-             needed for their language. Always include %d in "one" because
-             translators will need to use %d for languages where "one"
-             doesn't mean 1 (as explained above).
-          -->
         <item quantity="one">%1$s genommen in der letzten Stunde</item>
         <item quantity="other">%1$s genommen in den letzten %2$d Stunden</item>
     </plurals>
@@ -34,7 +27,6 @@
         <item quantity="one">%1$s genommen in den letzten 24 Stunden</item>
         <item quantity="other">%1$s genommen in den letzten %2$d Tagen</item>
     </plurals>
-
     <string name="edit_dose_title">%1$s-Dosis bearbeiten</string>
     <string name="edit_med_title">%1$s bearbeiten</string>
     <string name="dose_history">Dosisverlauf</string>
@@ -47,7 +39,6 @@
     <string name="dose_taken_at">Eingenommen um</string>
     <string name="dose_taken_at_time">Zeitpunkt der Einnahme</string>
     <string name="dose_taken_on_date">Datum, an dem die Dosis eingenommen wurde</string>
-
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
     <plurals name="expires">
         <item quantity="one">%1$s läuft ab: %2$s</item>
@@ -61,7 +52,6 @@
     <string name="notification_public_title">Eine Dosis ist abgelaufen</string>
     <!-- "<user-picked med name> dose expired" - Example: "Greenpill dose expired"-->
     <string name="notification_private_title">Dosis ’%1$s’ ist abgelaufen</string>
-
     <!-- Example: "expired 10m 43s ago" -->
     <!-- Example: "expires in 10M 2w" -->
     <string name="time_past_ago">vor %1$s</string>
@@ -80,20 +70,17 @@
     <string name="months_short">M</string>
     <string name="years">Jahre</string>
     <string name="years_short">J</string>
-
     <string name="save">Speichern</string>
     <string name="edit">Bearbeiten</string>
     <string name="delete">Löschen</string>
     <string name="yes">Ja</string>
     <string name="cancel">Abbrechen</string>
     <string name="more_options">Weitere Optionen</string>
-
     <string name="dialog_clear_db">Sind Sie sicher, dass Sie alle Medikamente und die Dosierungshistorie dauerhaft löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_repair_db">Bevor du versuchst, deine Datenbank zu reparieren, solltest du deine Daten mithilfe der Exportfunktion sichern. Klicke auf „Abbrechen“, um zurückzugehen, oder auf „Reparieren“, um die Datenbank jetzt zu reparieren.</string>
     <string name="dialog_delete_medication">Diese Medikation wirklich löschen? Dadurch werden auch alle für dieses Medikament eingegebenen Dosen gelöscht. Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose">Diese Dosis wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_delete_dose_and_older">Diese Dosis und alle älteren wirklich löschen? Dies kann nicht rückgängig gemacht werden.</string>
-
     <string name="settings">Einstellungen</string>
     <string name="clear_db">Alle Daten löschen</string>
     <string name="clear_meds_and_doses">Löscht alle Medikamente und den Dosierungsverlauf von Ihrem Gerät</string>
@@ -107,7 +94,6 @@
     <string name="reported_inventory">Dosen aktuell auf Vorrat</string>
     <string name="inventory_reported_at">Vorrat zuletzt angegeben: %1$s</string>
     <string name="inventory">Vorrat: %1$s</string>
-
     <string name="toast_dose_saved">Dosis gespeichert</string>
     <string name="toast_med_saved">Medikation gespeichert</string>
     <string name="toast_error_importing_database">Fehler beim Importieren der Datenbank</string>
@@ -115,19 +101,15 @@
     <string name="toast_error_exporting_database">Fehler beim Exportieren der Datenbank</string>
     <string name="toast_data_exported">Die Daten wurden exportiert</string>
     <string name="toast_database_cleared">Datenbank geleert</string>
-
     <string name="interface_header">Bedienoberfläche</string>
-
     <string name="theme_header">Design</string>
     <string name="theme_entry_light">Hell</string>
     <string name="theme_entry_dark">Dunkel</string>
     <string name="theme_entry_system_default">Systemstandard</string>
     <string name="theme_entry_auto_battery">Automatisch (Akku)</string>
-
     <string name="med_sort_header">Reihenfolge zum Sortieren der Medikamente</string>
     <string name="med_sort_entry_latest">Zuletzt eingenommen</string>
     <string name="med_sort_entry_alpha">Alphabetisch</string>
-
     <string name="color">Farbe</string>
     <string name="set_med_color">Lege die Farbe des Medikaments fest</string>
     <string name="red">Rot</string>
@@ -147,17 +129,14 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Rosa</string>
     <string name="rose">Rosenrot</string>
-
     <string name="disclaimer_title">Haftungsausschluss</string>
     <string name="disclaimer_1">Diese App gibt keine medizinischen Ratschläge, weder implizit noch anderweitig. Alle von der App bereitgestellten Informationen basieren ausschließlich auf Benutzereingaben und stellen keine Empfehlung dar. Medizinische Entscheidungen sollten stets in Absprache mit medizinischem Fachpersonal getroffen werden.</string>
     <string name="disclaimer_2">Dies ist eine einfache App, die für den persönlichen Gebrauch erstellt wurde. Es darf sich nicht auf diese App für gesundheitliche Zwecke verlassen werden. Aufgrund technischer Einschränkungen und bekannter Probleme kann nicht garantiert werden, dass Benachrichtigungen zu bestimmten Zeiten erfolgen. (Beispielsweise kann ein Neustart des Telefons geplante Benachrichtigungen dieser App deaktivieren.)</string>
-
     <string name="dev_decree_title">Hinweis</string>
     <string name="dev_decree_notice">Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.</string>
     <string name="learn_more">Mehr erfahren</string>
     <string name="keep_android_open">keepandroidopen.org</string>
     <string name="close">Schließen</string>
-
     <string name="no_meds">Keine Medikamente gefunden.</string>
     <string name="add_med">Medikation hinzufügen</string>
     <string name="no_doses">Keine Dosen eingenommen.</string>
@@ -167,7 +146,6 @@
     <string name="channel_name">Benachrichtigungen abgelaufener Dosen</string>
     <string name="channel_description">Benachrichtigungen, wenn Dosen ablaufen</string>
     <string name="delete_and_older">Dieses und ältere löschen</string>
-
     <string name="data">Daten</string>
     <string name="export_all">Alle Daten exportieren</string>
     <string name="export_all_summary">Erstellt eine Datei, die auf jedem Gerät importiert werden kann</string>
@@ -176,19 +154,10 @@
     <string name="last_taken">zuletzt eingenommen: %1$s</string>
     <!-- Example: "last taken: never" -->
     <string name="never">nie</string>
-
     <string name="about_app">Über Pill Time</string>
     <string name="changelog_title">Neue Funktionen</string>
     <string name="info_link_title">Quellcode und weitere Informationen auf GitHub verfügbar</string>
-
     <string name="translation_link_title">Hilf mit, diese App zu übersetzen</string>
     <string name="welcome_dialog_title">Neue Funktionen</string>
-    <string name="welcome_dialog_content">
-        Version 20: Wenn du Fehler siehst, versuch doch mal, deine Datenbank auf der Seite „Einstellungen“ zu reparieren.\n
-        \nNEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n
-        \nAb Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n
-        \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n
-        \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n
-        \nHINWEIS: Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.
-    </string>
+    <string name="welcome_dialog_content">Version 20: Wenn du Fehler siehst, versuch doch mal, deine Datenbank auf der Seite „Einstellungen“ zu reparieren.\n \nNEU in Version 19: Sie können nun für jedes Medikament Standardbenachrichtigungen festlegen.\n \nAb Version 18: Sie können Medikamente nach Einnahmedatum oder alphabetisch sortieren. (Siehe Einstellungsseite)\n \nAb Version 13: Du kannst jetzt auf dem Hauptbildschirm lange auf die Schaltfläche „Dosis hinzufügen“ drücken, um schnell eine neue Dosis hinzuzufügen.\n \nDu kannst außerdem auf dem Bearbeitungsbildschirm die Standarddosis für jedes Medikament festlegen.\n \nHINWEIS: Google ändert die Art und Weise, wie du Apps wie diese auf deinem Gerät installierst. Besuche keepandroidopen.org, um mehr zu erfahren.</string>
 </resources>
