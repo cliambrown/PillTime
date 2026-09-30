@@ -10,7 +10,8 @@
 
 <p align="center">
     <a href="https://f-droid.org/packages/com.cliambrown.pilltime/"><img alt="Get it on F-Droid" width="200px" src="https://raw.githubusercontent.com/cliambrown/PillTime/main/get-it-on-f-droid.png"/></a>
-    <a href="https://apt.izzysoft.de/packages/com.cliambrown.pilltime"><img alt="Get it on IzzyOnDroid" width="180px" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png"/></a>
+    &nbsp;
+    <a href="https://apt.izzysoft.de/packages/com.cliambrown.pilltime"><img alt="Get it on IzzyOnDroid" width="200px" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png"/></a>
 </p>
 
 <p align="center">
