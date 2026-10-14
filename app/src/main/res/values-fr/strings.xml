@@ -207,4 +207,15 @@
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
     <string name="help">Assistance</string>
+    <string name="widget_name">Prendre une dose</string>
+    <string name="widget_description">Enregistrer une dose du médicament sélectionné en un geste</string>
+    <string name="widget_configure_title">Choisir un médicament</string>
+    <string name="widget_configure_hint">Médicament enregistré par ce widget :</string>
+    <string name="widget_save">Ajouter le widget</string>
+    <string name="widget_take_dose">Prendre %1$s</string>
+    <string name="widget_med_unavailable">Médicament indisponible</string>
+    <string name="widget_no_meds">Ajoutez un médicament dans Pill Time avant de configurer ce widget.</string>
+    <string name="widget_ready">Prêt</string>
+    <string name="widget_limit_reached">Limite de dose atteinte</string>
+    <string name="widget_taken_today">Aujourd’hui : %1$s</string>
 </resources>

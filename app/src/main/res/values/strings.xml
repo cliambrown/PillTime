@@ -287,4 +287,16 @@
     <string name="pink">Pink</string>
     <string name="rose">Rose</string>
 
+    <string name="widget_name">Take a dose</string>
+    <string name="widget_description">Record a dose of a selected medication with one tap</string>
+    <string name="widget_configure_title">Choose a medication</string>
+    <string name="widget_configure_hint">Medication recorded by this widget:</string>
+    <string name="widget_save">Add widget</string>
+    <string name="widget_take_dose">Take %1$s</string>
+    <string name="widget_med_unavailable">Medication unavailable</string>
+    <string name="widget_no_meds">Add a medication in Pill Time before configuring this widget.</string>
+    <string name="widget_ready">Ready</string>
+    <string name="widget_limit_reached">Dose limit reached</string>
+    <string name="widget_taken_today">Today: %1$s</string>
+
 </resources>

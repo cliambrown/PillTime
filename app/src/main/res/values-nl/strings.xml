@@ -40,4 +40,15 @@
         <item quantity="one">%1$s verloopt %2$s</item>
         <item quantity="other">%1$s verlopen %2$s</item>
     </plurals>
+    <string name="widget_name">Een dosis nemen</string>
+    <string name="widget_description">Registreer een dosis van het gekozen medicijn met één tik</string>
+    <string name="widget_configure_title">Kies een medicijn</string>
+    <string name="widget_configure_hint">Medicijn dat met deze widget wordt geregistreerd:</string>
+    <string name="widget_save">Widget toevoegen</string>
+    <string name="widget_take_dose">%1$s nemen</string>
+    <string name="widget_med_unavailable">Medicijn niet beschikbaar</string>
+    <string name="widget_no_meds">Voeg een medicijn toe in Pill Time voordat je deze widget instelt.</string>
+    <string name="widget_ready">Klaar</string>
+    <string name="widget_limit_reached">Dosislimiet bereikt</string>
+    <string name="widget_taken_today">Vandaag: %1$s</string>
 </resources>

@@ -160,4 +160,16 @@
     <string name="translation_link_title">Hilf mit, diese App zu übersetzen</string>
     <string name="welcome_dialog_title">Neue Funktionen</string>
 
+    <string name="widget_name">Dosis einnehmen</string>
+    <string name="widget_description">Die Einnahme eines ausgewählten Medikaments mit einem Tippen erfassen</string>
+    <string name="widget_configure_title">Medikament auswählen</string>
+    <string name="widget_configure_hint">Mit diesem Widget erfasstes Medikament:</string>
+    <string name="widget_save">Widget hinzufügen</string>
+    <string name="widget_take_dose">%1$s einnehmen</string>
+    <string name="widget_med_unavailable">Medikament nicht verfügbar</string>
+    <string name="widget_no_meds">Füge in Pill Time ein Medikament hinzu, bevor du dieses Widget konfigurierst.</string>
+    <string name="widget_ready">Bereit</string>
+    <string name="widget_limit_reached">Dosislimit erreicht</string>
+    <string name="widget_taken_today">Heute: %1$s</string>
+
 </resources>

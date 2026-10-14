@@ -199,4 +199,15 @@
     <string name="invalid_dose_count">Cantidad de dosis inválida</string>
     <string name="invalid_dose_datetime">Fecha inválida</string>
     <string name="help">Asistencia</string>
+    <string name="widget_name">Tomar una dosis</string>
+    <string name="widget_description">Registra una dosis del medicamento seleccionado con un toque</string>
+    <string name="widget_configure_title">Elegir un medicamento</string>
+    <string name="widget_configure_hint">Medicamento registrado por este widget:</string>
+    <string name="widget_save">Añadir widget</string>
+    <string name="widget_take_dose">Tomar %1$s</string>
+    <string name="widget_med_unavailable">Medicamento no disponible</string>
+    <string name="widget_no_meds">Añade un medicamento en Pill Time antes de configurar este widget.</string>
+    <string name="widget_ready">Listo</string>
+    <string name="widget_limit_reached">Límite de dosis alcanzado</string>
+    <string name="widget_taken_today">Hoy: %1$s</string>
 </resources>
