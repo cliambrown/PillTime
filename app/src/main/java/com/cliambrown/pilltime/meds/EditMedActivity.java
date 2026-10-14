@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -72,6 +71,7 @@ public class EditMedActivity extends SimpleMenuActivity {
         medID = intent.getIntExtra("id", -1);
         mApp = (PillTimeApplication) this.getApplication();
         Med med = mApp.getMed(medID);
+        boolean isArchived;
 
         cl_editMed_parent = findViewById(R.id.cl_editMed_parent);
         et_editMed_name = findViewById(R.id.et_editMed_name);
@@ -177,7 +177,9 @@ public class EditMedActivity extends SimpleMenuActivity {
             }
             setTitle(getString(R.string.edit_med_title, "\"" + med.getName() +"\""));
             selectedColor = med.getColor();
+            isArchived = med.isArchived();
         } else {
+            isArchived = false;
             ll_editMed_trackInventory.setVisibility(View.GONE);
             tv_editMed_inventoryReportedAt.setVisibility(View.GONE);
             int rnd = new Random().nextInt(colors.length);
@@ -246,30 +248,19 @@ public class EditMedActivity extends SimpleMenuActivity {
                 }
                 med1 = new Med(medID, medName, maxDose, doseHours, selectedColor, isInventoryTracked,
                         reportedInventory, inventoryReportedAt, defaultDoseCount, showDayDoseCount,
-                        overrideGlobalNotifyDefaults, notifyDefault, notifySoundDefault,
+                        overrideGlobalNotifyDefaults, notifyDefault, notifySoundDefault, isArchived,
                         EditMedActivity.this);
             } catch (Exception e) {
-                Toast.makeText(
-                        EditMedActivity.this,
-                        getString(R.string.med_save_error) + " " + getString(R.string.invalid_data),
-                        Toast.LENGTH_SHORT
-                ).show();
+                mApp.handleMedSaveError(getString(R.string.invalid_data));
                 return;
             }
 
             if (medID > -1) {
-                boolean edited = mApp.setMed(med1);
-                if (!edited) return;
+                if (mApp.setMed(med1)) EditMedActivity.this.finish();
             } else {
                 med1.setHasLoadedAllDoses(true);
-                boolean added = mApp.addMed(med1);
-                if (!added) return;
+                if (mApp.saveNewMed(med1)) EditMedActivity.this.finish();
             }
-
-            Toast.makeText(EditMedActivity.this, getString(R.string.toast_med_saved),
-                    Toast.LENGTH_SHORT).show();
-
-            EditMedActivity.this.finish();
         });
     }
 

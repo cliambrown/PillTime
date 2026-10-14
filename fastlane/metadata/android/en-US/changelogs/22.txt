@@ -1,0 +1,3 @@
+- Add the ability to archive meds (hide them from the main screen)
+- Added a Help page
+- Minor bug fixes

@@ -8,6 +8,13 @@
         android:id="@+id/mi_med_option_history"
         android:title="@string/history" />
     <item
+        android:id="@+id/mi_med_option_archive"
+        android:title="@string/archive" />
+    <item
+        android:id="@+id/mi_med_option_unarchive"
+        android:title="@string/unarchive"
+        android:visible="false" />
+    <item
         android:id="@+id/mi_med_option_delete"
         android:title="@string/delete" />
 </menu>

@@ -35,6 +35,7 @@ public class Med {
     private boolean overrideGlobalNotifyDefaults;
     private boolean notifyDefault;
     private boolean notifySoundDefault;
+    private boolean isArchived;
 
     private final List<Dose> doses = new ArrayList<>();
     private boolean hasLoadedAllDoses;
@@ -48,7 +49,7 @@ public class Med {
             int id, String name, int maxDose, int doseHours, String color,
             boolean isInventoryTracked, double reportedInventory, long inventoryReportedAt,
             int defaultDoseCount, boolean showDayDoseCount, boolean overrideGlobalNotifyDefaults,
-            boolean notifyDefault, boolean notifySoundDefault,
+            boolean notifyDefault, boolean notifySoundDefault, boolean isArchived,
             Context context
     ) {
         this.context = context;
@@ -65,6 +66,7 @@ public class Med {
         this.overrideGlobalNotifyDefaults = overrideGlobalNotifyDefaults;
         this.notifyDefault = notifyDefault;
         this.notifySoundDefault = notifySoundDefault;
+        this.isArchived = isArchived;
         this.hasLoadedAllDoses = false;
     }
 
@@ -84,6 +86,7 @@ public class Med {
                 ", showDayDoseCount=" + showDayDoseCount +
                 ", notifyDefault=" + notifyDefault +
                 ", notifySoundDefault=" + notifySoundDefault +
+                ", isArchived=" + isArchived +
                 ", doses=" + doses +
                 '}';
     }
@@ -428,5 +431,13 @@ public class Med {
         if (this.overrideGlobalNotifyDefaults) return this.notifySoundDefault;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("notify_sound_default", false);
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
     }
 }

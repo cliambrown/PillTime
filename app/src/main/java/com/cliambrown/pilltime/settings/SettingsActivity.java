@@ -8,8 +8,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,6 +24,7 @@ import androidx.preference.PreferenceManager;
 
 import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.help.HelpActivity;
 import com.cliambrown.pilltime.utilities.DbHelper;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 
@@ -39,6 +41,7 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    PillTimeApplication mApp;
     static ActivityResultLauncher<Intent> exportLauncher;
     static ActivityResultLauncher<Intent> importLauncher;
 
@@ -59,6 +62,8 @@ public class SettingsActivity extends AppCompatActivity
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
+        mApp = (PillTimeApplication) this.getApplication();
+
         exportLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -75,35 +80,25 @@ public class SettingsActivity extends AppCompatActivity
                         DbHelper dbHelper = new DbHelper(SettingsActivity.this);
                         JSONObject jsonObject = dbHelper.getExportedDb();
                         if (jsonObject == null) {
-                            Toast.makeText(SettingsActivity.this,
-                                    getString(R.string.toast_error_exporting_database) + " (null JSON object)",
-                                    Toast.LENGTH_SHORT).show();
+                            mApp.handleDbError(R.string.error_exporting_database, R.string.null_json_object);
                         } else {
                             fileOutputStream.write((jsonObject.toString()).getBytes());
-                            Toast.makeText(SettingsActivity.this, R.string.toast_data_exported, Toast.LENGTH_SHORT).show();
+                            mApp.showToast(R.string.data_exported);
                         }
                         fileOutputStream.close();
                         pfd.close();
                     } catch (NullPointerException e) {
                         e.printStackTrace();
-                        Toast.makeText(SettingsActivity.this,
-                                getString(R.string.toast_error_exporting_database) + " (null pointer exception)",
-                                Toast.LENGTH_SHORT).show();
+                        mApp.handleDbError(R.string.error_exporting_database, R.string.null_pointer_exception);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        Toast.makeText(SettingsActivity.this,
-                                getString(R.string.toast_error_exporting_database) + " (file not found)",
-                                Toast.LENGTH_SHORT).show();
+                        mApp.handleDbError(R.string.error_exporting_database, R.string.file_not_found);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Toast.makeText(SettingsActivity.this,
-                                getString(R.string.toast_error_exporting_database) + " (IO exception)",
-                                Toast.LENGTH_SHORT).show();
+                        mApp.handleDbError(R.string.error_exporting_database, R.string.io_exception);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(SettingsActivity.this,
-                                getString(R.string.toast_error_exporting_database) + " (JSON exception)",
-                                Toast.LENGTH_SHORT).show();
+                        mApp.handleDbError(R.string.error_exporting_database, R.string.json_exception);
                     }
                 });
 
@@ -192,8 +187,6 @@ public class SettingsActivity extends AppCompatActivity
                                 if (activity == null) return;
                                 PillTimeApplication mApp = (PillTimeApplication) activity.getApplication();
                                 mApp.clearMeds();
-                                Toast.makeText(getActivity(), getString(R.string.toast_database_cleared),
-                                        Toast.LENGTH_SHORT).show();
                             })
                             .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
                     builder.show();
@@ -212,8 +205,6 @@ public class SettingsActivity extends AppCompatActivity
                                 if (activity == null) return;
                                 PillTimeApplication mApp = (PillTimeApplication) activity.getApplication();
                                 mApp.repairDb();
-                                Toast.makeText(getActivity(), getString(R.string.toast_database_repaired),
-                                        Toast.LENGTH_SHORT).show();
                             })
                             .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
                     builder.show();
@@ -224,11 +215,22 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             this.finish();
             return true;
+        }
+        if (itemID == R.id.mi_settings_help) {
+            Intent intent = new Intent(SettingsActivity.this, HelpActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

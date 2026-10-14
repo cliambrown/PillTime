@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/tips_title">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="tip_quick_dose"
+            app:persistent="false"
+            app:selectable="false"
+            android:title="@string/tip_quick_dose_title"
+            app:summary="@string/tip_quick_dose" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="tip_edit_med"
+            app:persistent="false"
+            app:selectable="false"
+            android:title="@string/tip_edit_med_title"
+            app:summary="@string/tip_edit_med" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="tip_archive_med"
+            app:persistent="false"
+            app:selectable="false"
+            android:title="@string/tip_archive_med_title"
+            app:summary="@string/tip_archive_med" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="tip_no_notifications"
+            app:persistent="false"
+            app:selectable="false"
+            android:title="@string/tip_no_notifications_title"
+            app:summary="@string/tip_no_notifications" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/about_app">
+
+        <Preference
+            android:summary="https://github.com/cliambrown/PillTime"
+            app:iconSpaceReserved="false"
+            app:key="github_link"
+            app:title="@string/info_link_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/cliambrown/PillTime"
+                android:title="@string/info_link_title" />
+        </Preference>
+
+        <Preference
+            android:summary="https://github.com/cliambrown/PillTime/releases"
+            app:iconSpaceReserved="false"
+            app:key="changelog_link"
+            app:title="@string/changelog_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/cliambrown/PillTime/releases"
+                android:title="@string/changelog_title" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/translation_link_title">
+
+        <Preference
+            android:summary="https://hosted.weblate.org/engage/pilltime"
+            app:iconSpaceReserved="false"
+            app:key="changelog_link"
+            app:title="@string/translate_on_weblate">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://hosted.weblate.org/engage/pilltime"
+                android:title="@string/translate_on_weblate" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/disclaimer_title">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="disclaimer_1"
+            app:persistent="false"
+            app:selectable="false"
+            app:summary="@string/disclaimer_1" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="disclaimer_2"
+            app:persistent="false"
+            app:selectable="false"
+            app:summary="@string/disclaimer_2" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/dev_decree_title">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="disclaimer_1"
+            app:persistent="false"
+            app:selectable="false"
+            app:summary="@string/dev_decree_notice" />
+
+        <Preference
+            android:summary="https://keepandroidopen.org"
+            app:iconSpaceReserved="false"
+            app:key="keepandroidopen_link">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://keepandroidopen.org"
+                android:title="Keep Android Open" />
+        </Preference>
+
+        <!-- Quick hacky way of adding some padding to the bottom -->
+        <Preference
+            app:persistent="false"
+            app:selectable="false" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
@@ -26,7 +25,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "pilltime.db";
-    public static final int DB_VERSION = 8;
+    public static final int DB_VERSION = 9;
 
     private final Context context;
 
@@ -119,6 +118,7 @@ public class DbHelper extends SQLiteOpenHelper {
     DbColBoolean medDbColOverrideGlobalNotifyDefaults = new DbColBoolean("override_global_notify_defaults");
     DbColBoolean medDbColNotifyDefault = new DbColBoolean("notify_default");
     DbColBoolean medDbColNotifySoundDefault = new DbColBoolean("notify_sound_default");
+    DbColBoolean medDbColIsArchived = new DbColBoolean("is_archived");
 
     private final DbCol[] medCols = {
             medDbColId,
@@ -133,7 +133,8 @@ public class DbHelper extends SQLiteOpenHelper {
             medDbColShowDayDoseCount,
             medDbColOverrideGlobalNotifyDefaults,
             medDbColNotifyDefault,
-            medDbColNotifySoundDefault
+            medDbColNotifySoundDefault,
+            medDbColIsArchived
     };
 
     public Med getMedAtCursor(Cursor cursor, Context context) {
@@ -151,6 +152,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 medDbColOverrideGlobalNotifyDefaults.getValFromCursor(cursor),
                 medDbColNotifyDefault.getValFromCursor(cursor),
                 medDbColNotifySoundDefault.getValFromCursor(cursor),
+                medDbColIsArchived.getValFromCursor(cursor),
                 context
         );
     }
@@ -349,6 +351,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(medDbColOverrideGlobalNotifyDefaults.name, med.getOverrideGlobalNotifyDefaults());
         cv.put(medDbColNotifyDefault.name, med.getNotifyDefault());
         cv.put(medDbColNotifySoundDefault.name, med.getNotifySoundDefault());
+        cv.put(medDbColIsArchived.name, med.isArchived());
         long insertID = db.insertOrThrow(MEDS_TABLE, null, cv);
         db.close();
         return (int) insertID;
@@ -370,6 +373,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(medDbColOverrideGlobalNotifyDefaults.name, med.getOverrideGlobalNotifyDefaults());
         cv.put(medDbColNotifyDefault.name, med.getNotifyDefault());
         cv.put(medDbColNotifySoundDefault.name, med.getNotifySoundDefault());
+        cv.put(medDbColIsArchived.name, med.isArchived());
         String[] whereArgs = new String[]{String.valueOf(med.getId())};
         int update = db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
         db.close();
@@ -597,6 +601,7 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesMap.put(medDbColOverrideGlobalNotifyDefaults.name, "m10");
         colCodesMap.put(medDbColNotifyDefault.name, "m11");
         colCodesMap.put(medDbColNotifySoundDefault.name, "m12");
+        colCodesMap.put(medDbColIsArchived.name, "m13");
         colCodesMap.put(doseDbColCount.name, "d1");
         colCodesMap.put(doseDbColTakenAt.name, "d2");
         colCodesMap.put(doseDbColNotify.name, "d3");
@@ -615,6 +620,7 @@ public class DbHelper extends SQLiteOpenHelper {
         colCodesObject.put(medDbColOverrideGlobalNotifyDefaults.name, colCodesMap.get(medDbColOverrideGlobalNotifyDefaults.name));
         colCodesObject.put(medDbColNotifyDefault.name, colCodesMap.get(medDbColNotifyDefault.name));
         colCodesObject.put(medDbColNotifySoundDefault.name, colCodesMap.get(medDbColNotifySoundDefault.name));
+        colCodesObject.put(medDbColIsArchived.name, colCodesMap.get(medDbColIsArchived.name));
         colCodesObject.put(doseDbColCount.name, colCodesMap.get(doseDbColCount.name));
         colCodesObject.put(doseDbColTakenAt.name, colCodesMap.get(doseDbColTakenAt.name));
         colCodesObject.put(doseDbColNotify.name, colCodesMap.get(doseDbColNotify.name));
@@ -643,6 +649,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 medObject.put(colCodesMap.get(medDbColOverrideGlobalNotifyDefaults.name), (med.getOverrideGlobalNotifyDefaults() ? 1 : 0));
                 medObject.put(colCodesMap.get(medDbColNotifyDefault.name), (med.getNotifyDefault() ? 1 : 0));
                 medObject.put(colCodesMap.get(medDbColNotifySoundDefault.name), (med.getNotifySoundDefault() ? 1 : 0));
+                medObject.put(colCodesMap.get(medDbColIsArchived.name), (med.isArchived() ? 1 : 0));
 
                 JSONArray dosesArray = new JSONArray();
                 String doseStmt = "SELECT * FROM " + DOSES_TABLE + " WHERE " + doseDbColMedId.name + " = ?";
@@ -690,117 +697,114 @@ public class DbHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void importFromString(String jsonText) {
+    public boolean importFromString(String jsonText) throws Exception {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = null;
         ContentValues cv;
-        try {
-            JSONObject rootJsonObject = new JSONObject(jsonText);
-            JSONObject dbObject = rootJsonObject.getJSONObject("db");
-            JSONObject colCodesObject = dbObject.getJSONObject("col_codes");
-            Iterator<String> keys = colCodesObject.keys();
-            HashMap<String, String> colCodesMap = new HashMap<>();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                String val = colCodesObject.getString(key);
-                colCodesMap.put(key, val);
+        JSONObject rootJsonObject = new JSONObject(jsonText);
+        JSONObject dbObject = rootJsonObject.getJSONObject("db");
+        JSONObject colCodesObject = dbObject.getJSONObject("col_codes");
+        Iterator<String> keys = colCodesObject.keys();
+        HashMap<String, String> colCodesMap = new HashMap<>();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            String val = colCodesObject.getString(key);
+            colCodesMap.put(key, val);
+        }
+
+        if (!colCodesMap.containsKey(medDbColName.name) ||
+                !colCodesMap.containsKey(medDbColMaxDose.name) ||
+                !colCodesMap.containsKey(medDbColDoseHours.name) ||
+                !colCodesMap.containsKey(medDbColColor.name) ||
+                !colCodesMap.containsKey(doseDbColCount.name) ||
+                !colCodesMap.containsKey(doseDbColTakenAt.name) ||
+                !colCodesMap.containsKey(doseDbColNotify.name) ||
+                !colCodesMap.containsKey(doseDbColNotifySound.name)) {
+            throw new Exception("Missing column code");
+        }
+
+        JSONArray medsArray = rootJsonObject.getJSONArray("meds");
+        for (int i=0; i<medsArray.length(); ++i) {
+            JSONObject medObject = medsArray.getJSONObject(i);
+            String medName = medObject.getString(colCodesMap.get(medDbColName.name));
+            int maxDose = medObject.getInt(colCodesMap.get(medDbColMaxDose.name));
+            int doseHours = medObject.getInt(colCodesMap.get(medDbColDoseHours.name));
+            String color = medObject.getString(colCodesMap.get(medDbColColor.name));
+
+            boolean isInventoryTracked = colCodesMap.containsKey(medDbColIsInventoryTracked.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColIsInventoryTracked.name));
+            double reportedInventory = (isInventoryTracked && colCodesMap.containsKey(medDbColReportedInventory.name))
+                    ? medObject.getDouble(colCodesMap.get(medDbColReportedInventory.name))
+                    : 0d;
+            long inventoryReportedAt = (isInventoryTracked && colCodesMap.containsKey(medDbColInventoryReportedAt.name))
+                    ? medObject.getLong(colCodesMap.get(medDbColInventoryReportedAt.name))
+                    : 0L;
+            int defaultDoseCount = colCodesMap.containsKey(medDbColDefaultDoseCount.name)
+                    ? medObject.getInt(colCodesMap.get(medDbColDefaultDoseCount.name))
+                    : 1;
+            boolean showDayDoseCount = colCodesMap.containsKey(medDbColShowDayDoseCount.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColShowDayDoseCount.name));
+            boolean overrideGlobalNotifyDefaults = colCodesMap.containsKey(medDbColOverrideGlobalNotifyDefaults.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColOverrideGlobalNotifyDefaults.name));
+            boolean notifyDefault = colCodesMap.containsKey(medDbColNotifyDefault.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColNotifyDefault.name));
+            boolean notifySoundDefault = colCodesMap.containsKey(medDbColNotifySoundDefault.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColNotifySoundDefault.name));
+            boolean isArchived = colCodesMap.containsKey(medDbColIsArchived.name)
+                    && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColIsArchived.name));
+
+            int medID;
+            String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
+                    "WHERE name = ? AND " +
+                    medDbColMaxDose.name + " = ? AND " +
+                    medDbColDoseHours.name + " = ?";
+            String[] selectionArgs = new String[]{
+                    medName,
+                    String.valueOf(maxDose),
+                    String.valueOf(doseHours)
+            };
+            cursor = db.rawQuery(stmt, selectionArgs);
+            cv = new ContentValues();
+            cv.put(medDbColColor.name, color);
+            cv.put(medDbColIsInventoryTracked.name, isInventoryTracked);
+            cv.put(medDbColReportedInventory.name, reportedInventory);
+            cv.put(medDbColInventoryReportedAt.name, inventoryReportedAt);
+            cv.put(medDbColDefaultDoseCount.name, defaultDoseCount);
+            cv.put(medDbColShowDayDoseCount.name, showDayDoseCount);
+            cv.put(medDbColOverrideGlobalNotifyDefaults.name, overrideGlobalNotifyDefaults);
+            cv.put(medDbColNotifyDefault.name, notifyDefault);
+            cv.put(medDbColNotifySoundDefault.name, notifySoundDefault);
+            cv.put(medDbColIsArchived.name, isArchived);
+            if (cursor.moveToFirst()) {
+                int col_id = cursor.getColumnIndex("id");
+                medID = cursor.getInt(col_id);
+                String[] whereArgs = new String[]{String.valueOf(medID)};
+                db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
+            } else {
+                cv.put(medDbColName.name, medName);
+                cv.put(medDbColMaxDose.name, maxDose);
+                cv.put(medDbColDoseHours.name, doseHours);
+                medID = (int) db.insert(MEDS_TABLE, null, cv);
             }
 
-            if (!colCodesMap.containsKey(medDbColName.name) ||
-                    !colCodesMap.containsKey(medDbColMaxDose.name) ||
-                    !colCodesMap.containsKey(medDbColDoseHours.name) ||
-                    !colCodesMap.containsKey(medDbColColor.name) ||
-                    !colCodesMap.containsKey(doseDbColCount.name) ||
-                    !colCodesMap.containsKey(doseDbColTakenAt.name) ||
-                    !colCodesMap.containsKey(doseDbColNotify.name) ||
-                    !colCodesMap.containsKey(doseDbColNotifySound.name)) {
-                throw new Exception("Missing column code");
-            }
-
-            JSONArray medsArray = rootJsonObject.getJSONArray("meds");
-            for (int i=0; i<medsArray.length(); ++i) {
-                JSONObject medObject = medsArray.getJSONObject(i);
-                String medName = medObject.getString(colCodesMap.get(medDbColName.name));
-                int maxDose = medObject.getInt(colCodesMap.get(medDbColMaxDose.name));
-                int doseHours = medObject.getInt(colCodesMap.get(medDbColDoseHours.name));
-                String color = medObject.getString(colCodesMap.get(medDbColColor.name));
-
-                boolean isInventoryTracked = colCodesMap.containsKey(medDbColIsInventoryTracked.name)
-                        && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColIsInventoryTracked.name));
-                double reportedInventory = (isInventoryTracked && colCodesMap.containsKey(medDbColReportedInventory.name))
-                        ? medObject.getDouble(colCodesMap.get(medDbColReportedInventory.name))
-                        : 0d;
-                long inventoryReportedAt = (isInventoryTracked && colCodesMap.containsKey(medDbColInventoryReportedAt.name))
-                        ? medObject.getLong(colCodesMap.get(medDbColInventoryReportedAt.name))
-                        : 0L;
-                int defaultDoseCount = colCodesMap.containsKey(medDbColDefaultDoseCount.name)
-                        ? medObject.getInt(colCodesMap.get(medDbColDefaultDoseCount.name))
-                        : 1;
-                boolean showDayDoseCount = colCodesMap.containsKey(medDbColShowDayDoseCount.name)
-                        && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColShowDayDoseCount.name));
-                boolean overrideGlobalNotifyDefaults = colCodesMap.containsKey(medDbColOverrideGlobalNotifyDefaults.name)
-                        && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColOverrideGlobalNotifyDefaults.name));
-                boolean notifyDefault = colCodesMap.containsKey(medDbColNotifyDefault.name)
-                        && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColNotifyDefault.name));
-                boolean notifySoundDefault = colCodesMap.containsKey(medDbColNotifySoundDefault.name)
-                        && getBoolFromJsonObj(medObject, colCodesMap.get(medDbColNotifySoundDefault.name));
-
-                int medID;
-                String stmt = "SELECT id FROM " + MEDS_TABLE + " " +
-                        "WHERE name = ? AND " +
-                        medDbColMaxDose.name + " = ? AND " +
-                        medDbColDoseHours.name + " = ?";
-                String[] selectionArgs = new String[]{
-                        medName,
-                        String.valueOf(maxDose),
-                        String.valueOf(doseHours)
-                };
-                cursor = db.rawQuery(stmt, selectionArgs);
+            JSONArray dosesArray = medObject.getJSONArray("doses");
+            for (int j=0; j<dosesArray.length(); ++j) {
+                JSONObject doseObject = dosesArray.getJSONObject(j);
+                double count = doseObject.getDouble(colCodesMap.get(doseDbColCount.name));
+                long takenAt = doseObject.getLong(colCodesMap.get(doseDbColTakenAt.name));
+                boolean notify = getBoolFromJsonObj(doseObject, colCodesMap.get(doseDbColNotify.name));
+                boolean notifySound = getBoolFromJsonObj(doseObject, colCodesMap.get(doseDbColNotifySound.name));
                 cv = new ContentValues();
-                cv.put(medDbColColor.name, color);
-                cv.put(medDbColIsInventoryTracked.name, isInventoryTracked);
-                cv.put(medDbColReportedInventory.name, reportedInventory);
-                cv.put(medDbColInventoryReportedAt.name, inventoryReportedAt);
-                cv.put(medDbColDefaultDoseCount.name, defaultDoseCount);
-                cv.put(medDbColShowDayDoseCount.name, showDayDoseCount);
-                cv.put(medDbColOverrideGlobalNotifyDefaults.name, overrideGlobalNotifyDefaults);
-                cv.put(medDbColNotifyDefault.name, notifyDefault);
-                cv.put(medDbColNotifySoundDefault.name, notifySoundDefault);
-                if (cursor.moveToFirst()) {
-                    int col_id = cursor.getColumnIndex("id");
-                    medID = cursor.getInt(col_id);
-                    String[] whereArgs = new String[]{String.valueOf(medID)};
-                    db.update(MEDS_TABLE, cv, "id = ?", whereArgs);
-                } else {
-                    cv.put(medDbColName.name, medName);
-                    cv.put(medDbColMaxDose.name, maxDose);
-                    cv.put(medDbColDoseHours.name, doseHours);
-                    medID = (int) db.insert(MEDS_TABLE, null, cv);
-                }
-
-                JSONArray dosesArray = medObject.getJSONArray("doses");
-                for (int j=0; j<dosesArray.length(); ++j) {
-                    JSONObject doseObject = dosesArray.getJSONObject(j);
-                    double count = doseObject.getDouble(colCodesMap.get(doseDbColCount.name));
-                    long takenAt = doseObject.getLong(colCodesMap.get(doseDbColTakenAt.name));
-                    boolean notify = getBoolFromJsonObj(doseObject, colCodesMap.get(doseDbColNotify.name));
-                    boolean notifySound = getBoolFromJsonObj(doseObject, colCodesMap.get(doseDbColNotifySound.name));
-                    cv = new ContentValues();
-                    cv.put(doseDbColMedId.name, medID);
-                    cv.put(doseDbColCount.name, count);
-                    cv.put(doseDbColTakenAt.name, takenAt);
-                    cv.put(doseDbColNotify.name, notify);
-                    cv.put(doseDbColNotifySound.name, notifySound);
-                    db.insert(DOSES_TABLE, null, cv);
-                }
+                cv.put(doseDbColMedId.name, medID);
+                cv.put(doseDbColCount.name, count);
+                cv.put(doseDbColTakenAt.name, takenAt);
+                cv.put(doseDbColNotify.name, notify);
+                cv.put(doseDbColNotifySound.name, notifySound);
+                db.insert(DOSES_TABLE, null, cv);
             }
-            Toast.makeText(context, context.getString(R.string.toast_data_imported), Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(context,context.getString(R.string.toast_error_importing_database) + ": " + e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
         }
         if (cursor != null) cursor.close();
         db.close();
+        return true;
     }
 }

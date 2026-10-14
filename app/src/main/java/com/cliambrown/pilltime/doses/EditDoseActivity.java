@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -144,11 +143,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
                 notify = switch_editDose_notify.isChecked();
                 notifySound = switch_editDose_notifySound.isChecked();
             } catch (Exception e) {
-                Toast.makeText(
-                        EditDoseActivity.this,
-                        getString(R.string.dose_save_error) + " " + getString(R.string.invalid_data),
-                        Toast.LENGTH_SHORT
-                ).show();
+                mApp.handleDoseSaveError(getString(R.string.invalid_data));
                 return;
             }
 
@@ -163,17 +158,10 @@ public class EditDoseActivity extends SimpleMenuActivity {
             Dose dose1 = new Dose(doseID, medID, count, unixTime, notify, notifySound, EditDoseActivity.this);
 
             if (doseID > -1) {
-                boolean edited = mApp.setDose(med, dose1);
-                if (!edited) return;
+                if (mApp.setDose(med, dose1)) EditDoseActivity.this.finish();
             } else {
-                boolean added = mApp.addDose(med, dose1);
-                if (!added) return;
+                if (mApp.addDose(med, dose1)) EditDoseActivity.this.finish();
             }
-
-            Toast.makeText(EditDoseActivity.this, getString(R.string.toast_dose_saved),
-                    Toast.LENGTH_SHORT).show();
-
-            EditDoseActivity.this.finish();
         });
     }
 

@@ -10,13 +10,14 @@ import android.graphics.Typeface;
 import android.text.ParcelableSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +35,19 @@ import java.util.List;
 public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleViewAdapter.MedViewHolder> {
 
     List<Med> meds;
+    boolean isArchives;
     final Context context;
     final PillTimeApplication mApp;
 
-    public MedsRecycleViewAdapter(List<Med> meds, Context context, PillTimeApplication mApp) {
+    public MedsRecycleViewAdapter(List<Med> meds, Context context, PillTimeApplication mApp, boolean isArchives) {
         this.meds = meds;
         this.context = context;
         this.mApp = mApp;
+        this.isArchives = isArchives;
+    }
+
+    public void setMeds(List<Med> meds) {
+        this.meds = meds;
     }
 
     @NonNull
@@ -82,17 +89,19 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                     holder.med.getNetNotifyDefault(context),
                     holder.med.getNetNotifySoundDefault(context),
                     context);
-            boolean added = mApp.addDose(holder.med, dose1);
-            if (added) {
-                Toast.makeText(context, R.string.toast_dose_saved,
-                        Toast.LENGTH_SHORT).show();
-            }
+            mApp.addDose(holder.med, dose1);
             return true;
         });
 
         holder.btn_rvMed_more.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(context, holder.btn_rvMed_more);
             popupMenu.inflate(R.menu.med_option_menu);
+
+            Menu menu = popupMenu.getMenu();
+            MenuItem archiveItem = menu.findItem(R.id.mi_med_option_archive);
+            MenuItem unarchiveItem = menu.findItem(R.id.mi_med_option_unarchive);
+            archiveItem.setVisible(!holder.med.isArchived());
+            unarchiveItem.setVisible(holder.med.isArchived());
 
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 Intent intent;
@@ -109,12 +118,40 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                     context.startActivity(intent);
                     return true;
                 }
+                if (itemID == R.id.mi_med_option_archive) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_archive_med)
+                            .setTitle(R.string.archive)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                if (mApp.archiveMed(holder.med, true)) {
+                                    archiveItem.setVisible(false);
+                                    unarchiveItem.setVisible(true);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
+                }
+                if (itemID == R.id.mi_med_option_unarchive) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_unarchive_med)
+                            .setTitle(R.string.unarchive)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                if (mApp.archiveMed(holder.med, false)) {
+                                    archiveItem.setVisible(true);
+                                    unarchiveItem.setVisible(false);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                    builder.show();
+                    return true;
+                }
                 if (itemID == R.id.mi_med_option_delete) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage(R.string.dialog_delete_medication)
+                    builder.setMessage(R.string.dialog_delete_med)
                             .setTitle(R.string.delete)
                             .setPositiveButton(R.string.yes, (dialog, id) -> {
-                                mApp.removeMedById(medID);
+                                mApp.deleteMedById(medID);
                                 MedsRecycleViewAdapter.this.notifyItemRemoved(holder.getBindingAdapterPosition());
                             })
                             .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());

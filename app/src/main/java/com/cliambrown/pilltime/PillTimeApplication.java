@@ -37,25 +37,36 @@ public class PillTimeApplication extends Application {
 
     private Context context;
     DbHelper dbHelper;
-    private List<Med> meds = new ArrayList<>();
+    private final List<Med> meds = new ArrayList<>();
     public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
     public String medSort;
-
-    public DbHelper getDbHelper() { return dbHelper; }
 
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         dbHelper = new DbHelper(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        medSort = prefs.getString("med_sort", context.getString(R.string.med_sort_value_latest));
+        medSort = prefs.getString("med_sort", getString(R.string.med_sort_value_latest));
         loadMeds();
         AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(context));
         createNotificationChannel();
     }
 
+    public DbHelper getDbHelper() { return dbHelper; }
+
+    public void showToast(int stringID) {
+        showToast(getString(stringID));
+    }
+    public void showToast(String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
     public void handleDbError(String introMessage, String message) {
-        Toast.makeText(context, introMessage + " " + message, Toast.LENGTH_SHORT).show();
+        showToast(introMessage + " " + message);
+    }
+
+    public void handleDbError(int introMessageID, int messageID) {
+        showToast(getString(introMessageID) + " " + getString(messageID));
     }
 
     public void handleDbError(String introMessage, Exception e) {
@@ -67,19 +78,19 @@ public class PillTimeApplication extends Application {
     }
 
     public void handleMedSaveError(String message) {
-        handleDbError(context.getString(R.string.med_save_error), message);
+        handleDbError(getString(R.string.error_saving_med), message);
     }
 
     public void handleMedSaveError(Exception e) {
-        handleDbError(context.getString(R.string.med_save_error), e);
+        handleDbError(getString(R.string.error_saving_med), e);
     }
 
     public void handleDoseSaveError(String message) {
-        handleDbError(context.getString(R.string.dose_save_error), message);
+        handleDbError(getString(R.string.error_saving_dose), message);
     }
 
     public void handleDoseSaveError(Exception e) {
-        handleDbError(context.getString(R.string.dose_save_error), e);
+        handleDbError(getString(R.string.error_saving_dose), e);
     }
 
     public void loadMeds() {
@@ -104,10 +115,12 @@ public class PillTimeApplication extends Application {
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DB_CLEARED");
         sendBroadcast(intent);
+        showToast(R.string.database_cleared);
     }
 
     public void repairDb() {
         dbHelper.repairDb();
+        showToast(R.string.database_repaired);
     }
 
     public List<Med> getMeds() {
@@ -116,14 +129,12 @@ public class PillTimeApplication extends Application {
 
     public Med getMed(int medID) {
         for (Med med : meds) {
-            if (med.getId() == medID) {
-                return med;
-            }
+            if (med.getId() == medID) return med;
         }
         return null;
     }
 
-    public boolean addMed(Med med) {
+    public boolean saveNewMed(Med med) {
         int insertID;
         try {
             insertID = dbHelper.insertMed(med);
@@ -131,12 +142,11 @@ public class PillTimeApplication extends Application {
             handleMedSaveError(e);
             return false;
         }
-        if (insertID >= 0) {
-            med.setId(insertID);
-        } else {
-            handleMedSaveError(context.getString(R.string.database_error));
+        if (insertID < 0) {
+            handleMedSaveError(getString(R.string.error_saving_to_database));
             return false;
         }
+        med.setId(insertID);
         med.updateTimes(dbHelper);
         Med listMed;
         int position = -1;
@@ -147,20 +157,17 @@ public class PillTimeApplication extends Application {
                 break;
             }
         }
-        if (position == -1) {
-            meds.add(med);
-        } else {
+        if (position > -1) {
             meds.add(position, med);
+        } else {
+            meds.add(med);
         }
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.MED_ADDED");
         intent.putExtra("medID", med.getId());
         sendBroadcast(intent);
+        showToast(R.string.med_saved);
         return true;
-    }
-
-    public void setMeds(List<Med> meds) {
-        this.meds = meds;
     }
 
     public boolean setMed(Med med) {
@@ -172,72 +179,97 @@ public class PillTimeApplication extends Application {
             return false;
         }
         if (!updated) {
-            handleMedSaveError(context.getString(R.string.database_error));
+            handleMedSaveError(getString(R.string.error_saving_to_database));
             return false;
         }
         int medID = med.getId();
         for (Med listMed : meds) {
-            if (listMed.getId() != medID) continue;
+            if (listMed.getId() == medID) {
+                // Check expiry times BEFORE rescheduling (use listMed, not med)
+                long now = System.currentTimeMillis() * 1000L;
+                long rescheduleBeforeTakenAt = now - listMed.getDoseDurationInSeconds();
 
-            // Check expiry times BEFORE rescheduling (use listMed, not med)
-            long now = System.currentTimeMillis() * 1000L;
-            long rescheduleBeforeTakenAt = now - listMed.getDoseDurationInSeconds();
+                listMed.setName(med.getName());
+                listMed.setMaxDose(med.getMaxDose());
+                listMed.setDoseHours(med.getDoseHours());
+                listMed.setColor(med.getColor());
+                listMed.setIsInventoryTracked(med.getIsInventoryTracked());
+                listMed.setReportedInventory(med.getReportedInventory());
+                listMed.setInventoryReportedAt(med.getInventoryReportedAt());
+                listMed.setDefaultDoseCount(med.getDefaultDoseCount());
+                listMed.setShowDayDoseCount(med.getShowDayDoseCount());
+                listMed.setOverrideGlobalNotifyDefaults(med.getOverrideGlobalNotifyDefaults());
+                listMed.setNotifyDefault(med.getNotifyDefault());
+                listMed.setNotifySoundDefault(med.getNotifySoundDefault());
+                listMed.updateTimes(dbHelper);
+                Intent intent = new Intent();
+                intent.setAction("com.cliambrown.broadcast.MED_EDITED");
+                intent.putExtra("medID", med.getId());
+                sendBroadcast(intent);
 
-            listMed.setName(med.getName());
-            listMed.setMaxDose(med.getMaxDose());
-            listMed.setDoseHours(med.getDoseHours());
-            listMed.setColor(med.getColor());
-            listMed.setIsInventoryTracked(med.getIsInventoryTracked());
-            listMed.setReportedInventory(med.getReportedInventory());
-            listMed.setInventoryReportedAt(med.getInventoryReportedAt());
-            listMed.setDefaultDoseCount(med.getDefaultDoseCount());
-            listMed.setShowDayDoseCount(med.getShowDayDoseCount());
-            listMed.setOverrideGlobalNotifyDefaults(med.getOverrideGlobalNotifyDefaults());
-            listMed.setNotifyDefault(med.getNotifyDefault());
-            listMed.setNotifySoundDefault(med.getNotifySoundDefault());
-            listMed.updateTimes(dbHelper);
-            Intent intent = new Intent();
-            intent.setAction("com.cliambrown.broadcast.MED_EDITED");
-            intent.putExtra("medID", medID);
-            sendBroadcast(intent);
+                if (medSort.equals(getString(R.string.med_sort_value_alpha))) repositionMed(listMed);
 
-            if (medSort.equals(context.getString(R.string.med_sort_value_alpha)))
-                repositionMed(listMed);
-
-            List<Dose> doses = listMed.getDoses();
-            for (Dose dose : doses) {
-                if (dose.getTakenAt() <= rescheduleBeforeTakenAt) break;
-                scheduleNotification(listMed, dose);
+                List<Dose> doses = listMed.getDoses();
+                for (Dose dose : doses) {
+                    if (dose.getTakenAt() <= rescheduleBeforeTakenAt) break;
+                    scheduleNotification(listMed, dose);
+                }
+                showToast(R.string.med_saved);
+                return true;
             }
-            return true;
         }
         return false;
     }
 
-    public void removeMedById(int medID) {
+    public boolean archiveMed(Med med, boolean doArchive) {
+        boolean updated;
+        med.setArchived(doArchive);
+        try {
+            updated = dbHelper.updateMed(med);
+        } catch (InvalidMedException | SQLException e) {
+            handleMedSaveError(e);
+            return false;
+        }
+        if (!updated) {
+            handleMedSaveError(getString(R.string.error_saving_to_database));
+            return false;
+        }
+        Med listMed = getMed(med.getId());
+        listMed.setArchived(doArchive);
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
+        intent.putExtra("medID", med.getId());
+        sendBroadcast(intent);
+        if (doArchive) {
+            showToast(R.string.med_archived);
+        } else {
+            showToast(R.string.med_unarchived);
+        }
+        return false;
+    }
+
+    public void deleteMedById(int medID) {
         boolean deleted = dbHelper.deleteMedById(medID);
         if (!deleted) {
-            Toast.makeText(context, "Error deleting med", Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_deleting_med);
             return;
         }
-        int position = -1;
-        for (int i=0; i<meds.size(); ++i) {
-            if (meds.get(i).getId() != medID) continue;
-            position = i;
-            break;
+        for (int i = 0; i < meds.size(); ++i) {
+            if (meds.get(i).getId() == medID) {
+                meds.remove(i);
+                break;
+            }
         }
-        if (position > -1) {
-            meds.remove(position);
-            Intent intent = new Intent();
-            intent.setAction("com.cliambrown.broadcast.MED_REMOVED");
-            intent.putExtra("medID", medID);
-            sendBroadcast(intent);
-        }
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.MED_REMOVED");
+        intent.putExtra("medID", medID);
+        sendBroadcast(intent);
+        showToast(R.string.med_deleted);
     }
 
     public void sortMeds() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        medSort = prefs.getString("med_sort", context.getString(R.string.med_sort_value_latest));
+        medSort = prefs.getString("med_sort", getString(R.string.med_sort_value_latest));
         loadMeds();
     }
 
@@ -250,7 +282,7 @@ public class PillTimeApplication extends Application {
             return false;
         }
         if (insertID < 0) {
-            handleDoseSaveError(context.getString(R.string.database_error));
+            handleDoseSaveError(getString(R.string.error_saving_to_database));
             return false;
         }
         dose.setId(insertID);
@@ -259,12 +291,13 @@ public class PillTimeApplication extends Application {
 
         med.addDose(dose);
         med.updateTimes(dbHelper);
+        repositionMed(med);
         Intent intent = new Intent();
         intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
         intent.putExtra("medID", med.getId());
         intent.putExtra("doseID", dose.getId());
         sendBroadcast(intent);
-        repositionMed(med);
+        showToast(R.string.dose_saved);
         return true;
     }
 
@@ -322,8 +355,7 @@ public class PillTimeApplication extends Application {
         if (newPosition != currentPosition) {
             Intent intent = new Intent();
             intent.setAction("com.cliambrown.broadcast.MED_MOVED");
-            intent.putExtra("fromPosition", currentPosition);
-            intent.putExtra("toPosition", newPosition);
+            intent.putExtra("medID", med.getId());
             sendBroadcast(intent);
         }
     }
@@ -338,7 +370,7 @@ public class PillTimeApplication extends Application {
             return false;
         }
         if (!updated) {
-            handleDoseSaveError(context.getString(R.string.database_error));
+            handleDoseSaveError(getString(R.string.error_saving_to_database));
             return false;
         }
 
@@ -360,33 +392,32 @@ public class PillTimeApplication extends Application {
         sendBroadcast(intent);
         scheduleNotification(med, dose);
         repositionMed(med);
+        showToast(R.string.dose_saved);
         return true;
     }
 
     public void removeDose(Dose dose) {
         dose.setNotify(false);
-        int medID = dose.getMedID();
-        int doseID = dose.getId();
-        dbHelper.deleteDoseById(doseID);
+        dbHelper.deleteDoseById(dose.getId());
         for (Med med : meds) {
-            if (med.getId() != medID) continue;
-            scheduleNotification(med, dose);
-            List<Dose> doses = med.getDoses();
-            int position = -1;
-            for (int j = 0; j < doses.size(); ++j) {
-                if (doses.get(j).getId() != doseID) continue;
-                position = j;
-                break;
-            }
-            if (position > -1) {
-                doses.remove(position);
-                med.updateTimes(dbHelper);
-                Intent intent = new Intent();
-                intent.setAction("com.cliambrown.broadcast.DOSE_REMOVED");
-                intent.putExtra("medID", medID);
-                intent.putExtra("doseID", doseID);
-                sendBroadcast(intent);
-                repositionMed(med);
+            if (med.getId() == dose.getMedID()) {
+                scheduleNotification(med, dose);
+                List<Dose> doses = med.getDoses();
+                for (int i = 0; i < doses.size(); ++i) {
+                    if (doses.get(i).getId() == dose.getId()) {
+                        doses.remove(i);
+                        med.updateTimes(dbHelper);
+                        Intent intent = new Intent();
+                        intent.setAction("com.cliambrown.broadcast.DOSE_REMOVED");
+                        intent.putExtra("medID", med.getId());
+                        intent.putExtra("doseID", dose.getId());
+                        sendBroadcast(intent);
+                        repositionMed(med);
+                        showToast(R.string.dose_deleted);
+                        return;
+                    }
+                }
+                return;
             }
             break;
         }
@@ -435,21 +466,28 @@ public class PillTimeApplication extends Application {
         intent.putExtra("medID", med.getId());
         sendBroadcast(intent);
         repositionMed(med);
+        showToast(R.string.doses_deleted);
     }
 
     public void importFromUri(Uri uri) {
+        boolean imported = false;
         try (DbHelper dbHelper = new DbHelper(context)) {
             String jsonText = Utils.readTextFromUri(uri, context);
-            dbHelper.importFromString(jsonText);
+            imported = dbHelper.importFromString(jsonText);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context,getString(R.string.toast_error_importing_database) + " (IO exception)",
-                    Toast.LENGTH_SHORT).show();
+            handleDbError(R.string.error_importing_database, R.string.io_exception);
+        } catch (Exception e) {
+            e.printStackTrace();
+            handleDbError(getString(R.string.error_importing_database), e.getMessage());
         }
-        loadMeds();
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction("com.cliambrown.broadcast.DB_CLEARED");
-        sendBroadcast(broadcastIntent);
+        if (imported) {
+            loadMeds();
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction("com.cliambrown.broadcast.DATA_IMPORTED");
+            sendBroadcast(broadcastIntent);
+            showToast(R.string.data_imported);
+        }
     }
 
     public boolean areNotificationsEnabled() {

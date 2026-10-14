@@ -6,18 +6,25 @@
         android:id="@+id/mi_med_edit"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="@string/edit"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/mi_med_archive"
+        android:icon="@drawable/baseline_archive_24"
+        android:title="@string/archive"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/mi_med_unarchive"
+        android:icon="@drawable/outline_unarchive_24"
+        android:title="@string/archive"
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/mi_med_delete"
         android:icon="@drawable/baseline_delete_24"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/mi_med_settings"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom"/>
 
 </menu>

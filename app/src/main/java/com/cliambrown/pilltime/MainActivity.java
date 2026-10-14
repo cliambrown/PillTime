@@ -27,6 +27,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cliambrown.pilltime.help.HelpActivity;
 import com.cliambrown.pilltime.meds.EditMedActivity;
 import com.cliambrown.pilltime.meds.Med;
 import com.cliambrown.pilltime.meds.MedsRecycleViewAdapter;
@@ -34,6 +35,7 @@ import com.cliambrown.pilltime.settings.SettingsActivity;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,13 +45,25 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MedsRecycleViewAdapter mAdapter;
     LinearLayout ll_main_no_meds;
+    LinearLayout ll_main_no_archived_meds;
     ExtendedFloatingActionButton btn_main_add_med;
 
     PillTimeApplication mApp;
     Timer timer;
     static SharedPreferences prefs;
 
-    List<Med> meds;
+    boolean isArchives = false;
+
+    List<Med> meds = new ArrayList<>();
+    private Menu optionsMenu;
+
+    protected void getMeds() {
+        meds.clear();
+        for (Med med: mApp.getMeds()) {
+            if (med.isArchived() == isArchives) meds.add(med);
+        }
+        toggleNoMedsMessages();
+    }
 
     @SuppressLint({"UnspecifiedRegisterReceiverFlag", "NewApi"})
     @Override
@@ -58,18 +72,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ll_main_no_meds = findViewById(R.id.ll_main_no_meds);
+        ll_main_no_archived_meds = findViewById(R.id.ll_main_no_archived_meds);
         btn_main_add_med = findViewById(R.id.btn_main_add_med);
 
         mApp = (PillTimeApplication) this.getApplication();
         prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        meds = mApp.getMeds();
-        onUpdateMeds();
+        getMeds();
 
         recyclerView = findViewById(R.id.rv_main_meds);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MedsRecycleViewAdapter(meds, this, mApp);
+        mAdapter = new MedsRecycleViewAdapter(meds, this, mApp, isArchives);
         recyclerView.setAdapter(mAdapter);
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
@@ -78,10 +92,12 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver br = new MainBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
+        filter.addAction("com.cliambrown.broadcast.DATA_IMPORTED");
         filter.addAction("com.cliambrown.broadcast.MED_ADDED");
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
-        filter.addAction("com.cliambrown.broadcast.MED_REMOVED");
         filter.addAction("com.cliambrown.broadcast.MED_MOVED");
+        filter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
+        filter.addAction("com.cliambrown.broadcast.MED_REMOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
@@ -89,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
         // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
-        // HOWEVER the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
+        // HOWEVER, the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
         // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             this.registerReceiver(br, filter, RECEIVER_EXPORTED);
@@ -98,83 +114,87 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btn_main_add_med.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, EditMedActivity.class);
-            startActivity(intent);
+            Intent addMedIntent = new Intent(MainActivity.this, EditMedActivity.class);
+            startActivity(addMedIntent);
         });
     }
 
+    protected int getMedPosition(int medID) {
+        for (int i = 0; i < meds.size(); ++i) {
+            if (meds.get(i).getId() == medID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public class MainBroadcastReceiver extends BroadcastReceiver {
-        @SuppressWarnings("UnnecessaryReturnStatement")
+
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mAdapter == null) return;
             String action = intent.getAction();
             if (action == null) return;
-            if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
-                mAdapter.notifyDataSetChanged();
-                onUpdateMeds();
-            }
-            int medID = intent.getIntExtra("medID", -1);
+
             switch (action) {
-                case "com.cliambrown.broadcast.MED_ADDED":
-                    for (int i = 0; i < meds.size(); ++i) {
-                        if (meds.get(i).getId() == medID) {
-                            mAdapter.notifyItemInserted(i);
-                            recyclerView.scrollToPosition(i);
-                            onUpdateMeds();
-                            return;
-                        }
-                    }
+                case "com.cliambrown.broadcast.DB_CLEARED":
+                case "com.cliambrown.broadcast.DATA_IMPORTED":
+                    getMeds();
+                    mAdapter.notifyDataSetChanged();
                     return;
-                case "com.cliambrown.broadcast.MED_EDITED":
-                    for (int i = 0; i < meds.size(); ++i) {
-                        if (meds.get(i).getId() == medID) {
-                            mAdapter.notifyItemChanged(i, "med_edited");
-                            recyclerView.scrollToPosition(i);
-                            return;
-                        }
-                    }
-                    return;
-                case "com.cliambrown.broadcast.MED_REMOVED":
-                    for (int i = 0; i < meds.size(); ++i) {
-                        if (meds.get(i).getId() == medID) {
-                            mAdapter.notifyItemRemoved(i);
-                            recyclerView.scrollToPosition(i);
-                            break;
-                        }
-                    }
-                    onUpdateMeds();
-                    return;
-                case "com.cliambrown.broadcast.MED_MOVED":
-                    int fromPosition = intent.getIntExtra("fromPosition", -1);
-                    int toPosition = intent.getIntExtra("toPosition", -1);
-                    mAdapter.notifyItemChanged(fromPosition, "med_edited");
-                    mAdapter.notifyItemMoved(fromPosition, toPosition);
-                    recyclerView.scrollToPosition(toPosition);
-                    return;
+            }
+
+            int medID = intent.getIntExtra("medID", -1);
+            int fromPosition = getMedPosition(medID);
+
+            // PillTimeApplication.java sends dose change broadcasts first, then sorts meds
+            // and sends second broadcast if med has moved
+            switch (action) {
                 case "com.cliambrown.broadcast.DOSE_ADDED":
                 case "com.cliambrown.broadcast.DOSE_EDITED":
                 case "com.cliambrown.broadcast.DOSE_REMOVED":
                 case "com.cliambrown.broadcast.DOSES_REMOVED":
-                    for (int i = 0; i < meds.size(); ++i) {
-                        if (meds.get(i).getId() == medID) {
-                            mAdapter.notifyItemChanged(i, "doses_edited");
-                            return;
-                        }
+                    if (fromPosition >= 0) {
+                        mAdapter.notifyItemChanged(fromPosition, "doses_edited");
                     }
                     return;
+            }
 
+            getMeds();
+            int toPosition = getMedPosition(medID);
+
+            if (fromPosition >= 0 && toPosition == -1) {
+                mAdapter.notifyItemRemoved(fromPosition);
+            } else if (fromPosition == -1 && toPosition >= 0) {
+                mAdapter.notifyItemInserted(toPosition);
+                recyclerView.scrollToPosition(toPosition);
+            } else if (fromPosition != toPosition) {
+                mAdapter.notifyItemChanged(fromPosition);
+                mAdapter.notifyItemMoved(fromPosition, toPosition);
+                recyclerView.scrollToPosition(toPosition);
+            }
+
+            if (toPosition >= 0 && action.equals("com.cliambrown.broadcast.MED_EDITED")) {
+                mAdapter.notifyItemChanged(toPosition, "med_edited");
+                recyclerView.scrollToPosition(toPosition);
             }
         }
     }
 
-    public void onUpdateMeds() {
+    public void toggleNoMedsMessages() {
         if (ll_main_no_meds == null) return;
-        if (!meds.isEmpty()) {
-            ll_main_no_meds.setVisibility(View.GONE);
+        if (meds.isEmpty()) {
+            if (isArchives) {
+                ll_main_no_archived_meds.setVisibility(View.VISIBLE);
+                ll_main_no_meds.setVisibility(View.GONE);
+            } else {
+                ll_main_no_meds.setVisibility(View.VISIBLE);
+                ll_main_no_archived_meds.setVisibility(View.GONE);
+            }
         } else {
-            ll_main_no_meds.setVisibility(View.VISIBLE);
+            ll_main_no_meds.setVisibility(View.GONE);
+            ll_main_no_archived_meds.setVisibility(View.GONE);
         }
     }
 
@@ -212,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.welcome_dialog_content)
                     .setPositiveButton(R.string.close, (dialog, id) -> {
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("show_v20_dialog", false);
+                        editor.putBoolean("show_v21_dialog", false);
                         editor.apply();
                         dialog.cancel();
                     })
@@ -227,35 +247,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onPostResume() {
         super.onPostResume();
         updateTimes();
-        for (int i=0; i<meds.size(); ++i) {
-            mAdapter.notifyItemChanged(i);
-        }
+        mAdapter.notifyDataSetChanged();
         startUpdateTimer();
 
-        // Previous welcome dialog prefs:
-        // show_dev_decree_dialog
-        // show_v13_dialog
-        // show_v14_dialog
-        // show_v18_dialog
-        // show_v19_dialog
-        // show_v20_dialog
-        boolean showWelcomeDialog = prefs.getBoolean("show_v20_dialog", true);
+        boolean showWelcomeDialog = prefs.getBoolean("show_v21_dialog", true);
         if (showWelcomeDialog) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             new welcomeDialogFragment().show(fragmentManager, "WELCOME_DIALOG");
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        optionsMenu = menu;
         return true;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void toggleArchives(boolean newIsArchives) {
+        isArchives = newIsArchives;
+        optionsMenu.findItem(R.id.mi_main_archives).setVisible(!isArchives);
+        if (isArchives) {
+            setTitle(R.string.archives);
+            btn_main_add_med.setVisibility(View.GONE);
+        } else {
+            setTitle(R.string.app_name);
+            btn_main_add_med.setVisibility(View.VISIBLE);
+        }
+        // Show back button on archives page
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(isArchives);
+        getMeds();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -263,8 +293,20 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
-            MainActivity.this.finish();
+            if (isArchives) {
+                toggleArchives(false);
+            } else {
+                MainActivity.this.finish();
+            }
             return true;
+        }
+        if (itemID == R.id.mi_main_archives) {
+            toggleArchives(true);
+            return true;
+        }
+        if (itemID == R.id.mi_main_help) {
+            intent = new Intent(MainActivity.this, HelpActivity.class);
+            startActivity(intent);
         }
         if (itemID == R.id.mi_main_settings) {
             intent = new Intent(MainActivity.this, SettingsActivity.class);

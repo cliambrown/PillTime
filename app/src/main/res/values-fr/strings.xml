@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Pill Time</string>
+    <string name="home">Accueil</string>
+    <string name="archives">Archives</string>
+    <string name="archive">Archiver</string>
+    <string name="unarchive">Désarchiver</string>
     <string name="med_name">Nom</string>
     <!-- "max" as in maximum, shortened to save space -->
     <string name="max">max</string>
@@ -78,14 +82,15 @@
     <string name="more_options">Plus d\'options</string>
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
     <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
-    <string name="dialog_delete_medication">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
+    <string name="dialog_unarchive_med">Êtes-vous sûr de vouloir désarchiver ce médicament ? Il apparaîtra sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
+    <string name="dialog_delete_med">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
     <string name="dialog_delete_dose_and_older">Êtes-vous sûr de vouloir supprimer cette dose ainsi que toutes les précédentes pour ce médicament ? Cette action est irréversible.</string>
     <string name="settings">Paramètres</string>
     <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
-    <string name="notifications_header">Défauts des notifications</string>
+    <string name="notifications_title">Défauts des notifications</string>
     <string name="notifications_description">Vous pouvez également définir des préférences de notification par défaut pour chaque médicament, et modifier les paramètres de notification pour chaque dose.</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
     <string name="notification_sound">Émettre un son avec la notification</string>
@@ -95,23 +100,27 @@
     <string name="reported_inventory">doses actuellement disponibles en stock</string>
     <string name="inventory_reported_at">Dernières doses restantes enregistrées %1$s</string>
     <string name="inventory">%1$s en stock</string>
-    <string name="toast_dose_saved">Dose sauvegardée</string>
-    <string name="toast_med_saved">Médicament sauvegardé</string>
-    <string name="toast_error_importing_database">Erreur d\'importation de la base de données</string>
-    <string name="toast_data_imported">Données importées</string>
-    <string name="toast_error_exporting_database">Erreur d\'exportation de la base de données</string>
-    <string name="toast_data_exported">Données exportées</string>
-    <string name="toast_database_cleared">Base de données effacée</string>
-    <string name="toast_database_repaired">Base de données réparée</string>
-    <string name="interface_header">Interface</string>
-    <string name="theme_header">Thème</string>
+    <string name="med_deleted">Médicament supprimé</string>
+    <string name="dose_saved">Dose sauvegardée</string>
+    <string name="med_archived">Médicament archivé</string>
+    <string name="med_unarchived">Médicament désarchivé</string>
+    <string name="med_saved">Médicament sauvegardé</string>
+    <string name="error_importing_database">Erreur d\'importation de la base de données</string>
+    <string name="data_imported">Données importées</string>
+    <string name="error_exporting_database">Erreur d\'exportation de la base de données</string>
+    <string name="data_exported">Données exportées</string>
+    <string name="database_cleared">Base de données effacée</string>
+    <string name="database_repaired">Base de données réparée</string>
+    <string name="interface_title">Interface</string>
+    <string name="theme_title">Thème</string>
     <string name="theme_entry_light">Clair</string>
     <string name="theme_entry_dark">Sombre</string>
     <string name="theme_entry_system_default">Défaut du système</string>
     <string name="theme_entry_auto_battery">Automatique - batterie</string>
-    <string name="med_sort_header">Ordre de tri des médicaments</string>
+    <string name="med_sort_title">Ordre de tri des médicaments</string>
     <string name="med_sort_entry_latest">Le plus récemment pris</string>
     <string name="med_sort_entry_alpha">Alphabétique</string>
+    <string name="translate_on_weblate">Ajouter des traductions pour « Pill Time » sur Weblate</string>
     <string name="color">Couleur</string>
     <string name="set_med_color">Mets ce médicament en</string>
     <string name="red">Rouge</string>
@@ -140,6 +149,7 @@
     <string name="keep_android_open">keepandroidopen.org</string>
     <string name="close">Fermer</string>
     <string name="no_meds">Aucun médicament trouvé</string>
+    <string name="no_archived_meds">Aucun médicament archivé trouvé</string>
     <string name="add_med">Ajouter un médicament</string>
     <string name="no_doses">Aucune dose prise.</string>
     <string name="add_dose">Ajouter une dose</string>
@@ -156,18 +166,34 @@
     <string name="last_taken">dernière dose %1$s</string>
     <!-- Example: "last taken never" -->
     <string name="never">jamais</string>
+    <string name="tips_title">Astuces</string>
+    <string name="tip_quick_dose_title">Dose rapide</string>
+    <string name="tip_quick_dose">Sur l\'écran principal, appuyez longuement sur le bouton « + » à côté d\'un médicament pour ajouter rapidement une nouvelle dose. (Sur la page d\'un médicament, appuyez longuement sur le bouton « Ajouter une dose ».)</string>
+    <string name="tip_edit_med_title">Paramètres des médicaments</string>
+    <string name="tip_edit_med">Ouvrez un médicament et appuyez sur l\'icône en forme de crayon pour modifier sa posologie par défaut, les paramètres de notification par défaut, sa couleur, son stock, et bien plus encore.</string>
+    <string name="tip_archive_med_title">Archiver des médicaments</string>
+    <string name="tip_archive_med">Pour archiver un médicament, cliquez sur l\'icône en forme de boîte avec une flèche vers le bas sur la page du médicament. Ça le masquera de l\'écran principal (les paramètres et les doses du médicament ne seront pas modifiés).   Pour voir votre liste de médicaments archivés, cliquez sur l\'icône en forme de boîte sur l\'écran principal.</string>
+    <string name="tip_no_notifications_title">Notifications manquantes</string>
+    <string name="tip_no_notifications">Vous ne recevez pas de notifications quand les doses arrivent à expiration ? Vérifiez les paramètres de votre appareil : Paramètres > Applications > Pill Time > autoriser les notifications. (Notez également qu\'en raison des limitations d\'Android, une notification peut ne s\'afficher que jusqu\'à 10 minutes après l\'expiration d\'une dose.)</string>
     <string name="about_app">À propos de Pill Time</string>
     <string name="changelog_title">Nouveautés</string>
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
     <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
-    <string name="welcome_dialog_content">v20 : Si vous voyez des erreurs, essayez de réparer votre base de données sur la page « Paramètres ».\n \nNOUVEAU dans la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n \nDepuis la v13 : Vous pouvez désormais appuyer longuement sur le bouton « + » à côté de chaque médicament sur l\'écran principal pour ajouter rapidement une nouvelle dose.\n \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
+    <string name="welcome_dialog_content">
+        NOUVEAU dans la v22 : Archivez un médicament pour le masquer de votre écran principal sans modifier ses paramètres, ses doses ou ses notifications.\n
+        \nDepuis la v20 : Si vous constatez des erreurs, essayez de réparer votre base de données sur la page Paramètres.\n
+        \nDepuis la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
+        \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n
+        \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.
+    </string>
     <string name="repair">Réparer</string>
     <string name="repair_db">Réparer la base de données</string>
-    <string name="error_intro">Erreur :</string>
-    <string name="database_error">Impossible d\'enregistrer dans la base de données</string>
+    <string name="error">Erreur :</string>
+    <string name="error_saving_to_database">Impossible d\'enregistrer dans la base de données</string>
     <string name="invalid_data">Données invalides</string>
-    <string name="med_save_error">Erreur de sauvegarde du médicament :</string>
+    <string name="dose_deleted">Dose supprimé</string>
+    <string name="error_saving_med">Erreur de sauvegarde du médicament :</string>
     <string name="name_required">Un nom est requis</string>
     <string name="invalid_max_dose">Le dosage maximal est invalide</string>
     <string name="invalid_dose_hours">La période de dosage est invalide</string>
@@ -175,8 +201,10 @@
     <string name="color_not_found">La couleur n\'est pas valide</string>
     <string name="invalid_reported_inventory">Le stock est invalide</string>
     <string name="invalid_default_dose_count">Le dosage par défaut est invalide</string>
-    <string name="dose_save_error">Erreur de sauvegarde de dose :</string>
+    <string name="error_deleting_med">Erreur de suppression de médicament</string>
+    <string name="error_saving_dose">Erreur de sauvegarde de dose :</string>
     <string name="invalid_med_id">ID du médicament invalide</string>
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
+    <string name="help">Assistance</string>
 </resources>

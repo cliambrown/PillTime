@@ -3,6 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/mi_main_archives"
+        android:icon="@drawable/baseline_inventory_2_24"
+        android:title="@string/archives"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/mi_main_help"
+        android:icon="@drawable/outline_help_outline_24"
+        android:title="@string/help"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/mi_main_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings"

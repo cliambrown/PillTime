@@ -30,7 +30,6 @@ import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.doses.DosesRecycleViewAdapter;
 import com.cliambrown.pilltime.doses.EditDoseActivity;
-import com.cliambrown.pilltime.settings.SettingsActivity;
 import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -42,6 +41,7 @@ import java.util.TimerTask;
 
 public class MedActivity extends AppCompatActivity {
 
+    Menu optionsMenu;
     TextView tv_med_name;
     TextView tv_med_maxDoseInfo;
     TextView tv_med_takenInPast;
@@ -90,10 +90,9 @@ public class MedActivity extends AppCompatActivity {
         }
 
         setTitle(getString(R.string.med));
-
         updateInfo();
         updateTimes();
-        onUpdateDoses();
+        toggleNoDosesMessages();
 
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
@@ -109,6 +108,7 @@ public class MedActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
+        filter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
         filter.addAction("com.cliambrown.broadcast.DOSES_LOADED");
         filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
@@ -131,6 +131,17 @@ public class MedActivity extends AppCompatActivity {
             intent1.putExtra("medID", medID);
             startActivity(intent1);
         });
+
+        btn_med_add_dose.setOnLongClickListener(view -> {
+            double count = med.getDefaultDoseCount();
+            long takenAt = System.currentTimeMillis() / 1000L;
+            Dose dose1 = new Dose(-1, medID, count, takenAt,
+                    med.getNetNotifyDefault(this),
+                    med.getNetNotifySoundDefault(this),
+                    this);
+            mApp.addDose(med, dose1);
+            return true;
+        });
     }
 
     public class MedBroadcastReceiver extends BroadcastReceiver {
@@ -140,16 +151,23 @@ public class MedActivity extends AppCompatActivity {
 
             String action = intent.getAction();
             if (action == null) return;
+
             if (action.equals("com.cliambrown.broadcast.DB_CLEARED")) {
                 MedActivity.this.finish();
                 return;
             }
+
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
-            if (action.equals("com.cliambrown.broadcast.MED_EDITED")) {
-                updateInfo();
-                updateTimes();
-                return;
+
+            switch (action) {
+                case "com.cliambrown.broadcast.MED_EDITED":
+                    updateInfo();
+                    updateTimes();
+                    return;
+                case "com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED":
+                    toggleArchiveButtons();
+                    return;
             }
 
             if (mAdapter == null) return;
@@ -164,32 +182,32 @@ public class MedActivity extends AppCompatActivity {
 
             List<Dose> doses = med.getDoses();
 
-            if (action.equals("com.cliambrown.broadcast.DOSES_LOADED")) {
-                try {
-                    List<Integer> doseIDs = intent.getIntegerArrayListExtra("doseIDs");
-                    for (int doseID : Objects.requireNonNull(doseIDs)) {
-                        for (int i=0; i<doses.size(); ++i) {
-                            if (doses.get(i).getId() == doseID) {
-                                mAdapter.notifyItemInserted(i);
-                                break;
+            switch (action) {
+                case "com.cliambrown.broadcast.DOSES_LOADED":
+                    try {
+                        List<Integer> doseIDs = intent.getIntegerArrayListExtra("doseIDs");
+                        for (int doseID : Objects.requireNonNull(doseIDs)) {
+                            for (int i=0; i<doses.size(); ++i) {
+                                if (doses.get(i).getId() == doseID) {
+                                    mAdapter.notifyItemInserted(i);
+                                    break;
+                                }
                             }
                         }
+                        updateTimes();
+                        toggleNoDosesMessages();
+                    } catch (Exception e) {
+                        Log.w(MedActivity.class.getName(), e);
                     }
+                    return;
+                case "com.cliambrown.broadcast.DOSES_REMOVED":
                     updateTimes();
-                    onUpdateDoses();
-                } catch (Exception e) {
-                    Log.w(MedActivity.class.getName(), e);
-                }
-                return;
-            }
-
-            if (action.equals("com.cliambrown.broadcast.DOSES_REMOVED")) {
-                updateTimes();
-                onUpdateDoses();
-                return;
+                    toggleNoDosesMessages();
+                    return;
             }
 
             int doseID = intent.getIntExtra("doseID", -1);
+
             switch (action) {
                 case "com.cliambrown.broadcast.DOSE_ADDED":
                     for (int i = 0; i < doses.size(); ++i) {
@@ -200,7 +218,7 @@ public class MedActivity extends AppCompatActivity {
                         }
                     }
                     updateTimes();
-                    onUpdateDoses();
+                    toggleNoDosesMessages();
                     return;
                 case "com.cliambrown.broadcast.DOSE_EDITED":
                     for (int i = 0; i < doses.size(); ++i) {
@@ -219,13 +237,13 @@ public class MedActivity extends AppCompatActivity {
                         }
                     }
                     updateTimes();
-                    onUpdateDoses();
+                    toggleNoDosesMessages();
                     return;
             }
         }
     }
 
-    public void onUpdateDoses() {
+    public void toggleNoDosesMessages() {
         if (ll_med_no_doses == null) return;
         if (!med.getDoses().isEmpty()) {
             ll_med_no_doses.setVisibility(View.GONE);
@@ -305,7 +323,7 @@ public class MedActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
         updateTimes();
-        onUpdateDoses();
+        toggleNoDosesMessages();
         startUpdateTimer();
     }
 
@@ -313,7 +331,14 @@ public class MedActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.med_menu, menu);
+        optionsMenu = menu;
+        toggleArchiveButtons();
         return true;
+    }
+
+    protected void toggleArchiveButtons() {
+        optionsMenu.findItem(R.id.mi_med_archive).setVisible(!med.isArchived());
+        optionsMenu.findItem(R.id.mi_med_unarchive).setVisible(med.isArchived());
     }
 
     @Override
@@ -330,23 +355,40 @@ public class MedActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (itemID == R.id.mi_med_archive) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_archive_med)
+                    .setTitle(R.string.archive)
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        mApp.archiveMed(med, true);
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+            builder.show();
+            return true;
+        }
+        if (itemID == R.id.mi_med_unarchive) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_unarchive_med)
+                    .setTitle(R.string.unarchive)
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        mApp.archiveMed(med, false);
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+            builder.show();
+            return true;
+        }
         if (itemID == R.id.mi_med_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_delete_medication)
+            builder.setMessage(R.string.dialog_delete_med)
                     .setTitle(R.string.delete)
                     .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        mApp.removeMedById(medID);
+                        mApp.deleteMedById(medID);
                         Intent homeIntent = new Intent(MedActivity.this, MainActivity.class);
                         startActivity(homeIntent);
                         MedActivity.this.finish();
                     })
                     .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
             builder.show();
-            return true;
-        }
-        if (itemID == R.id.mi_med_settings) {
-            intent = new Intent(MedActivity.this, SettingsActivity.class);
-            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

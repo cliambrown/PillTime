@@ -16,19 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:requiresFadingEdge="vertical"
         android:clipToPadding="false"/>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/btn_main_add_med"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/add_med"
-            app:icon="@drawable/ic_baseline_add_24"
-            android:text="@string/add_med"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="16dp" />
 
     <LinearLayout
         android:id="@+id/ll_main_no_meds"
@@ -80,5 +68,37 @@
             android:textAlignment="center" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_main_no_archived_meds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_main_no_archived_meds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_archived_meds"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_main_add_med"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_med"
+        app:icon="@drawable/ic_baseline_add_24"
+        android:text="@string/add_med"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

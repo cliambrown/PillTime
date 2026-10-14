@@ -3,52 +3,52 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/notifications_header">
+        app:title="@string/notifications_title">
 
         <Preference
-            app:key="notifications_description"
             app:iconSpaceReserved="false"
-            app:selectable="false"
+            app:key="notifications_description"
             app:persistent="false"
-            app:summary="@string/notifications_description"/>
+            app:selectable="false"
+            app:summary="@string/notifications_description" />
 
         <SwitchPreferenceCompat
-            app:key="notify_default"
-            app:title="@string/notify_expiring_dose"
-            app:singleLineTitle="false"
             app:iconSpaceReserved="false"
+            app:key="notify_default"
+            app:singleLineTitle="false"
+            app:title="@string/notify_expiring_dose"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
-            app:key="notify_sound_default"
-            app:title="@string/notification_sound"
-            app:singleLineTitle="false"
             app:iconSpaceReserved="false"
+            app:key="notify_sound_default"
+            app:singleLineTitle="false"
+            app:title="@string/notification_sound"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/interface_header">
+        app:title="@string/interface_title">
 
         <ListPreference
+            app:defaultValue="@string/theme_value_system_default"
             app:entries="@array/themes_entries"
             app:entryValues="@array/themes_values"
-            app:key="theme"
-            app:defaultValue="@string/theme_value_system_default"
-            app:title="@string/theme_header"
             app:iconSpaceReserved="false"
-            app:summary="%s"/>
+            app:key="theme"
+            app:summary="%s"
+            app:title="@string/theme_title" />
 
         <ListPreference
+            app:defaultValue="@string/med_sort_value_latest"
             app:entries="@array/med_sort_entries"
             app:entryValues="@array/med_sort_values"
-            app:key="med_sort"
-            app:defaultValue="@string/med_sort_value_latest"
-            app:title="@string/med_sort_header"
             app:iconSpaceReserved="false"
-            app:summary="%s"/>
+            app:key="med_sort"
+            app:summary="%s"
+            app:title="@string/med_sort_title" />
 
     </PreferenceCategory>
 
@@ -57,16 +57,16 @@
         app:title="@string/data">
 
         <Preference
-            app:key="export"
-            app:title="@string/export_all"
+            android:summary="@string/export_all_summary"
             app:iconSpaceReserved="false"
-            android:summary="@string/export_all_summary" />
+            app:key="export"
+            app:title="@string/export_all" />
 
         <Preference
-            app:key="import"
+            android:summary="@string/import_from_file"
             app:iconSpaceReserved="false"
-            app:title="@string/import_data"
-            android:summary="@string/import_from_file" />
+            app:key="import"
+            app:title="@string/import_data" />
 
         <com.cliambrown.pilltime.settings.ClearDbPreference
             android:icon="@drawable/baseline_delete_24"
@@ -80,82 +80,10 @@
             app:key="repairDb"
             app:title="@string/repair_db" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="@string/about_app"
-        >
-
-        <Preference
-            app:key="disclaimer_1"
-            app:iconSpaceReserved="false"
-            app:selectable="false"
-            app:persistent="false"
-            app:summary="@string/disclaimer_1"/>
-
-        <Preference
-            app:key="disclaimer_2"
-            app:iconSpaceReserved="false"
-            app:selectable="false"
-            app:persistent="false"
-            app:summary="@string/disclaimer_2"/>
-
-        <Preference
-            app:key="changelog_link"
-            app:iconSpaceReserved="false"
-            app:title="@string/changelog_title"
-            android:summary="https://github.com/cliambrown/PillTime/releases">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/cliambrown/PillTime/releases"
-                android:title="@string/changelog_title"/>
-        </Preference>
-
-        <Preference
-            app:key="github_link"
-            app:iconSpaceReserved="false"
-            app:title="@string/info_link_title"
-            android:summary="https://github.com/cliambrown/PillTime">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/cliambrown/PillTime"
-                android:title="@string/info_link_title"/>
-        </Preference>
-
-        <Preference
-            app:key="translation_link"
-            app:iconSpaceReserved="false"
-            app:title="@string/translation_link_title"
-            android:summary="https://hosted.weblate.org/engage/pilltime">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://hosted.weblate.org/engage/pilltime"
-                android:title="@string/translation_link_title"/>
-        </Preference>
-
-        <Preference
-            app:key="dev_decree"
-            app:iconSpaceReserved="false"
-            app:selectable="false"
-            app:persistent="false"
-            app:title="@string/dev_decree_title"
-            app:summary="@string/dev_decree_notice"/>
-
-        <Preference
-            app:key="keepandroidopen_link"
-            app:iconSpaceReserved="false"
-            android:summary="https://keepandroidopen.org">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://keepandroidopen.org"
-                android:title="Keep Android Open"/>
-        </Preference>
-
         <!-- Quick hacky way of adding some padding to the bottom -->
         <Preference
-            app:selectable="false"
-            app:persistent="false"/>
+            app:persistent="false"
+            app:selectable="false" />
 
     </PreferenceCategory>
 

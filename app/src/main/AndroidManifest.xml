@@ -34,15 +34,15 @@
             android:label="@string/settings" />
         <activity
             android:name=".doses.EditDoseActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".meds.MedActivity"
             android:exported="false" />
         <activity
             android:name=".meds.EditMedActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -52,6 +52,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".help.HelpActivity"
+            android:exported="false"
+            android:label="@string/help" />
     </application>
 
 </manifest>
