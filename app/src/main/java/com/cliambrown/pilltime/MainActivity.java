@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     static SharedPreferences prefs;
 
     boolean isArchives = false;
+    OnBackPressedCallback onBackPressedCallback;
 
     List<Med> meds = new ArrayList<>();
     private Menu optionsMenu;
@@ -117,6 +119,14 @@ public class MainActivity extends AppCompatActivity {
             Intent addMedIntent = new Intent(MainActivity.this, EditMedActivity.class);
             startActivity(addMedIntent);
         });
+
+        onBackPressedCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                toggleArchives(false);
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     protected int getMedPosition(int medID) {
@@ -277,9 +287,11 @@ public class MainActivity extends AppCompatActivity {
         if (isArchives) {
             setTitle(R.string.archives);
             btn_main_add_med.setVisibility(View.GONE);
+            onBackPressedCallback.setEnabled(true);
         } else {
             setTitle(R.string.app_name);
             btn_main_add_med.setVisibility(View.VISIBLE);
+            onBackPressedCallback.setEnabled(false);
         }
         // Show back button on archives page
         assert getSupportActionBar() != null;
