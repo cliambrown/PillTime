@@ -53,7 +53,7 @@ public class HelpActivity extends SimpleMenuActivity {
             setPreferencesFromResource(R.xml.help_preferences, rootKey);
             PreferenceManager preferenceManager = getPreferenceManager();
 
-            Preference pref_tipDelayedNotifications2 = preferenceManager.findPreference("pref_tipDelayedNotifications2");
+            Preference pref_tipDelayedNotifications2 = preferenceManager.findPreference("tip_delayed_notifications2");
             if (pref_tipDelayedNotifications2 != null) {
                 pref_tipDelayedNotifications2.setOnPreferenceClickListener(preference -> {
                     openAppSettings();
@@ -61,7 +61,7 @@ public class HelpActivity extends SimpleMenuActivity {
                 });
             }
 
-            Preference pref_tipDelayedNotifications3 = preferenceManager.findPreference("pref_tipDelayedNotifications3");
+            Preference pref_tipDelayedNotifications3 = preferenceManager.findPreference("tip_delayed_notifications3");
             if (pref_tipDelayedNotifications3 != null) {
                 pref_tipDelayedNotifications3.setOnPreferenceClickListener(preference -> {
                     openAppSettings();
@@ -69,7 +69,7 @@ public class HelpActivity extends SimpleMenuActivity {
                 });
             }
 
-            Preference pref_tipDelayedNotifications4 = preferenceManager.findPreference("pref_tipDelayedNotifications4");
+            Preference pref_tipDelayedNotifications4 = preferenceManager.findPreference("tip_delayed_notifications4");
             if (pref_tipDelayedNotifications4 != null) {
                 pref_tipDelayedNotifications4.setOnPreferenceClickListener(preference -> {
                     openAppSettings();
@@ -78,7 +78,7 @@ public class HelpActivity extends SimpleMenuActivity {
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Preference pref_tipDelayedNotifications5 = preferenceManager.findPreference("pref_tipDelayedNotifications5");
+                Preference pref_tipDelayedNotifications5 = preferenceManager.findPreference("tip_delayed_notifications5");
                 if (pref_tipDelayedNotifications5 != null) {
                     pref_tipDelayedNotifications5.setOnPreferenceClickListener(preference -> {
                         Intent intent = new Intent();

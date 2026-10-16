@@ -178,21 +178,21 @@ public class SettingsActivity extends AppCompatActivity
         private void toggleNotificationsDisabledNotice() {
             pref_notificationsDisabled.setVisible(
                     mApp.hasEnabledNotificationsOnce()
-                    && mApp.areNotificationsDisabled()
+                            && mApp.areNotificationsDisabled()
             );
         }
 
         private void toggleExactAlarmsDeniedNotice() {
             pref_exactAlarmsDenied.setVisible(
                     mApp.hasEnabledNotificationsOnce()
-                    && !mApp.hasExactAlarmPermission()
+                            && !mApp.hasExactAlarmPermission()
             );
         }
 
         private void toggleBatteryOptimizationNotice() {
             pref_batteryOptimized.setVisible(
                     mApp.hasEnabledNotificationsOnce()
-                    && !mApp.isBatteryUnrestricted()
+                            && !mApp.isBatteryUnrestricted()
             );
         }
 
@@ -205,11 +205,11 @@ public class SettingsActivity extends AppCompatActivity
 
             PreferenceManager preferenceManager = getPreferenceManager();
 
-            Preference pref_notifyDefault = preferenceManager.findPreference("pref_notifyDefault");
-            Preference pref_notifySoundDefault = preferenceManager.findPreference("pref_notifySoundDefault");
-            pref_notificationsDisabled = preferenceManager.findPreference("pref_notificationsDisabled");
-            pref_exactAlarmsDenied = preferenceManager.findPreference("pref_exactAlarmsDenied");
-            pref_batteryOptimized = preferenceManager.findPreference("pref_batteryOptimized");
+            Preference pref_notifyDefault = preferenceManager.findPreference("notify_default");
+            Preference pref_notifySoundDefault = preferenceManager.findPreference("notify_sound_default");
+            pref_notificationsDisabled = preferenceManager.findPreference("notifications_disabled");
+            pref_exactAlarmsDenied = preferenceManager.findPreference("exact_alarms_denied");
+            pref_batteryOptimized = preferenceManager.findPreference("battery_optimized");
 
             if (pref_notifyDefault != null && pref_notifySoundDefault != null && pref_exactAlarmsDenied != null && pref_batteryOptimized != null) {
                 toggleNotificationsDisabledNotice();
@@ -233,7 +233,7 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference pref_export = preferenceManager.findPreference("pref_export");
+            Preference pref_export = preferenceManager.findPreference("export");
             if (pref_export != null) {
                 pref_export.setOnPreferenceClickListener(preference -> {
                     Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -249,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference pref_import = preferenceManager.findPreference("pref_import");
+            Preference pref_import = preferenceManager.findPreference("import");
             if (pref_import != null) {
                 pref_import.setOnPreferenceClickListener(preference -> {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -260,7 +260,7 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference pref_clearDb = preferenceManager.findPreference("pref_clearDb");
+            Preference pref_clearDb = preferenceManager.findPreference("clear_db");
             if (pref_clearDb != null) {
                 pref_clearDb.setOnPreferenceClickListener(preference -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -278,7 +278,7 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference pref_repairDb = preferenceManager.findPreference("pref_repairDb");
+            Preference pref_repairDb = preferenceManager.findPreference("repair_db");
             if (pref_repairDb != null) {
                 pref_repairDb.setOnPreferenceClickListener(preference -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
