@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -356,11 +357,11 @@ public class PillTimeApplication extends Application {
         builder.setMessage(R.string.exact_alarm_permission_explanation)
                 .setTitle(R.string.permission_required)
                 .setPositiveButton(R.string.continue_option, (dialog, id) -> {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                        intent.setData(Uri.parse("package:" + getPackageName()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 })
                 .setNegativeButton(R.string.deny_permission, (dialog, id) -> {
                     dialog.dismiss();
@@ -369,6 +370,11 @@ public class PillTimeApplication extends Application {
                     editor.apply();
                 });
         builder.show();
+    }
+
+    public boolean isBatteryUnrestricted() {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager.isIgnoringBatteryOptimizations(getPackageName());
     }
 
     public void repositionMed(Med med) {

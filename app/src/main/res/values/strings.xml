@@ -210,6 +210,11 @@
         the "Exact Alarm" permission was refused. To get notifications at the correct time when
         doses expire, open your device\'s settings and switch on the Alarm permission for Pill Time.
     </string>
+    <string name="battery_optimized_title">Battery Optimization Detected</string>
+    <string name="battery_optimized">Your device seems to be "optimizing" Pill Time\'s battery usage,
+        which may affect the delivery of dose expiry notifications. Try setting Pill Time to
+        "Unrestricted" battery use in your device settings.
+    </string>
 
     <string name="interface_title">Interface</string>
     <string name="theme_title">Theme</string>

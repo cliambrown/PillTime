@@ -27,6 +27,14 @@
             app:summary="@string/exact_alarms_denied"
             app:isPreferenceVisible="false" />
 
+        <com.cliambrown.pilltime.settings.BoldRedTitlePreference
+            app:iconSpaceReserved="false"
+            app:key="pref_batteryOptimized"
+            app:persistent="false"
+            app:isPreferenceVisible="false"
+            android:title="@string/battery_optimized_title"
+            app:summary="@string/battery_optimized" />
+
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
             app:key="pref_notifyDefault"

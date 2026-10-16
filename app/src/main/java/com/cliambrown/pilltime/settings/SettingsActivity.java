@@ -143,6 +143,7 @@ public class SettingsActivity extends AppCompatActivity
         Preference pref_notificationsDisabled;
         boolean notifyDefaultVal;
         Preference pref_exactAlarmsDenied;
+        Preference pref_batteryOptimized;
 
         @Override
         public void onAttach(@NonNull Context thisContext) {
@@ -170,7 +171,8 @@ public class SettingsActivity extends AppCompatActivity
             super.onResume();
             notifyDefaultVal = prefs.getBoolean("notify_default", false);
             toggleNotificationsDisabledNotice();
-            toggleExactAlarmsDenied();
+            toggleExactAlarmsDeniedNotice();
+            toggleBatteryOptimizationNotice();
         }
 
         private void toggleNotificationsDisabledNotice() {
@@ -180,10 +182,17 @@ public class SettingsActivity extends AppCompatActivity
             );
         }
 
-        private void toggleExactAlarmsDenied() {
+        private void toggleExactAlarmsDeniedNotice() {
             pref_exactAlarmsDenied.setVisible(
                     mApp.hasEnabledNotificationsOnce()
                     && !mApp.hasExactAlarmPermission()
+            );
+        }
+
+        private void toggleBatteryOptimizationNotice() {
+            pref_batteryOptimized.setVisible(
+                    mApp.hasEnabledNotificationsOnce()
+                    && !mApp.isBatteryUnrestricted()
             );
         }
 
@@ -198,13 +207,15 @@ public class SettingsActivity extends AppCompatActivity
 
             Preference pref_notifyDefault = preferenceManager.findPreference("pref_notifyDefault");
             Preference pref_notifySoundDefault = preferenceManager.findPreference("pref_notifySoundDefault");
-            pref_exactAlarmsDenied = preferenceManager.findPreference("pref_exactAlarmsDenied");
             pref_notificationsDisabled = preferenceManager.findPreference("pref_notificationsDisabled");
+            pref_exactAlarmsDenied = preferenceManager.findPreference("pref_exactAlarmsDenied");
+            pref_batteryOptimized = preferenceManager.findPreference("pref_batteryOptimized");
 
-            if (pref_notifyDefault != null && pref_notifySoundDefault != null && pref_exactAlarmsDenied != null) {
+            if (pref_notifyDefault != null && pref_notifySoundDefault != null && pref_exactAlarmsDenied != null && pref_batteryOptimized != null) {
                 toggleNotificationsDisabledNotice();
                 pref_notifySoundDefault.setVisible(notifyDefaultVal);
-                toggleExactAlarmsDenied();
+                toggleExactAlarmsDeniedNotice();
+                toggleBatteryOptimizationNotice();
                 pref_notifyDefault.setOnPreferenceChangeListener((preference, isChecked) -> {
                     notifyDefaultVal = (Boolean) isChecked;
                     if (notifyDefaultVal) {
