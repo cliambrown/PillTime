@@ -180,8 +180,7 @@
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
     <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
-    <string name="welcome_dialog_content">
-        NOUVEAU dans la v22 : Archivez un médicament pour le masquer de votre écran principal sans modifier ses paramètres, ses doses ou ses notifications.\n
+    <string name="welcome_dialog_content">NOUVEAU dans la v22 : Archivez un médicament pour le masquer de votre écran principal sans modifier ses paramètres, ses doses ou ses notifications.\n
         \nDepuis la v20 : Si vous constatez des erreurs, essayez de réparer votre base de données sur la page Paramètres.\n
         \nDepuis la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n
         \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n

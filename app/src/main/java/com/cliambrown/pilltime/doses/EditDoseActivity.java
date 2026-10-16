@@ -40,6 +40,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
     TextView tv_editDose_takenAtTime;
     TextView tv_editDose_takenAtDate;
     TextView tv_editDose_timezone;
+    TextView tv_editDose_notificationsDisabled;
     SwitchCompat switch_editDose_notify;
     SwitchCompat switch_editDose_notifySound;
     ExtendedFloatingActionButton btn_editDose_save;
@@ -52,8 +53,16 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (!isGranted) switch_editDose_notify.setChecked(false);
+            toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
         });
+
+    private void toggleNotificationsDisabledNotice(boolean notify) {
+        if (notify && mApp.areNotificationsDisabled()) {
+            tv_editDose_notificationsDisabled.setVisibility(View.VISIBLE);
+        } else {
+            tv_editDose_notificationsDisabled.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         tv_editDose_takenAtTime = findViewById(R.id.tv_editDose_takenAtTime);
         tv_editDose_takenAtDate = findViewById(R.id.tv_editDose_takenAtDate);
         tv_editDose_timezone = findViewById(R.id.tv_editDose_timezone);
+        tv_editDose_notificationsDisabled = findViewById(R.id.tv_editDose_notificationsDisabled);
         switch_editDose_notify = findViewById(R.id.switch_editDose_notify);
         switch_editDose_notifySound = findViewById(R.id.switch_editDose_notifySound);
         btn_editDose_save = findViewById(R.id.btn_editDose_save);
@@ -111,13 +121,17 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
         switch_editDose_notify.setChecked(dose.getNotify());
         switch_editDose_notifySound.setChecked(dose.getNotifySound());
-        switch_editDose_notifySound.setEnabled(dose.getNotify());
+        switch_editDose_notifySound.setVisibility(dose.getNotify() ? View.VISIBLE : View.GONE);
 
-        handleNotifyPermissions();
+        toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
+        requestNotificationPermission(switch_editDose_notify.isChecked());
 
         switch_editDose_notify.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            switch_editDose_notifySound.setEnabled(isChecked);
-            handleNotifyPermissions();
+            requestNotificationPermission(isChecked);
+            mApp.requestExactAlarmPermission(this);
+            toggleNotificationsDisabledNotice(isChecked);
+            switch_editDose_notifySound.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            if (isChecked) mApp.recordEnabledNotifications();
         });
 
         et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
@@ -165,14 +179,18 @@ public class EditDoseActivity extends SimpleMenuActivity {
         });
     }
 
-    private void handleNotifyPermissions() {
-        if (switch_editDose_notify.isChecked()) {
-            boolean notificationsEnabled = mApp.areNotificationsEnabled();
-            if (!notificationsEnabled) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-                }
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
+    }
+
+    private void requestNotificationPermission(boolean notify) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && notify
+                && mApp.areNotificationsDisabled()
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

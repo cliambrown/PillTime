@@ -38,8 +38,7 @@
     <string name="fuchsia">Fucsia</string>
     <string name="pink">Rosa</string>
     <string name="rose">Rosado</string>
-    <string name="welcome_dialog_content">
-        NOVEDAD en la v22: Archiva un medicamento para ocultarlo de tu pantalla principal sin que eso afecte a su configuración, dosis o notificaciones.\n
+    <string name="welcome_dialog_content">NOVEDAD en la v22: Archiva un medicamento para ocultarlo de tu pantalla principal sin que eso afecte a su configuración, dosis o notificaciones.\n
         \nDesde la v20: Si ves algún error, prueba a reparar tu base de datos en la página de Ajustes.\n
         \nDesde la v19: Ahora puedes configurar los ajustes predeterminados de notificaciones para cada medicamento.\n
         \nDesde la v18: Ordena los medicamentos por fecha de toma o por orden alfabético. (Consulta la página de Ajustes)\n

@@ -1,7 +1,9 @@
 package com.cliambrown.pilltime.meds;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.ParcelableSpan;
 import android.text.style.StyleSpan;
@@ -15,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
@@ -45,6 +49,7 @@ public class EditMedActivity extends SimpleMenuActivity {
     SwitchCompat switch_editMed_showDayDoseCount;
     SwitchCompat switch_editMed_overrideGlobalNotifyDefaults;
     SwitchCompat switch_editMed_notifyDefault;
+    TextView tv_editMed_notificationsDisabled;
     SwitchCompat switch_editMed_notifySoundDefault;
     LinearLayout ll_editMed_trackInventory;
     NumberPicker np_editMed_currentInventory;
@@ -56,6 +61,19 @@ public class EditMedActivity extends SimpleMenuActivity {
     String[] colors;
     String selectedColor;
     List<ImageButton> colorButtons;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                toggleNotificationsDisabledNotice(switch_editMed_overrideGlobalNotifyDefaults.isChecked() && switch_editMed_notifyDefault.isChecked());
+            });
+
+    private void toggleNotificationsDisabledNotice(boolean notifyDefault) {
+        if (notifyDefault && mApp.areNotificationsDisabled()) {
+            tv_editMed_notificationsDisabled.setVisibility(View.VISIBLE);
+        } else {
+            tv_editMed_notificationsDisabled.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,14 +124,20 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         switch_editMed_overrideGlobalNotifyDefaults = findViewById(R.id.switch_editMed_overrideGlobalNotifyDefaults);
         switch_editMed_notifyDefault = findViewById(R.id.switch_editMed_notifyDefault);
+        tv_editMed_notificationsDisabled = findViewById(R.id.tv_editMed_notificationsDisabled);
         switch_editMed_notifySoundDefault = findViewById(R.id.switch_editMed_notifySoundDefault);
 
         switch_editMed_overrideGlobalNotifyDefaults.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            switch_editMed_notifyDefault.setEnabled(isChecked);
-            switch_editMed_notifySoundDefault.setEnabled(isChecked && switch_editMed_notifyDefault.isChecked());
+            switch_editMed_notifyDefault.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            switch_editMed_notifySoundDefault.setVisibility((isChecked && switch_editMed_notifyDefault.isChecked()) ? View.VISIBLE : View.GONE);
+            toggleNotificationsDisabledNotice(isChecked && switch_editMed_notifyDefault.isChecked());
         });
         switch_editMed_notifyDefault.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            switch_editMed_notifySoundDefault.setEnabled(isChecked && switch_editMed_overrideGlobalNotifyDefaults.isChecked());
+            requestNotificationPermission(isChecked);
+            mApp.requestExactAlarmPermission(this);
+            toggleNotificationsDisabledNotice(isChecked && switch_editMed_overrideGlobalNotifyDefaults.isChecked());
+            switch_editMed_notifySoundDefault.setVisibility((isChecked && switch_editMed_overrideGlobalNotifyDefaults.isChecked()) ? View.VISIBLE : View.GONE);
+            if (isChecked) mApp.recordEnabledNotifications();
         });
 
         np_editMed_currentInventory = findViewById(R.id.np_editMed_currentInventory);
@@ -147,11 +171,14 @@ public class EditMedActivity extends SimpleMenuActivity {
 
             switch_editMed_overrideGlobalNotifyDefaults.setChecked(med.getOverrideGlobalNotifyDefaults());
             switch_editMed_notifyDefault.setChecked(med.getNotifyDefault());
-            switch_editMed_notifyDefault.setEnabled(med.getOverrideGlobalNotifyDefaults());
+            switch_editMed_notifyDefault.setVisibility(med.getOverrideGlobalNotifyDefaults() ? View.VISIBLE : View.GONE);
+            toggleNotificationsDisabledNotice(switch_editMed_overrideGlobalNotifyDefaults.isChecked() && switch_editMed_notifyDefault.isChecked());
             switch_editMed_notifySoundDefault.setChecked(med.getNotifySoundDefault());
-            switch_editMed_notifySoundDefault.setEnabled(
-                    med.getOverrideGlobalNotifyDefaults()
-                    && med.getNotifyDefault()
+            switch_editMed_notifySoundDefault.setVisibility(
+                    (med.getOverrideGlobalNotifyDefaults()
+                    && med.getNotifyDefault())
+                            ? View.VISIBLE
+                            : View.GONE
             );
 
             if (med.getIsInventoryTracked()) {
@@ -186,6 +213,8 @@ public class EditMedActivity extends SimpleMenuActivity {
             selectedColor = colors[rnd];
             setTitle(getString(R.string.new_med));
         }
+
+        requestNotificationPermission(switch_editMed_notifyDefault.isChecked());
 
         colorButtons = new ArrayList<>();
         ImageButton imageButton;
@@ -262,6 +291,21 @@ public class EditMedActivity extends SimpleMenuActivity {
                 if (mApp.saveNewMed(med1)) EditMedActivity.this.finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toggleNotificationsDisabledNotice(switch_editMed_overrideGlobalNotifyDefaults.isChecked() && switch_editMed_notifyDefault.isChecked());
+    }
+
+    private void requestNotificationPermission(boolean notifyDefault) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && notifyDefault
+                && mApp.areNotificationsDisabled()
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     private void setColorBtnState(ImageButton btn, boolean isSelected) {

@@ -8,17 +8,14 @@
 
     <string name="home">Home</string>
     <string name="archives">Archives</string>
-    <string name="help">Help</string>
+    <string name="help">Help &amp; About</string>
     <string name="settings">Settings</string>
 
     <string name="welcome_dialog_title">New Features</string>
-    <string name="welcome_dialog_content">
-        NEW in v22: Archive a med to hide it from your main screen without affecting its settings, doses, or notifications.\n
-        \nFrom v20: If you see errors, try repairing your db on the Settings page.\n
-        \nFrom v19: You can now set notification defaults for each med.\n
-        \nFrom v18: Sort meds by date taken or in alphabetical order. (See Settings page)\n
-        \nNOTE: Google is trying to stop you from installing apps like this one on your device. Visit keepandroidopen.org to learn more.
+    <string name="welcome_dialog_content">NEW: Meds can be archived to hide them from the main screen.\n
+        \nNEW: Check device permissions to get notifications on time (instead of delayed by 10 minutes)!
     </string>
+    <string name="check_permissions">Check Permissions</string>
 
     <string name="disclaimer_title">Disclaimer</string>
     <string name="disclaimer_1">This app does not provide any medical advice, implied or otherwise. All information provided by the app is based only on user input and does not constitute a recommendation of any kind. All medical decisions should always be taken in consultation with medical professionals.</string>
@@ -186,6 +183,18 @@
     <string name="invalid_dose_count">Invalid dose amount</string>
     <string name="invalid_dose_datetime">Invalid date</string>
 
+    <string name="permission_required">Permission Required</string>
+    <string name="exact_alarm_permission_explanation">This app requires the "exact alarm" permission
+        to show notifications as soon as a dose expires. (Exactly timed notifications use a bit more
+        battery power.)\n
+        \nWithout this permission, notifications may arrive up to 10 minutes after a dose has
+        expired.\n
+        \nDo you want to continue to the permissions page to receive your dose notifications
+        on time, or ignore this and accept slightly delayed notifications?
+    </string>
+    <string name="continue_option">Go to settings</string>
+    <string name="deny_permission">Ignore</string>
+
 <!--
     SETTINGS PAGE
 -->
@@ -194,6 +203,13 @@
     <string name="notifications_description">You can also set default notification preferences for each med, and you can change the notification settings for each dose.</string>
     <string name="notify_expiring_dose">Show a notification when dose expires</string>
     <string name="notification_sound">Make a sound with the notification</string>
+    <string name="notifications_disabled_title">Notifications Disabled</string>
+    <string name="notifications_disabled">Warning: Pill Time notifications are disabled by your device due to missing permissions. Open your device settings to allow Pill Time to send notifications.</string>
+    <string name="exact_alarms_denied_title">Delayed Notifications</string>
+    <string name="exact_alarms_denied">Your notifications may be delayed by up to 10 minutes because
+        the "Exact Alarm" permission was refused. To get notifications at the correct time when
+        doses expire, open your device\'s settings and switch on the Alarm permission for Pill Time.
+    </string>
 
     <string name="interface_title">Interface</string>
     <string name="theme_title">Theme</string>
@@ -244,8 +260,12 @@
     <string name="tip_archive_med_title">Archiving Meds</string>
     <string name="tip_archive_med">Archive a med by clicking the box icon with the down arrow on the med page. This will hide it from the main screen (the med\'s settings and doses will not be affected).
         \nView your archived meds by clicking the box icon on the main screen.</string>
-    <string name="tip_no_notifications_title">Missing Notifications</string>
-    <string name="tip_no_notifications">Not receiving notifications when doses expire? Check your device Settings > Apps > Pill Time > allow notifications. (Also note that due to Android limitations, a notification may not appear until up to 10 minutes after a dose has expired.)</string>
+    <string name="tip_no_notifications_title">Missing or Delayed Notifications</string>
+    <string name="tip_no_notifications">If you are not getting notifications or they arrive late, Pill Time may be missing certain device permissions. Try the following fixes (the steps may look slightly different on different devices):</string>
+    <string name="tip_delayed_notifications_2">Device Settings > Apps > Pill Time > Notifications > enable all</string>
+    <string name="tip_delayed_notifications_3">Device Settings > Apps > Pill Time > App battery usage > Allow background usage > On</string>
+    <string name="tip_delayed_notifications_4">Device Settings > Apps > Pill Time > App battery usage > Allow background usage (tap for options) > Unrestricted</string>
+    <string name="tip_delayed_notifications_5">Device Settings > Apps > Special app access > Alarm &amp; reminders > Pill Time > On</string>
 
     <string name="about_app">About Pill Time</string>
     <string name="info_link_title">Source code and more info available on GitHub</string>

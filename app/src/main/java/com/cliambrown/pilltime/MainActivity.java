@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -240,19 +242,21 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.welcome_dialog_title)
                     .setMessage(R.string.welcome_dialog_content)
-                    .setPositiveButton(R.string.close, (dialog, id) -> {
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("show_v21_dialog", false);
-                        editor.apply();
+                    .setNegativeButton(R.string.close, (dialog, id) -> {
                         dialog.cancel();
-                    })
-                    .setNegativeButton(R.string.keep_android_open, (dialog, id) -> {
-                        Intent browserIntent = new Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://keepandroidopen.org/")
-                        );
-                        startActivity(browserIntent);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("show_v22_dialog", false);
+                        editor.apply();
                     });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                builder.setPositiveButton(R.string.check_permissions, (dialog, id) -> {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                        intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    });
+            }
             return builder.create();
         }
     }
@@ -265,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         startUpdateTimer();
 
-        boolean showWelcomeDialog = prefs.getBoolean("show_v21_dialog", true);
+        boolean showWelcomeDialog = prefs.getBoolean("show_v22_dialog", true);
         if (showWelcomeDialog) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             new welcomeDialogFragment().show(fragmentManager, "WELCOME_DIALOG");

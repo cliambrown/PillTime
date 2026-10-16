@@ -7,24 +7,40 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="notifications_description"
+            app:key="pref_notifications_description"
             app:persistent="false"
             app:selectable="false"
             app:summary="@string/notifications_description" />
 
+        <com.cliambrown.pilltime.settings.BoldRedTitlePreference
+            app:iconSpaceReserved="false"
+            app:key="pref_notificationsDisabled"
+            app:persistent="false"
+            app:isPreferenceVisible="false"
+            android:title="@string/notifications_disabled_title"
+            app:summary="@string/notifications_disabled" />
+
+        <com.cliambrown.pilltime.settings.BoldRedTitlePreference
+            app:iconSpaceReserved="false"
+            app:key="pref_exactAlarmsDenied"
+            app:title="@string/exact_alarms_denied_title"
+            app:summary="@string/exact_alarms_denied"
+            app:isPreferenceVisible="false" />
+
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="notify_default"
+            app:key="pref_notifyDefault"
             app:singleLineTitle="false"
             app:title="@string/notify_expiring_dose"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="notify_sound_default"
+            app:key="pref_notifySoundDefault"
             app:singleLineTitle="false"
             app:title="@string/notification_sound"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            app:isPreferenceVisible="false" />
 
     </PreferenceCategory>
 
@@ -37,7 +53,7 @@
             app:entries="@array/themes_entries"
             app:entryValues="@array/themes_values"
             app:iconSpaceReserved="false"
-            app:key="theme"
+            app:key="pref_theme"
             app:summary="%s"
             app:title="@string/theme_title" />
 
@@ -46,7 +62,7 @@
             app:entries="@array/med_sort_entries"
             app:entryValues="@array/med_sort_values"
             app:iconSpaceReserved="false"
-            app:key="med_sort"
+            app:key="pref_med_sort"
             app:summary="%s"
             app:title="@string/med_sort_title" />
 
@@ -59,25 +75,25 @@
         <Preference
             android:summary="@string/export_all_summary"
             app:iconSpaceReserved="false"
-            app:key="export"
+            app:key="pref_export"
             app:title="@string/export_all" />
 
         <Preference
             android:summary="@string/import_from_file"
             app:iconSpaceReserved="false"
-            app:key="import"
+            app:key="pref_import"
             app:title="@string/import_data" />
 
-        <com.cliambrown.pilltime.settings.ClearDbPreference
+        <com.cliambrown.pilltime.settings.BoldRedTitlePreference
             android:icon="@drawable/baseline_delete_24"
             android:summary="@string/clear_meds_and_doses"
-            app:key="clearDb"
+            app:key="pref_clearDb"
             app:title="@string/clear_db" />
 
         <Preference
             android:icon="@android:drawable/ic_menu_manage"
             android:summary="@string/repair_db_description"
-            app:key="repairDb"
+            app:key="pref_repairDb"
             app:title="@string/repair_db" />
 
         <!-- Quick hacky way of adding some padding to the bottom -->

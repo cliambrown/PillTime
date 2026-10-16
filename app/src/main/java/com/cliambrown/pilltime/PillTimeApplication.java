@@ -2,7 +2,9 @@ package com.cliambrown.pilltime;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,6 +15,7 @@ import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -39,13 +42,14 @@ public class PillTimeApplication extends Application {
     DbHelper dbHelper;
     private final List<Med> meds = new ArrayList<>();
     public static final String CHANNEL_ID = "NOTIFICATION_SERVICE_CHANNEL";
+    SharedPreferences prefs;
     public String medSort;
 
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         dbHelper = new DbHelper(context);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         medSort = prefs.getString("med_sort", getString(R.string.med_sort_value_latest));
         loadMeds();
         AppCompatDelegate.setDefaultNightMode(ThemeHelper.getThemeFromPrefs(context));
@@ -315,10 +319,56 @@ public class PillTimeApplication extends Application {
         long now = System.currentTimeMillis();
         long triggerAtMillis = (dose.getTakenAt() + med.getDoseDurationInSeconds()) * 1000L;
         if (triggerAtMillis < now) return;
-//        Exact alarm would probably be preferred but caused too many permission complexities
-//        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
-//        Instead, set an inexact alarm with 10-minute window (the minimum allowed)
-        am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
+
+        if (hasExactAlarmPermission(am)) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        } else {
+            am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
+        }
+    }
+
+    public void recordEnabledNotifications() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("has_enabled_notifications_once", true);
+        editor.apply();
+    }
+
+    public boolean hasEnabledNotificationsOnce() {
+        return prefs.getBoolean("has_enabled_notifications_once", false);
+    }
+
+    public boolean hasExactAlarmPermission() {
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                || hasExactAlarmPermission((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
+        );
+    }
+
+    public boolean hasExactAlarmPermission(AlarmManager am) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms();
+    }
+
+    @SuppressLint("InlinedApi")
+    public void requestExactAlarmPermission(Context activityContext) {
+        if (hasExactAlarmPermission() || prefs.getBoolean("ignore_exact_alarm_permission", false)) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
+        builder.setMessage(R.string.exact_alarm_permission_explanation)
+                .setTitle(R.string.permission_required)
+                .setPositiveButton(R.string.continue_option, (dialog, id) -> {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                })
+                .setNegativeButton(R.string.deny_permission, (dialog, id) -> {
+                    dialog.dismiss();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("ignore_exact_alarm_permission", true);
+                    editor.apply();
+                });
+        builder.show();
     }
 
     public void repositionMed(Med med) {
@@ -490,14 +540,14 @@ public class PillTimeApplication extends Application {
         }
     }
 
-    public boolean areNotificationsEnabled() {
+    public boolean areNotificationsDisabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!manager.areNotificationsEnabled()) return false;
+            if (!manager.areNotificationsEnabled()) return true;
             NotificationChannel channel = manager.getNotificationChannel(CHANNEL_ID);
-            return channel.getImportance() != NotificationManager.IMPORTANCE_NONE;
+            return channel.getImportance() == NotificationManager.IMPORTANCE_NONE;
         } else {
-            return NotificationManagerCompat.from(context).areNotificationsEnabled();
+            return !NotificationManagerCompat.from(context).areNotificationsEnabled();
         }
     }
 }

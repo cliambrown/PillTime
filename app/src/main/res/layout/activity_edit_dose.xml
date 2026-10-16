@@ -153,6 +153,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_editDose_takenAtDateTime" />
 
+            <TextView
+                android:id="@+id/tv_editDose_notificationsDisabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_disabled"
+                android:textColor="?attr/redText"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_editDose_timezone"
+                android:visibility="gone"
+                />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editDose_notify"
                 android:layout_width="match_parent"
@@ -163,7 +178,7 @@
                 android:text="@string/notify_expiring_dose"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_editDose_timezone" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_editDose_notificationsDisabled" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_editDose_notifySound"
@@ -175,7 +190,9 @@
                 android:text="@string/notification_sound"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch_editDose_notify" />
+                app:layout_constraintTop_toBottomOf="@+id/switch_editDose_notify"
+                android:visibility="gone"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

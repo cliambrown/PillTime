@@ -8,7 +8,7 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="tip_quick_dose"
+            app:key="pref_tipQuickDose"
             app:persistent="false"
             app:selectable="false"
             android:title="@string/tip_quick_dose_title"
@@ -16,7 +16,7 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="tip_edit_med"
+            app:key="pref_tipEditMed"
             app:persistent="false"
             app:selectable="false"
             android:title="@string/tip_edit_med_title"
@@ -24,7 +24,7 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="tip_archive_med"
+            app:key="pref_tipArchiveMed"
             app:persistent="false"
             app:selectable="false"
             android:title="@string/tip_archive_med_title"
@@ -32,11 +32,35 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="tip_no_notifications"
+            app:key="pref_tipNoNotifications"
             app:persistent="false"
             app:selectable="false"
             android:title="@string/tip_no_notifications_title"
             app:summary="@string/tip_no_notifications" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="pref_tipDelayedNotifications2"
+            app:persistent="false"
+            app:summary="@string/tip_delayed_notifications_2" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="pref_tipDelayedNotifications3"
+            app:persistent="false"
+            app:summary="@string/tip_delayed_notifications_3" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="pref_tipDelayedNotifications4"
+            app:persistent="false"
+            app:summary="@string/tip_delayed_notifications_4" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="pref_tipDelayedNotifications5"
+            app:persistent="false"
+            app:summary="@string/tip_delayed_notifications_5" />
 
     </PreferenceCategory>
 
@@ -47,7 +71,7 @@
         <Preference
             android:summary="https://github.com/cliambrown/PillTime"
             app:iconSpaceReserved="false"
-            app:key="github_link"
+            app:key="pref_githubLink"
             app:title="@string/info_link_title">
             <intent
                 android:action="android.intent.action.VIEW"
@@ -58,7 +82,7 @@
         <Preference
             android:summary="https://github.com/cliambrown/PillTime/releases"
             app:iconSpaceReserved="false"
-            app:key="changelog_link"
+            app:key="pref_changelogLink"
             app:title="@string/changelog_title">
             <intent
                 android:action="android.intent.action.VIEW"
@@ -75,7 +99,7 @@
         <Preference
             android:summary="https://hosted.weblate.org/engage/pilltime"
             app:iconSpaceReserved="false"
-            app:key="changelog_link"
+            app:key="pref_translateOnWeblate"
             app:title="@string/translate_on_weblate">
             <intent
                 android:action="android.intent.action.VIEW"
@@ -91,14 +115,14 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="disclaimer_1"
+            app:key="pref_disclaimer1"
             app:persistent="false"
             app:selectable="false"
             app:summary="@string/disclaimer_1" />
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="disclaimer_2"
+            app:key="pref_disclaimer2"
             app:persistent="false"
             app:selectable="false"
             app:summary="@string/disclaimer_2" />
@@ -111,7 +135,7 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="disclaimer_1"
+            app:key="pref_devDecreeNotice"
             app:persistent="false"
             app:selectable="false"
             app:summary="@string/dev_decree_notice" />
@@ -119,7 +143,7 @@
         <Preference
             android:summary="https://keepandroidopen.org"
             app:iconSpaceReserved="false"
-            app:key="keepandroidopen_link">
+            app:key="pref_keepandroidopenLink">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://keepandroidopen.org"

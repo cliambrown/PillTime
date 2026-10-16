@@ -13,20 +13,20 @@ import com.cliambrown.pilltime.utilities.ThemeHelper;
 
 import org.jspecify.annotations.NonNull;
 
-public class ClearDbPreference extends Preference {
-    public ClearDbPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+public class BoldRedTitlePreference extends Preference {
+    public BoldRedTitlePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public ClearDbPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BoldRedTitlePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public ClearDbPreference(Context context, AttributeSet attrs) {
+    public BoldRedTitlePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ClearDbPreference(Context context) {
+    public BoldRedTitlePreference(Context context) {
         super(context);
     }
 

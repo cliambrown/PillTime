@@ -1,11 +1,14 @@
 package com.cliambrown.pilltime.settings;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.view.Menu;
@@ -36,7 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -133,25 +135,96 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+
+        PillTimeApplication mApp;
+        SharedPreferences prefs;
+        Context context;
+
+        Preference pref_notificationsDisabled;
+        boolean notifyDefaultVal;
+        Preference pref_exactAlarmsDenied;
+
+        @Override
+        public void onAttach(@NonNull Context thisContext) {
+            super.onAttach(thisContext);
+            context = thisContext;
+            mApp = (PillTimeApplication) requireActivity().getApplication();
+            prefs = PreferenceManager.getDefaultSharedPreferences(thisContext);
+        }
+
+        private final ActivityResultLauncher<String> requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    toggleNotificationsDisabledNotice();
+                });
+
+        private void requestNotificationPermission() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && mApp.areNotificationsDisabled()
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            notifyDefaultVal = prefs.getBoolean("notify_default", false);
+            toggleNotificationsDisabledNotice();
+            toggleExactAlarmsDenied();
+        }
+
+        private void toggleNotificationsDisabledNotice() {
+            pref_notificationsDisabled.setVisible(
+                    mApp.hasEnabledNotificationsOnce()
+                    && mApp.areNotificationsDisabled()
+            );
+        }
+
+        private void toggleExactAlarmsDenied() {
+            pref_exactAlarmsDenied.setVisible(
+                    mApp.hasEnabledNotificationsOnce()
+                    && !mApp.hasExactAlarmPermission()
+            );
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            Preference notifyDefault = getPreferenceManager().findPreference("notify_default");
-            Preference notifySoundDefault = getPreferenceManager().findPreference("notify_sound_default");
-            if (notifyDefault != null && notifySoundDefault != null) {
-                notifySoundDefault.setVisible(
-                        Objects.requireNonNull(getPreferenceManager().getSharedPreferences())
-                                .getBoolean("notify_default", false));
-                notifyDefault.setOnPreferenceChangeListener((preference, isChecked) -> {
-                    notifySoundDefault.setVisible((Boolean) isChecked);
+            notifyDefaultVal = prefs.getBoolean("notify_default", false);
+            if (notifyDefaultVal) requestNotificationPermission();
+
+            PreferenceManager preferenceManager = getPreferenceManager();
+
+            Preference pref_notifyDefault = preferenceManager.findPreference("pref_notifyDefault");
+            Preference pref_notifySoundDefault = preferenceManager.findPreference("pref_notifySoundDefault");
+            pref_exactAlarmsDenied = preferenceManager.findPreference("pref_exactAlarmsDenied");
+            pref_notificationsDisabled = preferenceManager.findPreference("pref_notificationsDisabled");
+
+            if (pref_notifyDefault != null && pref_notifySoundDefault != null && pref_exactAlarmsDenied != null) {
+                toggleNotificationsDisabledNotice();
+                pref_notifySoundDefault.setVisible(notifyDefaultVal);
+                toggleExactAlarmsDenied();
+                pref_notifyDefault.setOnPreferenceChangeListener((preference, isChecked) -> {
+                    notifyDefaultVal = (Boolean) isChecked;
+                    if (notifyDefaultVal) {
+                        mApp.recordEnabledNotifications();
+                        requestNotificationPermission();
+                        mApp.requestExactAlarmPermission(context);
+                    }
+                    toggleNotificationsDisabledNotice();
+                    pref_notifySoundDefault.setVisible(notifyDefaultVal);
+                    return true;
+                });
+                pref_exactAlarmsDenied.setOnPreferenceClickListener((preference) -> {
+                    mApp.requestExactAlarmPermission(context);
                     return true;
                 });
             }
 
-            Preference export = getPreferenceManager().findPreference("export");
-            if (export != null) {
-                export.setOnPreferenceClickListener(preference -> {
+            Preference pref_export = preferenceManager.findPreference("pref_export");
+            if (pref_export != null) {
+                pref_export.setOnPreferenceClickListener(preference -> {
                     Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("text/plain");
@@ -165,9 +238,9 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference importPref = getPreferenceManager().findPreference("import");
-            if (importPref != null) {
-                importPref.setOnPreferenceClickListener(preference -> {
+            Preference pref_import = preferenceManager.findPreference("pref_import");
+            if (pref_import != null) {
+                pref_import.setOnPreferenceClickListener(preference -> {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("text/plain");
@@ -176,9 +249,9 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference clearDB = getPreferenceManager().findPreference("clearDb");
-            if (clearDB != null) {
-                clearDB.setOnPreferenceClickListener(preference -> {
+            Preference pref_clearDb = preferenceManager.findPreference("pref_clearDb");
+            if (pref_clearDb != null) {
+                pref_clearDb.setOnPreferenceClickListener(preference -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(R.string.dialog_clear_db)
                             .setTitle(R.string.clear_db)
@@ -194,9 +267,9 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
 
-            Preference repairDb = getPreferenceManager().findPreference("repairDb");
-            if (repairDb != null) {
-                repairDb.setOnPreferenceClickListener(preference -> {
+            Preference pref_repairDb = preferenceManager.findPreference("pref_repairDb");
+            if (pref_repairDb != null) {
+                pref_repairDb.setOnPreferenceClickListener(preference -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(R.string.dialog_repair_db)
                             .setTitle(R.string.repair_db)
