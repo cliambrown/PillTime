@@ -43,6 +43,7 @@
         \nDesde la v19: Ahora puedes configurar los ajustes predeterminados de notificaciones para cada medicamento.\n
         \nDesde la v18: Ordena los medicamentos por fecha de toma o por orden alfabético. (Consulta la página de Ajustes)\n
         \nNOTA: Google está intentando impedir que instales apps como esta en tu dispositivo. Visita keepandroidopen.org para saber más.</string>
+    <string name="check_permissions">Comprueba los permisos</string>
     <string name="disclaimer_title">Descargo de responsabilidad</string>
     <string name="disclaimer_1">Esta app no proporciona ningún tipo de asesoramiento médico, implícito o explícito. Toda la información proporcionada por la app está basada exclusivamente en los datos introducidos por el usuario y no constituye una recomendación de ningún tipo. Toda decisión médica debe consultarse siempre con médicos profesionales.</string>
     <string name="disclaimer_2">Esta es una app simple creada para uso personal. No se puede depender de ella para ningún propósito relacionado con la salud. Debido a limitaciones técnicas y problemas conocidos, no se puede garantizar que las notificaciones se muestren en momentos específicos. (Por ejemplo, reiniciar el teléfono puede deshabilitar las notificaciones programadas de esta app.)</string>
@@ -197,5 +198,5 @@
     <string name="invalid_med_id">Identificador de medicamento inválido</string>
     <string name="invalid_dose_count">Cantidad de dosis inválida</string>
     <string name="invalid_dose_datetime">Fecha inválida</string>
-    <string name="help">Asistencia</string>
+    <string name="help">Ayuda y sobre la app</string>
 </resources>

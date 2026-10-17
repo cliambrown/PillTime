@@ -1,3 +1,5 @@
-- Add the ability to archive meds (hide them from the main screen)
+- Added the ability to archive meds (hide them from the main screen)
 - Added a Help page
+- Added exact alarm option to receive notifications on time
+- Added notices on the Settings page if device settings or missing permissions may be blocking notifications
 - Minor bug fixes
