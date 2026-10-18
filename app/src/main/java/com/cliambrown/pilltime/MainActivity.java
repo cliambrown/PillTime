@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        filter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
 
         // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
         // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 case "com.cliambrown.broadcast.DOSE_ADDED":
                 case "com.cliambrown.broadcast.DOSE_EDITED":
                 case "com.cliambrown.broadcast.DOSE_REMOVED":
-                case "com.cliambrown.broadcast.DOSES_REMOVED":
+                case "com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED":
                     if (fromPosition >= 0) {
                         mAdapter.notifyItemChanged(fromPosition, "doses_edited");
                     }

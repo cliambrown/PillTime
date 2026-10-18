@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.AttrRes;
 import androidx.recyclerview.widget.RecyclerView;
@@ -139,6 +140,23 @@ public class Utils {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public static List<View> getAllViewChildren(View view) {
+        List<View> visited = new ArrayList<>();
+        List<View> unvisited = new ArrayList<>();
+        unvisited.add(view);
+
+        while (!unvisited.isEmpty()) {
+            View child = unvisited.remove(0);
+            visited.add(child);
+            if (!(child instanceof ViewGroup)) continue;
+            ViewGroup group = (ViewGroup) child;
+            final int childCount = group.getChildCount();
+            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
+        }
+
+        return visited;
     }
 
     public static SpannableString buildTakenInPastString(Context context, @AttrRes int colorAttrResId, double takenAmount, int doseHours) {

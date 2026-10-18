@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
@@ -58,6 +61,10 @@ public class MedActivity extends AppCompatActivity {
     Timer timer;
     int medID;
     Med med;
+
+    OnBackPressedCallback onBackPressedCallback;
+    public boolean isMultiSelectActive = false;
+    public HashSet<Integer> selectedDoseIDs = new HashSet<>();
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
@@ -89,20 +96,20 @@ public class MedActivity extends AppCompatActivity {
             return;
         }
 
-        setTitle(getString(R.string.med));
-        updateInfo();
-        updateTimes();
-        toggleNoDosesMessages();
-
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, mApp);
+        mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, MedActivity.this, mApp);
         recyclerView.setAdapter(mAdapter);
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
         recyclerView.addItemDecoration(bottomOffsetDecoration);
+
+        setTitle(getString(R.string.med));
+        updateInfo();
+        updateTimes();
+        toggleNoDosesMessages();
 
         BroadcastReceiver br = new MedActivity.MedBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -110,11 +117,12 @@ public class MedActivity extends AppCompatActivity {
         filter.addAction("com.cliambrown.broadcast.MED_EDITED");
         filter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
         filter.addAction("com.cliambrown.broadcast.DOSES_LOADED");
-        filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
         filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
         filter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
         filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
+        filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        filter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
 
         // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
         // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
@@ -142,6 +150,14 @@ public class MedActivity extends AppCompatActivity {
             mApp.addDose(med, dose1);
             return true;
         });
+
+        onBackPressedCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                deactivateMultiSelect();
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     public class MedBroadcastReceiver extends BroadcastReceiver {
@@ -157,20 +173,19 @@ public class MedActivity extends AppCompatActivity {
                 return;
             }
 
+            if (mAdapter == null) return;
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
 
             switch (action) {
                 case "com.cliambrown.broadcast.MED_EDITED":
                     updateInfo();
-                    updateTimes();
+                    updateAllTimes();
                     return;
                 case "com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED":
                     toggleArchiveButtons();
                     return;
             }
-
-            if (mAdapter == null) return;
 
             if (action.equals("com.cliambrown.broadcast.DOSE_MOVED")) {
                 int fromPosition = intent.getIntExtra("fromPosition", -1);
@@ -189,6 +204,7 @@ public class MedActivity extends AppCompatActivity {
                         for (int doseID : Objects.requireNonNull(doseIDs)) {
                             for (int i=0; i<doses.size(); ++i) {
                                 if (doses.get(i).getId() == doseID) {
+                                    doses.remove(i);
                                     mAdapter.notifyItemInserted(i);
                                     break;
                                 }
@@ -201,6 +217,24 @@ public class MedActivity extends AppCompatActivity {
                     }
                     return;
                 case "com.cliambrown.broadcast.DOSES_REMOVED":
+                    try {
+                        List<Integer> doseIDs = intent.getIntegerArrayListExtra("doseIDs");
+                        for (int doseID : Objects.requireNonNull(doseIDs)) {
+                            for (int i=0; i<doses.size(); ++i) {
+                                if (doses.get(i).getId() == doseID) {
+                                    doses.remove(i);
+                                    mAdapter.notifyItemRemoved(i);
+                                    break;
+                                }
+                            }
+                        }
+                        updateTimes();
+                        toggleNoDosesMessages();
+                    } catch (Exception e) {
+                        Log.w(MedActivity.class.getName(), e);
+                    }
+                    return;
+                case "com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED":
                     updateTimes();
                     toggleNoDosesMessages();
                     return;
@@ -232,6 +266,7 @@ public class MedActivity extends AppCompatActivity {
                 case "com.cliambrown.broadcast.DOSE_REMOVED":
                     for (int i = 0; i < doses.size(); ++i) {
                         if (doses.get(i).getId() == doseID) {
+                            doses.remove(i);
                             mAdapter.notifyItemRemoved(i);
                             break;
                         }
@@ -264,6 +299,10 @@ public class MedActivity extends AppCompatActivity {
         int textColor = ThemeHelper.getThemeAttr(attrResourceID, MedActivity.this);
         tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfoStr());
+        btn_med_add_dose.setBackgroundColor(textColor);
+        for (int i=0; i<med.getDoses().size(); ++i) {
+            mAdapter.notifyItemChanged(i, "update_color");
+        }
     }
 
     // Update Med values that change over time
@@ -296,9 +335,18 @@ public class MedActivity extends AppCompatActivity {
             );
             tv_med_takenInPastDay.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void updateDoseTimes() {
+        if (med == null) return;
         for (int i=0; i<med.getDoses().size(); ++i) {
             mAdapter.notifyItemChanged(i, "update_times");
         }
+    }
+
+    public void updateAllTimes() {
+        updateTimes();
+        updateDoseTimes();
     }
 
     private void startUpdateTimer() {
@@ -307,10 +355,51 @@ public class MedActivity extends AppCompatActivity {
         TimerTask doAsynchronousTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(MedActivity.this::updateTimes);
+                handler.post(MedActivity.this::updateAllTimes);
             }
         };
         timer.schedule(doAsynchronousTask, 60000, 60000); // once every minute
+    }
+
+    public void activateMultiSelect(int doseID) {
+        if (isMultiSelectActive) return;
+        isMultiSelectActive = true;
+        optionsMenu.findItem(R.id.mi_med_edit).setVisible(false);
+        optionsMenu.findItem(R.id.mi_med_archive).setVisible(false);
+        optionsMenu.findItem(R.id.mi_med_select_all).setVisible(true);
+        selectDose(doseID, true);
+        int doseCount = med.getDoses().size();
+        for (int i = 0; i < doseCount; i++) {
+            mAdapter.notifyItemChanged(i, "multiselect_activated");
+        }
+        onBackPressedCallback.setEnabled(true);
+    }
+
+    protected void deactivateMultiSelect() {
+        isMultiSelectActive = false;
+        optionsMenu.findItem(R.id.mi_med_edit).setVisible(true);
+        optionsMenu.findItem(R.id.mi_med_archive).setVisible(true);
+        optionsMenu.findItem(R.id.mi_med_select_all).setVisible(false);
+        selectedDoseIDs.clear();
+        setTitle(getString(R.string.med));
+        int doseCount = med.getDoses().size();
+        for (int i = 0; i < doseCount; i++) {
+            mAdapter.notifyItemChanged(i, "multiselect_deactivated");
+        }
+        onBackPressedCallback.setEnabled(false);
+    }
+
+    public void selectDose(int doseID, boolean isSelected) {
+        if (isSelected) {
+            selectedDoseIDs.add(doseID);
+        } else {
+            selectedDoseIDs.remove(doseID);
+            if (selectedDoseIDs.isEmpty()) {
+                deactivateMultiSelect();
+                return;
+            }
+        }
+        setTitle(this.getResources().getQuantityString(R.plurals.doses_selected, selectedDoseIDs.size(), selectedDoseIDs.size()));
     }
 
     @Override
@@ -322,7 +411,7 @@ public class MedActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        updateTimes();
+        updateAllTimes();
         toggleNoDosesMessages();
         startUpdateTimer();
     }
@@ -346,6 +435,10 @@ public class MedActivity extends AppCompatActivity {
         Intent intent;
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
+            if (isMultiSelectActive) {
+                deactivateMultiSelect();
+                return true;
+            }
             MedActivity.this.finish();
             return true;
         }
@@ -377,8 +470,33 @@ public class MedActivity extends AppCompatActivity {
             builder.show();
             return true;
         }
+        if (itemID == R.id.mi_med_select_all) {
+            if (!isMultiSelectActive) return true;
+            List<Dose> doses = med.getDoses();
+            for (int i = 0; i< doses.size(); i++) {
+                int doseID = doses.get(i).getId();
+                selectDose(doseID, true);
+                mAdapter.notifyItemChanged(i, "dose_selected");
+            }
+        }
         if (itemID == R.id.mi_med_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            if (isMultiSelectActive) {
+                if (selectedDoseIDs.isEmpty()) return false;
+                builder.setMessage(getResources().getQuantityString(
+                            R.plurals.dialog_delete_selected_doses,
+                            selectedDoseIDs.size(),
+                            selectedDoseIDs.size()
+                        ))
+                        .setTitle(R.string.delete_doses)
+                        .setPositiveButton(R.string.yes, (dialog, id) -> {
+                            mApp.removeDosesByIDs(med, selectedDoseIDs);
+                            deactivateMultiSelect();
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+                builder.show();
+                return true;
+            }
             builder.setMessage(R.string.dialog_delete_med)
                     .setTitle(R.string.delete)
                     .setPositiveButton(R.string.yes, (dialog, id) -> {

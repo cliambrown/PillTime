@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.meds.Med;
@@ -22,7 +21,6 @@ public class RecreateNotificationsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d("CLB_TAG", "RecreateNotificationsReceiver action = " + action);
         if (
                 Objects.equals(action, "android.intent.action.BOOT_COMPLETED")
                 || Objects.equals(action, AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED)

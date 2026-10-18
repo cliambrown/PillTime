@@ -7,8 +7,8 @@
     <attr name="windowBackground" format="reference|color" />
     <attr name="secondaryBackground" format="reference|color" />
     <attr name="tertiaryBackground" format="reference|color" />
+    <attr name="highlightBackground" format="reference|color" />
 
-    <attr name="redTextInverse" format="reference|color" />
     <attr name="redText" format="reference|color" />
     <attr name="orangeText" format="reference|color" />
     <attr name="amberText" format="reference|color" />

@@ -1,0 +1,1 @@
+- Long-press doses on a med page to select them, then click the trash icon to delete selected doses

@@ -5,6 +5,7 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="secondaryBackground">@color/gray_50</item>
         <item name="tertiaryBackground">@color/gray_100</item>
+        <item name="highlightBackground">@color/red_500</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_800</item>
         <item name="colorPrimaryVariant">@color/purple_900</item>
@@ -24,7 +25,6 @@
         <item name="lighterText">@color/gray_300</item>
         <item name="buttonText">@color/white</item>
 
-        <item name="redTextInverse">@color/red_300</item>
         <item name="redText">@color/red_600</item>
         <item name="orangeText">@color/orange_700</item>
         <item name="amberText">@color/amber_700</item>

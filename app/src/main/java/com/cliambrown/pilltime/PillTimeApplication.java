@@ -35,6 +35,7 @@ import com.cliambrown.pilltime.utilities.Utils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PillTimeApplication extends Application {
@@ -461,7 +462,6 @@ public class PillTimeApplication extends Application {
                 List<Dose> doses = med.getDoses();
                 for (int i = 0; i < doses.size(); ++i) {
                     if (doses.get(i).getId() == dose.getId()) {
-                        doses.remove(i);
                         med.updateTimes(dbHelper);
                         Intent intent = new Intent();
                         intent.setAction("com.cliambrown.broadcast.DOSE_REMOVED");
@@ -475,8 +475,32 @@ public class PillTimeApplication extends Application {
                 }
                 return;
             }
-            break;
         }
+    }
+
+    public void removeDosesByIDs(Med med, HashSet<Integer> doseIDs) {
+        List<Integer> deletedDoseIDs = new ArrayList<>();
+        if (!doseIDs.isEmpty()) {
+            for (Dose dose: med.getDoses()) {
+                int doseID = dose.getId();
+                if (doseIDs.contains(doseID)) {
+                    dose.setNotify(false);
+                    dbHelper.deleteDoseById(doseID);
+                    scheduleNotification(med, dose);
+                    deletedDoseIDs.add(doseID);
+                    doseIDs.remove(doseID);
+                    if (doseIDs.isEmpty()) break;
+                }
+            }
+        }
+        med.updateTimes(dbHelper);
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseIDs", (Serializable) deletedDoseIDs);
+        sendBroadcast(intent);
+        repositionMed(med);
+        showToast(R.string.doses_deleted);
     }
 
     public void loadMoreDoses(Med med) {
@@ -518,7 +542,7 @@ public class PillTimeApplication extends Application {
         med.removeDoseAndOlder(dose);
         med.updateTimes(dbHelper);
         Intent intent = new Intent();
-        intent.setAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        intent.setAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
         intent.putExtra("medID", med.getId());
         sendBroadcast(intent);
         repositionMed(med);

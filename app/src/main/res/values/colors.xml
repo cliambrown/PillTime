@@ -12,7 +12,9 @@
     <color name="gray_900">#FF212121</color>
     <color name="gray_1000">#FF101010</color>
     <color name="red_300">#FFFCA5A5</color>
+    <color name="red_500">#FFEF4444</color>
     <color name="red_600">#FFDC2626</color>
+    <color name="red_800">#FF991b1b</color>
     <color name="orange_300">#FFFDBA74</color>
     <color name="orange_700">#FFC2410C</color>
     <color name="amber_400">#FFFBBF24</color>

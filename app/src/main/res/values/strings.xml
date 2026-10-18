@@ -119,6 +119,23 @@
     <string name="show_more">Show More</string>
     <string name="delete_and_older">Delete this and older</string>
 
+    <string name="select_all">Select All</string>
+    <string name="selected">Selected</string>
+    <string name="unselected">Unselected</string>
+    <string name="expired">Expired</string>
+    <string name="active">Active</string>
+
+    <plurals name="doses_selected">
+        <item quantity="one">%1$d dose selected</item>
+        <item quantity="other">%1$d doses selected</item>
+    </plurals>
+
+    <plurals name="dialog_delete_selected_doses">
+        <item quantity="one">Are you sure you want to delete %1$d selected dose? This cannot be undone.</item>
+        <item quantity="other">Are you sure you want to delete %1$d selected doses? This cannot be undone.</item>
+    </plurals>
+    <string name="delete_doses">Delete doses</string>
+
 <!--
     EDITING MEDS AND DOSES
 -->
