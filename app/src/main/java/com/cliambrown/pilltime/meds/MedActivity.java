@@ -204,7 +204,6 @@ public class MedActivity extends AppCompatActivity {
                         for (int doseID : Objects.requireNonNull(doseIDs)) {
                             for (int i=0; i<doses.size(); ++i) {
                                 if (doses.get(i).getId() == doseID) {
-                                    doses.remove(i);
                                     mAdapter.notifyItemInserted(i);
                                     break;
                                 }
