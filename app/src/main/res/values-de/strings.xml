@@ -159,4 +159,83 @@
     <string name="info_link_title">Quellcode und weitere Informationen auf GitHub verfügbar</string>
     <string name="translation_link_title">Hilf mit, diese App zu übersetzen</string>
     <string name="welcome_dialog_title">Neue Funktionen</string>
+    <string name="archives"></string>
+    <string name="invalid_dose_count"></string>
+    <string name="tip_quick_dose"></string>
+    <string name="dialog_unarchive_med"></string>
+    <string name="repair_db"></string>
+    <string name="med_sort_value_alpha" translatable="false"></string>
+    <string name="battery_optimized"></string>
+    <string name="tip_no_notifications"></string>
+    <string name="error_saving_dose"></string>
+    <string name="theme_value_auto_battery" translatable="false"></string>
+    <string name="invalid_dose_hours"></string>
+    <string name="notifications_disabled_title"></string>
+    <string name="tip_quick_dose_title"></string>
+    <string name="tip_delayed_notifications_4"></string>
+    <string name="invalid_med_id"></string>
+    <string name="tip_delayed_notifications_2"></string>
+    <string name="exact_alarms_denied"></string>
+    <string name="exact_alarms_denied_title"></string>
+    <string name="battery_optimized_title"></string>
+    <string name="notifications_disabled"></string>
+    <string name="invalid_max_dose"></string>
+    <string name="doses_deleted"></string>
+    <string name="med_sort_value_latest" translatable="false"></string>
+    <string name="invalid_reported_inventory"></string>
+    <string name="tip_edit_med"></string>
+    <string name="error_saving_med"></string>
+    <string name="theme_value_dark" translatable="false"></string>
+    <string name="deny_permission"></string>
+    <string name="tips_title"></string>
+    <string name="help"></string>
+    <string name="permission_required"></string>
+    <string name="repair"></string>
+    <string name="dose_deleted"></string>
+    <string name="json_exception" translatable="false"></string>
+    <string name="selected"></string>
+    <string name="error_deleting_med"></string>
+    <string name="unarchive"></string>
+    <string name="invalid_data"></string>
+    <string name="tip_no_notifications_title"></string>
+    <plurals name="dialog_delete_selected_doses">
+    </plurals>
+    <string name="theme_value_system_default" translatable="false"></string>
+    <string name="color_not_found"></string>
+    <string name="select_all"></string>
+    <string name="no_archived_meds"></string>
+    <string name="repair_db_description"></string>
+    <plurals name="doses_selected">
+    </plurals>
+    <string name="tip_archive_med"></string>
+    <string name="color_required"></string>
+    <string name="active"></string>
+    <string name="null_pointer_exception" translatable="false"></string>
+    <string name="unselected"></string>
+    <string name="tip_delayed_notifications_3"></string>
+    <string name="med_archived"></string>
+    <string name="continue_option"></string>
+    <string name="home"></string>
+    <string name="null_json_object" translatable="false"></string>
+    <string name="error_saving_to_database"></string>
+    <string name="welcome_dialog_content"></string>
+    <string name="invalid_dose_datetime"></string>
+    <string name="theme_value_light" translatable="false"></string>
+    <string name="error"></string>
+    <string name="check_permissions"></string>
+    <string name="translate_on_weblate"></string>
+    <string name="med_unarchived"></string>
+    <string name="tip_archive_med_title"></string>
+    <string name="file_not_found" translatable="false"></string>
+    <string name="tip_edit_med_title"></string>
+    <string name="delete_doses"></string>
+    <string name="med_deleted"></string>
+    <string name="archive"></string>
+    <string name="exact_alarm_permission_explanation"></string>
+    <string name="database_repaired"></string>
+    <string name="name_required"></string>
+    <string name="io_exception" translatable="false"></string>
+    <string name="dialog_archive_med"></string>
+    <string name="tip_delayed_notifications_5"></string>
+    <string name="invalid_default_dose_count"></string>
 </resources>
