@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -170,8 +169,6 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            Log.d("CLB_TAG", "onReceive");
 
             if (mAdapter == null) return;
             String action = intent.getAction();
