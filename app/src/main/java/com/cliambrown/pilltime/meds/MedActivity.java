@@ -291,7 +291,7 @@ public class MedActivity extends AppCompatActivity {
     public void updateInfo() {
         if (med == null) return;
         tv_med_name.setText(med.getName());
-        int textColor = Utils.getMedTextColor(med, MedActivity.this);
+        int textColor = Utils.getTextColor(med.getColor(), MedActivity.this);
         tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfoStr());
         btn_med_add_dose.setBackgroundColor(textColor);

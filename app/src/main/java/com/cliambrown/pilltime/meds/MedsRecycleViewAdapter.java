@@ -271,7 +271,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         public void updateInfo() {
             tv_rvMed_name.setText(med.getName());
             btn_rvMed_add.setBackgroundResource(Utils.getRoundButton(med.getColor()));
-            int textColor = Utils.getMedTextColor(med, context);
+            int textColor = Utils.getTextColor(med.getColor(), context);
             tv_rvMed_name.setTextColor(textColor);
             ll_rvMed_medInfo.getBackground().setColorFilter(new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
             tv_rvMed_maxDoseInfo.setText(med.getMaxDoseInfoStr());

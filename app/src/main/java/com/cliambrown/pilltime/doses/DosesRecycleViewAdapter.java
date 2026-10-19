@@ -21,6 +21,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
@@ -258,10 +259,9 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         }
 
         public void updateColor() {
-            int textColor;
-            if (med != null && dose != null && dose.isActive()) {
-                textColor = Utils.getMedTextColor(med, context);
-            } else {
+            int textColor = Utils.getTextColor(med.getColor(), context);
+            iv_rvDose_active.setColorFilter(textColor);
+            if (med == null || dose == null || !dose.isActive()) {
                 textColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
             }
             ll_rvDose_doseInfo.getBackground().setColorFilter(

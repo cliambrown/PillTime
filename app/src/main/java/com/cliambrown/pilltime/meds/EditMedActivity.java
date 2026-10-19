@@ -159,7 +159,7 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         if (med != null) {
             et_editMed_name.setText(med.getName());
-            btn_editMed_save.setBackgroundColor(Utils.getMedTextColor(med, EditMedActivity.this));
+            btn_editMed_save.setBackgroundColor(Utils.getTextColor(med.getColor(), EditMedActivity.this));
             np_editMed_maxDose.setValue(med.getMaxDose());
             if (med.getDoseHours() % 24 == 0) {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours() / 24);

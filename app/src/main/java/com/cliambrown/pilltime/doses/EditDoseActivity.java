@@ -96,7 +96,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             return;
         }
 
-        btn_editDose_save.setBackgroundColor(Utils.getMedTextColor(med, EditDoseActivity.this));
+        btn_editDose_save.setBackgroundColor(Utils.getTextColor(med.getColor(), EditDoseActivity.this));
 
         selectedDatetime = Calendar.getInstance();
         hasManuallySelectedTime = false;
