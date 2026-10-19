@@ -82,7 +82,6 @@
     <string name="more_options">Plus d\'options</string>
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
     <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
-    <string name="dialog_archive_med"></string>
     <string name="dialog_unarchive_med">Êtes-vous sûr de vouloir désarchiver ce médicament ? Il apparaîtra sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
     <string name="dialog_delete_med">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
@@ -91,10 +90,6 @@
     <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
-    <string name="permission_required"></string>
-    <string name="exact_alarm_permission_explanation"></string>
-    <string name="continue_option"></string>
-    <string name="deny_permission"></string>
     <string name="notifications_title">Défauts des notifications</string>
     <string name="notifications_description">Vous pouvez également définir des préférences de notification par défaut pour chaque médicament, et modifier les paramètres de notification pour chaque dose.</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
@@ -116,12 +111,6 @@
     <string name="data_exported">Données exportées</string>
     <string name="database_cleared">Base de données effacée</string>
     <string name="database_repaired">Base de données réparée</string>
-    <string name="notifications_disabled_title"></string>
-    <string name="notifications_disabled"></string>
-    <string name="exact_alarms_denied_title"></string>
-    <string name="exact_alarms_denied"></string>
-    <string name="battery_optimized_title"></string>
-    <string name="battery_optimized"></string>
     <string name="interface_title">Interface</string>
     <string name="theme_title">Thème</string>
     <string name="theme_entry_light">Clair</string>
@@ -151,7 +140,6 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Rose</string>
     <string name="rose">Rouge pâle</string>
-    <string name="check_permissions"></string>
     <string name="disclaimer_title">Avertissement</string>
     <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des spécialistes de santé.</string>
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
@@ -199,7 +187,6 @@
     <string name="error_saving_to_database">Impossible d\'enregistrer dans la base de données</string>
     <string name="invalid_data">Données invalides</string>
     <string name="dose_deleted">Dose supprimé</string>
-    <string name="doses_deleted"></string>
     <string name="error_saving_med">Erreur de sauvegarde du médicament :</string>
     <string name="name_required">Un nom est requis</string>
     <string name="invalid_max_dose">Le dosage maximal est invalide</string>
@@ -214,28 +201,4 @@
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
     <string name="help">Assistance</string>
-    <string name="med_sort_value_alpha" translatable="false"></string>
-    <string name="theme_value_auto_battery" translatable="false"></string>
-    <string name="tip_delayed_notifications_4"></string>
-    <string name="tip_delayed_notifications_2"></string>
-    <string name="med_sort_value_latest" translatable="false"></string>
-    <string name="theme_value_dark" translatable="false"></string>
-    <string name="json_exception" translatable="false"></string>
-    <string name="selected"></string>
-    <plurals name="dialog_delete_selected_doses">
-    </plurals>
-    <string name="theme_value_system_default" translatable="false"></string>
-    <string name="select_all"></string>
-    <plurals name="doses_selected">
-    </plurals>
-    <string name="active"></string>
-    <string name="null_pointer_exception" translatable="false"></string>
-    <string name="unselected"></string>
-    <string name="tip_delayed_notifications_3"></string>
-    <string name="null_json_object" translatable="false"></string>
-    <string name="theme_value_light" translatable="false"></string>
-    <string name="file_not_found" translatable="false"></string>
-    <string name="delete_doses"></string>
-    <string name="io_exception" translatable="false"></string>
-    <string name="tip_delayed_notifications_5"></string>
 </resources>
