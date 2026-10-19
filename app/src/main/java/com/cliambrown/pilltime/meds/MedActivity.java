@@ -59,10 +59,15 @@ public class MedActivity extends AppCompatActivity {
     Timer timer;
     int medID;
     Med med;
+    List<Dose> doses;
 
     OnBackPressedCallback onBackPressedCallback;
     public boolean isMultiSelectActive = false;
     public HashSet<Integer> selectedDoseIDs = new HashSet<>();
+
+    protected void getDoses() {
+        doses = med.getDoses();
+    }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
@@ -94,11 +99,13 @@ public class MedActivity extends AppCompatActivity {
             return;
         }
 
+        getDoses();
+
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DosesRecycleViewAdapter(med, med.getDoses(), this, MedActivity.this, mApp);
+        mAdapter = new DosesRecycleViewAdapter(med, doses, this, MedActivity.this, mApp);
         recyclerView.setAdapter(mAdapter);
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
@@ -175,6 +182,8 @@ public class MedActivity extends AppCompatActivity {
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
 
+            Log.d("CLB_TAG", "" + intentMedID);
+
             switch (action) {
                 case "com.cliambrown.broadcast.MED_EDITED":
                     updateInfo();
@@ -185,6 +194,8 @@ public class MedActivity extends AppCompatActivity {
                     return;
             }
 
+            doses = med.getDoses();
+
             if (action.equals("com.cliambrown.broadcast.DOSE_MOVED")) {
                 int fromPosition = intent.getIntExtra("fromPosition", -1);
                 int toPosition = intent.getIntExtra("toPosition", -1);
@@ -192,8 +203,6 @@ public class MedActivity extends AppCompatActivity {
                 mAdapter.notifyItemChanged(toPosition);
                 return;
             }
-
-            List<Dose> doses = med.getDoses();
 
             switch (action) {
                 case "com.cliambrown.broadcast.DOSES_LOADED":
@@ -219,6 +228,7 @@ public class MedActivity extends AppCompatActivity {
                         for (int doseID : Objects.requireNonNull(doseIDs)) {
                             for (int i=0; i<doses.size(); ++i) {
                                 if (doses.get(i).getId() == doseID) {
+                                    Log.d("CLB_TAG", "found doseID = "+doseID);
                                     doses.remove(i);
                                     mAdapter.notifyItemRemoved(i);
                                     break;
@@ -277,13 +287,13 @@ public class MedActivity extends AppCompatActivity {
 
     public void toggleNoDosesMessages() {
         if (ll_med_no_doses == null) return;
-        if (!med.getDoses().isEmpty()) {
+        if (doses.isEmpty()) {
+            ll_med_no_doses.setVisibility(View.VISIBLE);
+        } else {
             ll_med_no_doses.setVisibility(View.GONE);
             if (mAdapter != null) {
                 mAdapter.notifyItemChanged(mAdapter.getItemCount() - 1, "update_show_more_btn");
             }
-        } else {
-            ll_med_no_doses.setVisibility(View.VISIBLE);
         }
     }
 
@@ -295,7 +305,7 @@ public class MedActivity extends AppCompatActivity {
         tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfoStr());
         btn_med_add_dose.setBackgroundColor(textColor);
-        for (int i=0; i<med.getDoses().size(); ++i) {
+        for (int i=0; i<doses.size(); ++i) {
             mAdapter.notifyItemChanged(i, "update_color");
         }
     }
@@ -333,8 +343,7 @@ public class MedActivity extends AppCompatActivity {
     }
 
     public void updateDoseTimes() {
-        if (med == null) return;
-        for (int i=0; i<med.getDoses().size(); ++i) {
+        for (int i=0; i<doses.size(); ++i) {
             mAdapter.notifyItemChanged(i, "update_times");
         }
     }
@@ -363,7 +372,7 @@ public class MedActivity extends AppCompatActivity {
         optionsMenu.findItem(R.id.mi_med_archive).setVisible(false);
         optionsMenu.findItem(R.id.mi_med_select_all).setVisible(true);
         selectDose(doseID, true);
-        int doseCount = med.getDoses().size();
+        int doseCount = doses.size();
         for (int i = 0; i < doseCount; i++) {
             mAdapter.notifyItemChanged(i, "multiselect_activated");
         }
@@ -377,7 +386,7 @@ public class MedActivity extends AppCompatActivity {
         optionsMenu.findItem(R.id.mi_med_select_all).setVisible(false);
         selectedDoseIDs.clear();
         setTitle(getString(R.string.med));
-        int doseCount = med.getDoses().size();
+        int doseCount = doses.size();
         for (int i = 0; i < doseCount; i++) {
             mAdapter.notifyItemChanged(i, "multiselect_deactivated");
         }
@@ -407,7 +416,6 @@ public class MedActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
         updateAllTimes();
-        toggleNoDosesMessages();
         startUpdateTimer();
     }
 
@@ -467,7 +475,6 @@ public class MedActivity extends AppCompatActivity {
         }
         if (itemID == R.id.mi_med_select_all) {
             if (!isMultiSelectActive) return true;
-            List<Dose> doses = med.getDoses();
             for (int i = 0; i< doses.size(); i++) {
                 int doseID = doses.get(i).getId();
                 selectDose(doseID, true);

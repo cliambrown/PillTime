@@ -159,7 +159,6 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         if (med != null) {
             et_editMed_name.setText(med.getName());
-            btn_editMed_save.setBackgroundColor(Utils.getTextColor(med.getColor(), EditMedActivity.this));
             np_editMed_maxDose.setValue(med.getMaxDose());
             if (med.getDoseHours() % 24 == 0) {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours() / 24);
@@ -203,7 +202,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                 ll_editMed_trackInventory.setVisibility(View.GONE);
                 tv_editMed_inventoryReportedAt.setVisibility(View.GONE);
             }
-            setTitle(getString(R.string.edit_med_title, "\"" + med.getName() +"\""));
+            setTitle(getString(R.string.edit_med_title, "\"" + med.getName() + "\""));
             selectedColor = med.getColor();
             isArchived = med.isArchived();
         } else {
@@ -214,6 +213,8 @@ public class EditMedActivity extends SimpleMenuActivity {
             selectedColor = colors[rnd];
             setTitle(getString(R.string.new_med));
         }
+
+        btn_editMed_save.setBackgroundColor(Utils.getTextColor(selectedColor, EditMedActivity.this));
 
         requestNotificationPermission(switch_editMed_notifyDefault.isChecked());
 

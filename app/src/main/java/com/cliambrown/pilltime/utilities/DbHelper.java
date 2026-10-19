@@ -548,7 +548,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "(D." + doseDbColTakenAt.name + " + M." + medDbColDoseHours.name + " * 60 * 60) AS expires_at " +
                 "FROM " + MEDS_TABLE + " M " +
                 "LEFT JOIN " + DOSES_TABLE + " D " +
-                "ON D." + doseDbColMedId.name +" = M.id " +
+                "ON D." + doseDbColMedId.name + " = M.id " +
                 "WHERE D." + doseDbColNotify.name + " > 0 AND expires_at > " + now;
         Cursor cursor = db.rawQuery(stmt, null);
         if (cursor.moveToFirst()) {
