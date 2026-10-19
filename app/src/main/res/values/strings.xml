@@ -264,11 +264,11 @@
 
     <string name="error_exporting_database">Error exporting database:</string>
     <string name="error_importing_database">Error importing database:</string>
-    <string name="io_exception">IO exception</string>
-    <string name="null_json_object">Null JSON object</string>
-    <string name="null_pointer_exception">Null pointer exception</string>
-    <string name="json_exception">JSON exception</string>
-    <string name="file_not_found">File not found</string>
+    <string name="io_exception" translatable="false">IO exception</string>
+    <string name="null_json_object" translatable="false">Null JSON object</string>
+    <string name="null_pointer_exception" translatable="false">Null pointer exception</string>
+    <string name="json_exception" translatable="false">JSON exception</string>
+    <string name="file_not_found" translatable="false">File not found</string>
 
 <!--
     HELP PAGE
