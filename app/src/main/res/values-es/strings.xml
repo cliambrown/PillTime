@@ -208,17 +208,12 @@
     <string name="tip_edit_med">Abre un medicamento y pulsa sobre el icono del lápiz para editar su dosis habitual, los valores por defecto de su notificación, color, inventario y más.</string>
     <string name="deny_permission">Ignorar</string>
     <string name="permission_required">Permiso Requerido</string>
-
     <string name="tip_no_notifications_title">Notificaciones Perdidas o Con Retardo</string>
     <string name="tip_archive_med">Archiva un medicamento pulsando el icono de la caja con la flecha hacia abajo en su página. Esto lo ocultará de la página principal (los ajustes y dosis del medicamento no se verán afectados).\nPuedes ver tus medicamentos archivados pulsando sobre el icono de la caja en la pantalla principal.</string>
-
     <string name="tip_delayed_notifications_3">Ajustes del Dispositivo &gt; Aplicaciones &gt; Pill Time &gt; Uso de la batería &gt; Permitir actividad en segundo plano &gt; Activado</string>
     <string name="continue_option">Ir a ajustes</string>
-
     <string name="tip_archive_med_title">Archivando Medicamentos</string>
-
     <string name="tip_edit_med_title">Opciones De Medicamento</string>
     <string name="exact_alarm_permission_explanation">Esta app requiere el permiso para programar alarmas exactas si quieres que las notificaciones se muestren tan pronto como expiren las dosis. (Las notificaciones exactas requieren un poco más de batería.) \n\nSin este permiso, las notificaciones pueden tardar hasta 10 minutos tras expirar una dosis.\n\n¿Quieres navegar a la página de permisos para recibir notificaciones puntuales, o ignorar esto y recibir notificaciones ligeramente tardías?</string>
-
     <string name="tip_delayed_notifications_5">Ajustes del Dispositivo &gt; Aplicaciones &gt; Acceso especial a aplicaciones &gt; Alarmas y recordatorios &gt; Pill Time &gt; Activado</string>
 </resources>
