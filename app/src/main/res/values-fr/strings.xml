@@ -3,6 +3,12 @@
     <string name="app_name">Pill Time</string>
     <string name="home">Accueil</string>
     <string name="archives">Archives</string>
+    <string name="select_all">Sélectionner tout</string>
+    <string name="selected">Sélectionné</string>
+    <string name="unselected">Pas sélectionné</string>
+    <string name="expired">Expiré</string>
+    <string name="active">Actif</string>
+    <string name="delete_doses">Supprimer les doses</string>
     <string name="archive">Archiver</string>
     <string name="unarchive">Désarchiver</string>
     <string name="med_name">Nom</string>
@@ -82,6 +88,7 @@
     <string name="more_options">Plus d\'options</string>
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
     <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
+    <string name="dialog_archive_med">Êtes-vous sûr de vouloir archiver ce médicament ? Il n\'apparaîtra plus sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
     <string name="dialog_unarchive_med">Êtes-vous sûr de vouloir désarchiver ce médicament ? Il apparaîtra sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
     <string name="dialog_delete_med">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
@@ -90,6 +97,8 @@
     <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
+    <string name="permission_required">Autorisation requise</string>
+    <string name="deny_permission">Ignorer</string>
     <string name="notifications_title">Défauts des notifications</string>
     <string name="notifications_description">Vous pouvez également définir des préférences de notification par défaut pour chaque médicament, et modifier les paramètres de notification pour chaque dose.</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
@@ -111,6 +120,7 @@
     <string name="data_exported">Données exportées</string>
     <string name="database_cleared">Base de données effacée</string>
     <string name="database_repaired">Base de données réparée</string>
+    <string name="notifications_disabled_title">Notifications désactivées</string>
     <string name="interface_title">Interface</string>
     <string name="theme_title">Thème</string>
     <string name="theme_entry_light">Clair</string>
@@ -140,6 +150,7 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Rose</string>
     <string name="rose">Rouge pâle</string>
+    <string name="check_permissions">Consultez les autorisations</string>
     <string name="disclaimer_title">Avertissement</string>
     <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des spécialistes de santé.</string>
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
@@ -180,13 +191,14 @@
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
     <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
-    <string name="welcome_dialog_content">NOUVEAU dans la v22 : Archivez un médicament pour le masquer de votre écran principal sans modifier ses paramètres, ses doses ou ses notifications.\n \nDepuis la v20 : Si vous constatez des erreurs, essayez de réparer votre base de données sur la page Paramètres.\n \nDepuis la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
+    <string name="welcome_dialog_content">NOUVEAU : les médicaments peuvent être archivés pour les masquer de l\'écran principal.\n\nNOUVEAU : vérifiez les autorisations de l\'appareil pour recevoir les notifications en temps réel (au lieu d\'un retard de 10 minutes) !</string>
     <string name="repair">Réparer</string>
     <string name="repair_db">Réparer la base de données</string>
     <string name="error">Erreur :</string>
     <string name="error_saving_to_database">Impossible d\'enregistrer dans la base de données</string>
     <string name="invalid_data">Données invalides</string>
     <string name="dose_deleted">Dose supprimé</string>
+    <string name="doses_deleted">Doses supprimés</string>
     <string name="error_saving_med">Erreur de sauvegarde du médicament :</string>
     <string name="name_required">Un nom est requis</string>
     <string name="invalid_max_dose">Le dosage maximal est invalide</string>
