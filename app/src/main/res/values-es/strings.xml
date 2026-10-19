@@ -221,4 +221,19 @@
     <string name="exact_alarm_permission_explanation">Esta app requiere el permiso para programar alarmas exactas si quieres que las notificaciones se muestren tan pronto como expiren las dosis. (Las notificaciones exactas requieren un poco más de batería.) \n\nSin este permiso, las notificaciones pueden tardar hasta 10 minutos tras expirar una dosis.\n\n¿Quieres navegar a la página de permisos para recibir notificaciones puntuales, o ignorar esto y recibir notificaciones ligeramente tardías?</string>
     <string name="io_exception" translatable="false">Error de Entrada/Salida</string>
     <string name="tip_delayed_notifications_5">Ajustes del Dispositivo &gt; Aplicaciones &gt; Acceso especial a aplicaciones &gt; Alarmas y recordatorios &gt; Pill Time &gt; Activado</string>
+    <string name="med_sort_value_alpha" translatable="false"></string>
+    <string name="theme_value_auto_battery" translatable="false"></string>
+    <string name="med_sort_value_latest" translatable="false"></string>
+    <string name="theme_value_dark" translatable="false"></string>
+    <string name="selected"></string>
+    <plurals name="dialog_delete_selected_doses">
+    </plurals>
+    <string name="theme_value_system_default" translatable="false"></string>
+    <string name="select_all"></string>
+    <plurals name="doses_selected">
+    </plurals>
+    <string name="active"></string>
+    <string name="unselected"></string>
+    <string name="theme_value_light" translatable="false"></string>
+    <string name="delete_doses"></string>
 </resources>
