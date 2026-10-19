@@ -1,7 +1,5 @@
 package com.cliambrown.pilltime.doses;
 
-import static com.cliambrown.pilltime.utilities.Utils.getAllViewChildren;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -84,8 +82,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         long expiresAtUnix = holder.dose.getTakenAt() + med.getDoseDurationInSeconds();
         holder.tv_rvDose_expiresAt.setText(Utils.buildTimeOnDateString(context, expiresAtUnix));
 
-        holder.updateColor();
         holder.updateTimes();
+        holder.updateColor();
 
         if (medActivity.isMultiSelectActive) {
             holder.btn_rvDose_more.setVisibility(View.GONE);
@@ -111,9 +109,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                         builder = new AlertDialog.Builder(context);
                         builder.setMessage(R.string.dialog_delete_dose)
                                 .setTitle(R.string.delete)
-                                .setPositiveButton(R.string.yes, (dialog, id) -> {
-                                    mApp.removeDose(holder.dose);
-                                })
+                                .setPositiveButton(R.string.yes, (dialog, id) -> mApp.removeDose(holder.dose))
                                 .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
                         builder.show();
                         return true;
@@ -167,11 +163,11 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             case "update_show_more_btn":
                 holder.updateLoadMore();
                 return;
-            case "update_color":
-                holder.updateColor();
-                return;
             case "update_times":
                 holder.updateTimes();
+                return;
+            case "update_color":
+                holder.updateColor();
                 return;
             default:
         }
@@ -219,18 +215,10 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
-            for (View view: getAllViewChildren(itemView)) {
+            for (View view: Utils.getAllViewChildren(itemView)) {
                 view.setOnLongClickListener(this);
                 view.setOnClickListener(this);
             }
-        }
-
-        public void updateColor() {
-            String colorName = med.getColor();
-            int attrResourceID = Utils.getResourceIdentifier(context, colorName + "Text", "attr");
-            int textColor = ThemeHelper.getThemeAttr(attrResourceID, context);
-            ll_rvDose_doseInfo.getBackground().setColorFilter(
-                    new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
         }
 
         public void updateTimes() {
@@ -267,6 +255,17 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             spansList.add(spans);
             unformatted = context.getString(R.string.taken);
             tv_rvDose_taken.setText(Utils.styleString(unformatted, spansList, dose.getTakenAtTimeAgo()));
+        }
+
+        public void updateColor() {
+            int textColor;
+            if (med != null && dose != null && dose.isActive()) {
+                textColor = Utils.getMedTextColor(med, context);
+            } else {
+                textColor = ThemeHelper.getThemeAttr(R.attr.lighterText, context);
+            }
+            ll_rvDose_doseInfo.getBackground().setColorFilter(
+                    new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
         }
 
         public void updateLoadMore() {

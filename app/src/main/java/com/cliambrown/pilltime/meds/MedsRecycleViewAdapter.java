@@ -26,7 +26,6 @@ import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.doses.EditDoseActivity;
-import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 
 import java.util.ArrayList;
@@ -271,15 +270,8 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         @SuppressLint("DefaultLocale")
         public void updateInfo() {
             tv_rvMed_name.setText(med.getName());
-            String colorName = med.getColor();
-            int attrResourceID = Utils.getResourceIdentifier(context, colorName + "Text", "attr");
-            int textColor = ThemeHelper.getThemeAttr(attrResourceID, context);
-            try {
-                int drawableID = Utils.getResourceIdentifier(context, "round_button_" + colorName, "drawable");
-                btn_rvMed_add.setBackgroundResource(drawableID);
-            } catch (Exception e) {
-                // Do nothing
-            }
+            btn_rvMed_add.setBackgroundResource(Utils.getRoundButton(med.getColor()));
+            int textColor = Utils.getMedTextColor(med, context);
             tv_rvMed_name.setTextColor(textColor);
             ll_rvMed_medInfo.getBackground().setColorFilter(new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
             tv_rvMed_maxDoseInfo.setText(med.getMaxDoseInfoStr());

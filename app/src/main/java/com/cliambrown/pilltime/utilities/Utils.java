@@ -18,6 +18,7 @@ import androidx.annotation.AttrRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.R;
+import com.cliambrown.pilltime.meds.Med;
 
 import org.jspecify.annotations.NonNull;
 
@@ -124,10 +125,6 @@ public class Utils {
         return context.getString(timeStringRes, timeDiffString);
     }
 
-    public static int getResourceIdentifier(Context context, String name, String type) {
-        return context.getResources().getIdentifier(name, type, context.getPackageName());
-    }
-
     public static String readTextFromUri(Uri uri, Context context) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         try (InputStream inputStream =
@@ -140,23 +137,6 @@ public class Utils {
             }
         }
         return stringBuilder.toString();
-    }
-
-    public static List<View> getAllViewChildren(View view) {
-        List<View> visited = new ArrayList<>();
-        List<View> unvisited = new ArrayList<>();
-        unvisited.add(view);
-
-        while (!unvisited.isEmpty()) {
-            View child = unvisited.remove(0);
-            visited.add(child);
-            if (!(child instanceof ViewGroup)) continue;
-            ViewGroup group = (ViewGroup) child;
-            final int childCount = group.getChildCount();
-            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
-        }
-
-        return visited;
     }
 
     public static SpannableString buildTakenInPastString(Context context, @AttrRes int colorAttrResId, double takenAmount, int doseHours) {
@@ -242,6 +222,140 @@ public class Utils {
                 outRect.set(0, 0, 0, 0);
             }
 
+        }
+    }
+
+    public static List<View> getAllViewChildren(View view) {
+        List<View> visited = new ArrayList<>();
+        List<View> unvisited = new ArrayList<>();
+        unvisited.add(view);
+
+        while (!unvisited.isEmpty()) {
+            View child = unvisited.remove(0);
+            visited.add(child);
+            if (!(child instanceof ViewGroup)) continue;
+            ViewGroup group = (ViewGroup) child;
+            final int childCount = group.getChildCount();
+            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
+        }
+
+        return visited;
+    }
+
+    public static int getMedTextColor(Med med, Context context) {
+        return Utils.getTextColor(med.getColor(), context);
+    }
+
+    public static int getTextColor(String colorName, Context context) {
+        switch (colorName) {
+            case "orange":
+                return ThemeHelper.getThemeAttr(R.attr.orangeText, context);
+            case "amber":
+                return ThemeHelper.getThemeAttr(R.attr.amberText, context);
+            case "yellow":
+                return ThemeHelper.getThemeAttr(R.attr.yellowText, context);
+            case "lime":
+                return ThemeHelper.getThemeAttr(R.attr.limeText, context);
+            case "green":
+                return ThemeHelper.getThemeAttr(R.attr.greenText, context);
+            case "emerald":
+                return ThemeHelper.getThemeAttr(R.attr.emeraldText, context);
+            case "teal":
+                return ThemeHelper.getThemeAttr(R.attr.tealText, context);
+            case "cyan":
+                return ThemeHelper.getThemeAttr(R.attr.cyanText, context);
+            case "sky":
+                return ThemeHelper.getThemeAttr(R.attr.skyText, context);
+            case "blue":
+                return ThemeHelper.getThemeAttr(R.attr.blueText, context);
+            case "indigo":
+                return ThemeHelper.getThemeAttr(R.attr.indigoText, context);
+            case "violet":
+                return ThemeHelper.getThemeAttr(R.attr.violetText, context);
+            case "fuchsia":
+                return ThemeHelper.getThemeAttr(R.attr.fuchsiaText, context);
+            case "pink":
+                return ThemeHelper.getThemeAttr(R.attr.pinkText, context);
+            case "rose":
+                return ThemeHelper.getThemeAttr(R.attr.roseText, context);
+            default:
+                return ThemeHelper.getThemeAttr(R.attr.purpleText, context);
+        }
+    }
+
+    public static int getRoundButton(String colorName) {
+        switch (colorName) {
+            case "orange":
+                return R.drawable.round_button_orange;
+            case "amber":
+                return R.drawable.round_button_amber;
+            case "yellow":
+                return R.drawable.round_button_yellow;
+            case "lime":
+                return R.drawable.round_button_lime;
+            case "green":
+                return R.drawable.round_button_green;
+            case "emerald":
+                return R.drawable.round_button_emerald;
+            case "teal":
+                return R.drawable.round_button_teal;
+            case "cyan":
+                return R.drawable.round_button_cyan;
+            case "sky":
+                return R.drawable.round_button_sky;
+            case "blue":
+                return R.drawable.round_button_blue;
+            case "indigo":
+                return R.drawable.round_button_indigo;
+            case "violet":
+                return R.drawable.round_button_violet;
+            case "fuchsia":
+                return R.drawable.round_button_fuchsia;
+            case "pink":
+                return R.drawable.round_button_pink;
+            case "rose":
+                return R.drawable.round_button_rose;
+            default:
+                return R.drawable.round_button_purple;
+        }
+    }
+
+    public static int getColorString(String colorName) {
+        switch (colorName) {
+            case "orange":
+                return R.string.orange;
+            case "amber":
+                return R.string.amber;
+            case "yellow":
+                return R.string.yellow;
+            case "lime":
+                return R.string.lime;
+            case "green":
+                return R.string.green;
+            case "emerald":
+                return R.string.emerald;
+            case "teal":
+                return R.string.teal;
+            case "cyan":
+                return R.string.cyan;
+            case "sky":
+                return R.string.sky;
+            case "blue":
+                return R.string.blue;
+            case "indigo":
+                return R.string.indigo;
+            case "violet":
+                return R.string.violet;
+            case "purple":
+                return R.string.purple;
+            case "fuchsia":
+                return R.string.fuchsia;
+            case "pink":
+                return R.string.pink;
+            case "rose":
+                return R.string.rose;
+            default:
+                return -1;
         }
     }
 }

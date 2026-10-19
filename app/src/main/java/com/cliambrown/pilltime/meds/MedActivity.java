@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +31,6 @@ import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.doses.DosesRecycleViewAdapter;
 import com.cliambrown.pilltime.doses.EditDoseActivity;
-import com.cliambrown.pilltime.utilities.ThemeHelper;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -293,9 +291,7 @@ public class MedActivity extends AppCompatActivity {
     public void updateInfo() {
         if (med == null) return;
         tv_med_name.setText(med.getName());
-        String colorName = med.getColor();
-        int attrResourceID = Utils.getResourceIdentifier(MedActivity.this, colorName + "Text", "attr");
-        int textColor = ThemeHelper.getThemeAttr(attrResourceID, MedActivity.this);
+        int textColor = Utils.getMedTextColor(med, MedActivity.this);
         tv_med_name.setTextColor(textColor);
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfoStr());
         btn_med_add_dose.setBackgroundColor(textColor);

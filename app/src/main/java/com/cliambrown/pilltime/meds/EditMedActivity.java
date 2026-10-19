@@ -159,6 +159,7 @@ public class EditMedActivity extends SimpleMenuActivity {
 
         if (med != null) {
             et_editMed_name.setText(med.getName());
+            btn_editMed_save.setBackgroundColor(Utils.getMedTextColor(med, EditMedActivity.this));
             np_editMed_maxDose.setValue(med.getMaxDose());
             if (med.getDoseHours() % 24 == 0) {
                 np_editMed_doseHoursDays.setValue(med.getDoseHours() / 24);
@@ -234,10 +235,13 @@ public class EditMedActivity extends SimpleMenuActivity {
             imageButton.setLayoutParams(params);
             imageButton.setColorFilter(btnText);
             setColorBtnState(imageButton, selectedColor.equals(colorName));
-            drawableID = Utils.getResourceIdentifier(this, "round_button_" + colorName, "drawable");
+            drawableID = Utils.getRoundButton(colorName);
             imageButton.setBackgroundResource(drawableID);
             imageButton.setFocusable(true);
-            imageButton.setContentDescription(R.string.set_med_color + " " + Utils.getResourceIdentifier(this, colorName, "string"));
+            imageButton.setContentDescription(
+                    getString(R.string.set_med_color) + " "
+                    + Utils.getColorString(colorName)
+            );
             colorButtons.add(imageButton);
 
             imageButton.setOnClickListener(view -> {
@@ -246,6 +250,7 @@ public class EditMedActivity extends SimpleMenuActivity {
                 }
                 setColorBtnState((ImageButton) view, true);
                 selectedColor = colorName;
+                btn_editMed_save.setBackgroundColor(Utils.getTextColor(selectedColor, EditMedActivity.this));
             });
 
             cl_editMed_parent.addView(imageButton);
