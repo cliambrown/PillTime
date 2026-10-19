@@ -201,41 +201,4 @@
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
     <string name="help">Assistance</string>
-    <string name="med_sort_value_alpha" translatable="false"></string>
-    <string name="battery_optimized"></string>
-    <string name="theme_value_auto_battery" translatable="false"></string>
-    <string name="notifications_disabled_title"></string>
-    <string name="tip_delayed_notifications_4"></string>
-    <string name="tip_delayed_notifications_2"></string>
-    <string name="exact_alarms_denied"></string>
-    <string name="exact_alarms_denied_title"></string>
-    <string name="battery_optimized_title"></string>
-    <string name="notifications_disabled"></string>
-    <string name="doses_deleted"></string>
-    <string name="med_sort_value_latest" translatable="false"></string>
-    <string name="theme_value_dark" translatable="false"></string>
-    <string name="deny_permission"></string>
-    <string name="permission_required"></string>
-    <string name="json_exception" translatable="false"></string>
-    <string name="selected"></string>
-    <plurals name="dialog_delete_selected_doses">
-    </plurals>
-    <string name="theme_value_system_default" translatable="false"></string>
-    <string name="select_all"></string>
-    <plurals name="doses_selected">
-    </plurals>
-    <string name="active"></string>
-    <string name="null_pointer_exception" translatable="false"></string>
-    <string name="unselected"></string>
-    <string name="tip_delayed_notifications_3"></string>
-    <string name="continue_option"></string>
-    <string name="null_json_object" translatable="false"></string>
-    <string name="theme_value_light" translatable="false"></string>
-    <string name="check_permissions"></string>
-    <string name="file_not_found" translatable="false"></string>
-    <string name="delete_doses"></string>
-    <string name="exact_alarm_permission_explanation"></string>
-    <string name="io_exception" translatable="false"></string>
-    <string name="dialog_archive_med"></string>
-    <string name="tip_delayed_notifications_5"></string>
 </resources>
