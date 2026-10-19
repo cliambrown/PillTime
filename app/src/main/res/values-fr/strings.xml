@@ -82,7 +82,6 @@
     <string name="more_options">Plus d\'options</string>
     <string name="dialog_clear_db">Êtes-vous sûr de vouloir supprimer définitivement tous les médicaments et l\'historique des doses ? Cette action est irréversible.</string>
     <string name="dialog_repair_db">Avant d\'essayer de réparer votre base de données, vous devez sauvegarder vos données à l\'aide de la fonction d\'exportation. Appuyez sur « Annuler » pour revenir en arrière, ou sur « Réparer » pour réparer la base de données maintenant.</string>
-    <string name="dialog_archive_med">Etes-vous sûr de vouloir archiver ce médicament ? Il n\'apparaîtra plus sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
     <string name="dialog_unarchive_med">Êtes-vous sûr de vouloir désarchiver ce médicament ? Il apparaîtra sur l\'écran principal. (Ses paramètres, ses doses et ses notifications ne seront PAS modifiés.)</string>
     <string name="dialog_delete_med">Êtes-vous sûr de vouloir supprimer ce médicament ? Cela supprimera également toutes les doses saisies pour ce médicament. Cette action est irréversible.</string>
     <string name="dialog_delete_dose">Êtes-vous sûr de vouloir supprimer cette dose ? Cette action est irréversible.</string>
@@ -91,10 +90,6 @@
     <string name="repair_db_description">À utiliser si des erreurs apparaissent pendant l\'utilisation de l\'appli</string>
     <string name="clear_db">Effacer toutes les données</string>
     <string name="clear_meds_and_doses">Supprime tous les médicaments et l\'historique des doses de votre appareil</string>
-    <string name="permission_required">Autorisation requise</string>
-    <string name="exact_alarm_permission_explanation">Cette appli a besoin de l\'autorisation « alarme précise » pour vous envoyer des notifications dès qu\'une dose arrive à échéance. (Les notifications programmées avec précision consomment un peu plus de batterie.)   Sans cette autorisation, les notifications pourraient arriver jusqu\'à 10 minutes après l\'échéance d\'une dose.   Voulez-vous passer à la page des autorisations pour recevoir vos notifications de dose à temps, ou ignorer ça et accepter des notifications légèrement retardées ?</string>
-    <string name="continue_option">Aller dans les paramètres</string>
-    <string name="deny_permission">Ignorer</string>
     <string name="notifications_title">Défauts des notifications</string>
     <string name="notifications_description">Vous pouvez également définir des préférences de notification par défaut pour chaque médicament, et modifier les paramètres de notification pour chaque dose.</string>
     <string name="notify_expiring_dose">Afficher une notification lorsqu\'une dose s\'expire</string>
@@ -116,12 +111,6 @@
     <string name="data_exported">Données exportées</string>
     <string name="database_cleared">Base de données effacée</string>
     <string name="database_repaired">Base de données réparée</string>
-    <string name="notifications_disabled_title">Notifications désactivées</string>
-    <string name="notifications_disabled">Attention : les notifications de Pill Time sont désactivées sur votre appareil car certaines autorisations manquent. Ouvrez les paramètres de votre appareil pour autoriser Pill Time à envoyer des notifications.</string>
-    <string name="exact_alarms_denied_title">Notifications en retard</string>
-    <string name="exact_alarms_denied">"Vos notifications peuvent être retardées de 10 minutes maximum, car l'autorisation « Alarme précise » a été refusée. Pour recevoir les notifications à l'heure exacte à laquelle les doses doivent être prises, ouvrez les paramètres de votre appareil et activez l'autorisation « Alarme » pour Pill Time.   "</string>
-    <string name="battery_optimized_title">Optimisation de la batterie détectée</string>
-    <string name="battery_optimized">Votre appareil semble optimiser la consommation de batterie de Pill Time, ce qui peut perturber l\'envoi des notifications de fin de délai de validité des doses. Essayez de configurer Pill Time sur « Utilisation illimitée de la batterie » dans les paramètres de votre appareil.</string>
     <string name="interface_title">Interface</string>
     <string name="theme_title">Thème</string>
     <string name="theme_entry_light">Clair</string>
@@ -151,7 +140,6 @@
     <string name="fuchsia">Fuchsia</string>
     <string name="pink">Rose</string>
     <string name="rose">Rouge pâle</string>
-    <string name="check_permissions">Voir les autorisations</string>
     <string name="disclaimer_title">Avertissement</string>
     <string name="disclaimer_1">Cette application ne fournit aucun conseil médical, implicite ou explicite. Toutes les informations fournies par l\'application sont basées uniquement sur les données saisies par l\'utilisateur et ne constituent en aucun cas une recommandation. Toute décision médicale doit toujours être prise en consultation avec des spécialistes de santé.</string>
     <string name="disclaimer_2">Il s\'agit d\'une application simple conçue pour un usage personnel. Elle ne peut être utilisée à des fins médicales. En raison de limitations techniques et de problèmes connus, il n\'est pas garanti qu\'elle fournisse des notifications à des moments précis. (Par exemple, le redémarrage du téléphone peut désactiver les notifications programmées par cette application.)</string>
@@ -184,24 +172,21 @@
     <string name="tip_edit_med_title">Paramètres des médicaments</string>
     <string name="tip_edit_med">Ouvrez un médicament et appuyez sur l\'icône en forme de crayon pour modifier sa posologie par défaut, les paramètres de notification par défaut, sa couleur, son stock, et bien plus encore.</string>
     <string name="tip_archive_med_title">Archiver des médicaments</string>
-    <string name="tip_archive_med">Pour archiver un médicament, cliquez sur l\'icône en forme de boîte avec une flèche vers le bas sur la page du médicament. Ça le masquera de l\'écran principal (les paramètres et les doses du médicament ne seront pas modifiés).   Pour voir votre liste de médicaments archivés, cliquez sur l\'icône en forme de boîte sur l\'écran principal.</string>
-    <string name="tip_no_notifications_title">Notifications manquantes ou en retard</string>
-    <string name="tip_no_notifications">Si vous ne recevez pas de notifications ou si elles arrivent en retard, il se peut que Pill Time ne dispose pas de certaines autorisations sur votre appareil. Essayez les solutions suivantes (les étapes peuvent varier selon l\'appareil) :</string>
+    <string name="tip_archive_med">Pour archiver un médicament, cliquez sur l\'icône en forme de boîte avec une flèche vers le bas sur la page du médicament. Ça le masquera de l\'écran principal (les paramètres et les doses du médicament ne seront pas modifiés). Pour voir votre liste de médicaments archivés, cliquez sur l\'icône en forme de boîte sur l\'écran principal.</string>
+    <string name="tip_no_notifications_title">Notifications manquantes</string>
+    <string name="tip_no_notifications">Vous ne recevez pas de notifications quand les doses arrivent à expiration ? Vérifiez les paramètres de votre appareil : Paramètres &gt; Applications &gt; Pill Time &gt; autoriser les notifications. (Notez également qu\'en raison des limitations d\'Android, une notification peut ne s\'afficher que jusqu\'à 10 minutes après l\'expiration d\'une dose.)</string>
     <string name="about_app">À propos de Pill Time</string>
     <string name="changelog_title">Nouveautés</string>
     <string name="info_link_title">Code source et informations supplémentaires disponibles sur GitHub</string>
     <string name="translation_link_title">Aidez à traduire cette appli</string>
     <string name="welcome_dialog_title">Nouvelles fonctionnalités</string>
-    <string name="welcome_dialog_content">NOUVEAU : les médicaments peuvent être archivés pour les masquer de l\'écran principal.\n
-        \nNOUVEAU : vérifiez les autorisations de l\'appareil pour recevoir les notifications en temps réel (au lieu d\'un retard de 10 minutes) !
-    </string>
+    <string name="welcome_dialog_content">NOUVEAU dans la v22 : Archivez un médicament pour le masquer de votre écran principal sans modifier ses paramètres, ses doses ou ses notifications.\n \nDepuis la v20 : Si vous constatez des erreurs, essayez de réparer votre base de données sur la page Paramètres.\n \nDepuis la v19 : Vous pouvez définir des paramètres par défaut pour les notifications pour chaque médicament.\n \nDepuis la v18 : Vous pouvez trier les médicaments par date de prise ou par ordre alphabétique. (Voir la page Paramètres)\n \nATTENTION : Google essaie de vous empêcher d\'installer des applications comme celle-ci sur votre appareil. Consultez keepandroidopen.org pour en savoir plus.</string>
     <string name="repair">Réparer</string>
     <string name="repair_db">Réparer la base de données</string>
     <string name="error">Erreur :</string>
     <string name="error_saving_to_database">Impossible d\'enregistrer dans la base de données</string>
     <string name="invalid_data">Données invalides</string>
     <string name="dose_deleted">Dose supprimé</string>
-    <string name="doses_deleted">Doses supprimées</string>
     <string name="error_saving_med">Erreur de sauvegarde du médicament :</string>
     <string name="name_required">Un nom est requis</string>
     <string name="invalid_max_dose">Le dosage maximal est invalide</string>
@@ -215,5 +200,5 @@
     <string name="invalid_med_id">ID du médicament invalide</string>
     <string name="invalid_dose_count">Montant de dose invalide</string>
     <string name="invalid_dose_datetime">Date invalide</string>
-    <string name="help">Assistance et à propos</string>
+    <string name="help">Assistance</string>
 </resources>

@@ -8,9 +8,9 @@
     <string name="med_archived">Medicamento archivada</string>
     <string name="med_unarchived">Medicamento desarchivada</string>
     <string name="med_saved">Medicamento guardado</string>
-    <string name="error_importing_database">Error importando la base de datos</string>
+    <string name="error_importing_database">Error importando la base de datos:</string>
     <string name="data_imported">Datos importados</string>
-    <string name="error_exporting_database">Error exportando la base de datos</string>
+    <string name="error_exporting_database">Error exportando la base de datos:</string>
     <string name="data_exported">Datos exportados</string>
     <string name="database_cleared">Base de datos reiniciada</string>
     <string name="theme_title">Tema</string>
@@ -38,12 +38,8 @@
     <string name="fuchsia">Fucsia</string>
     <string name="pink">Rosa</string>
     <string name="rose">Rosado</string>
-    <string name="welcome_dialog_content">NOVEDAD en la v22: Archiva un medicamento para ocultarlo de tu pantalla principal sin que eso afecte a su configuración, dosis o notificaciones.\n
-        \nDesde la v20: Si ves algún error, prueba a reparar tu base de datos en la página de Ajustes.\n
-        \nDesde la v19: Ahora puedes configurar los ajustes predeterminados de notificaciones para cada medicamento.\n
-        \nDesde la v18: Ordena los medicamentos por fecha de toma o por orden alfabético. (Consulta la página de Ajustes)\n
-        \nNOTA: Google está intentando impedir que instales apps como esta en tu dispositivo. Visita keepandroidopen.org para saber más.</string>
-    <string name="check_permissions">Comprueba los permisos</string>
+    <string name="welcome_dialog_content">NOVEDAD: Los medicamentos pueden archivarse para retirarlos de la pantalla principal.\n\nNOVEDAD: ¡Comprueba los permisos del dispositivo para obtener notificaciones puntuales (y no con 10 minutos de retraso)!</string>
+    <string name="check_permissions">Comprobar Permisos</string>
     <string name="disclaimer_title">Descargo de responsabilidad</string>
     <string name="disclaimer_1">Esta app no proporciona ningún tipo de asesoramiento médico, implícito o explícito. Toda la información proporcionada por la app está basada exclusivamente en los datos introducidos por el usuario y no constituye una recomendación de ningún tipo. Toda decisión médica debe consultarse siempre con médicos profesionales.</string>
     <string name="disclaimer_2">Esta es una app simple creada para uso personal. No se puede depender de ella para ningún propósito relacionado con la salud. Debido a limitaciones técnicas y problemas conocidos, no se puede garantizar que las notificaciones se muestren en momentos específicos. (Por ejemplo, reiniciar el teléfono puede deshabilitar las notificaciones programadas de esta app.)</string>
@@ -164,7 +160,6 @@
     <string name="notification_sound">Añadir sonido a la notificación</string>
     <string name="show_day_dose_count">¿Mostrar también el número de dosis tomadas durante las últimas 24 horas en el histórico de este medicamento?</string>
     <string name="track_inventory">¿Supervisar tu inventario personal de este medicamento?</string>
-
     <string name="med">Medicamento</string>
     <string name="dialog_repair_db">Antes de intentar reparar tu base de datos, deberías hacer una copia de seguridad usando la característica de exportación. Pulsa Cancelar para volver atrás, o Reparar para reparar la base de datos.</string>
     <string name="repair">Reparar</string>
@@ -179,7 +174,7 @@
     <string name="med_sort_entry_latest">Última Toma</string>
     <string name="med_sort_entry_alpha">Alfabético</string>
     <string name="changelog_title">Novedades</string>
-    <string name="translation_link_title">Ayuda a traducir esta app</string>
+    <string name="translation_link_title">Ayuda A Traducir Esta App</string>
     <string name="error">Error:</string>
     <string name="error_saving_to_database">No se ha podido guardar en la base de datos</string>
     <string name="invalid_data">Datos inválidos</string>
@@ -198,5 +193,32 @@
     <string name="invalid_med_id">Identificador de medicamento inválido</string>
     <string name="invalid_dose_count">Cantidad de dosis inválida</string>
     <string name="invalid_dose_datetime">Fecha inválida</string>
-    <string name="help">Ayuda y sobre la app</string>
+    <string name="help">Asistencia / Acerca de la app</string>
+    <string name="tip_quick_dose">En la pantalla principal, mantén pulsado el botón + junto a un medicamento para añadir una dosis rápidamente. (En la página de un Medicamento, mantén pulsado el botón de Añadir una dosis.)</string>
+    <string name="battery_optimized">Tu dispositivo parece estar optimizando el uso de batería de Pill Time, lo que puede afectar al envío de notificaciones de dosis expiradas. Intenta quitar las restricciones al uso de batería de Pill Time en los ajustes de tu dispositivo.</string>
+    <string name="tip_no_notifications">Si no se envían notificaciones o llegan tarde, puede que a Pill Time le falten ciertos permisos en el dispositivo. Prueba las siguientes soluciones (los pasos pueden ser ligeramente diferentes en distintos dispositivos):</string>
+    <string name="notifications_disabled_title">Notificaciones Deshabilitadas</string>
+    <string name="tip_quick_dose_title">Dosis Rápida</string>
+    <string name="tip_delayed_notifications_4">Ajustes del Dispositivo &gt; Aplicaciones &gt; Pill Time &gt; Uso de la batería &gt; Permitir actividad en segundo plano (pulsar para más opciones) &gt; Sin restricciones</string>
+    <string name="tip_delayed_notifications_2">Ajustes del Dispositivo &gt; Aplicaciones &gt; Pill Time &gt; Notificaciones &gt; Activar todo</string>
+    <string name="exact_alarms_denied">Tus notificaciones pueden retrasarse hasta 10 minutos porque el permiso de Alarmas Exactas fue denegado. Para obtener notificaciones en el momento correcto en el que expiren las dosis, accede a los ajustes de tu dispositivo y activa el permiso de Alarma para Pill Time.</string>
+    <string name="exact_alarms_denied_title">Notificaciones Con Retardo</string>
+    <string name="battery_optimized_title">Optimización De Batería Detectada</string>
+    <string name="notifications_disabled">Advertencia: Las notificaciones de Pill Time están deshabilitadas en tu dispositivo por falta de permisos. Accede a los ajustes de tu dispositivo para permitir que Pill Time envíe notificaciones.</string>
+    <string name="tip_edit_med">Abre un medicamento y pulsa sobre el icono del lápiz para editar su dosis habitual, los valores por defecto de su notificación, color, inventario y más.</string>
+    <string name="deny_permission">Ignorar</string>
+    <string name="permission_required">Permiso Requerido</string>
+    <string name="json_exception" translatable="false">Error JSON</string>
+    <string name="tip_no_notifications_title">Notificaciones Perdidas o Con Retardo</string>
+    <string name="tip_archive_med">Archiva un medicamento pulsando el icono de la caja con la flecha hacia abajo en su página. Esto lo ocultará de la página principal (los ajustes y dosis del medicamento no se verán afectados).\nPuedes ver tus medicamentos archivados pulsando sobre el icono de la caja en la pantalla principal.</string>
+    <string name="null_pointer_exception" translatable="false">Error de puntero nulo</string>
+    <string name="tip_delayed_notifications_3">Ajustes del Dispositivo &gt; Aplicaciones &gt; Pill Time &gt; Uso de la batería &gt; Permitir actividad en segundo plano &gt; Activado</string>
+    <string name="continue_option">Ir a ajustes</string>
+    <string name="null_json_object" translatable="false">Objeto JSON nulo</string>
+    <string name="tip_archive_med_title">Archivando Medicamentos</string>
+    <string name="file_not_found" translatable="false">Archivo no encontrado</string>
+    <string name="tip_edit_med_title">Opciones De Medicamento</string>
+    <string name="exact_alarm_permission_explanation">Esta app requiere el permiso para programar alarmas exactas si quieres que las notificaciones se muestren tan pronto como expiren las dosis. (Las notificaciones exactas requieren un poco más de batería.) \n\nSin este permiso, las notificaciones pueden tardar hasta 10 minutos tras expirar una dosis.\n\n¿Quieres navegar a la página de permisos para recibir notificaciones puntuales, o ignorar esto y recibir notificaciones ligeramente tardías?</string>
+    <string name="io_exception" translatable="false">Error de Entrada/Salida</string>
+    <string name="tip_delayed_notifications_5">Ajustes del Dispositivo &gt; Aplicaciones &gt; Acceso especial a aplicaciones &gt; Alarmas y recordatorios &gt; Pill Time &gt; Activado</string>
 </resources>
