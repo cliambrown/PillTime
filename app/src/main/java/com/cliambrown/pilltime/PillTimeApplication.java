@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,6 +36,7 @@ import com.cliambrown.pilltime.utilities.Utils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -67,6 +69,14 @@ public class PillTimeApplication extends Application {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void logException(Throwable e) {
+        if (e.getMessage() != null) Log.e(context.getPackageName(), e.getMessage());
+        if (e.getCause() != null && e.getCause().getMessage() != null) {
+            Log.e(context.getPackageName(), e.getCause().getMessage());
+        }
+        Log.e(context.getPackageName(), Arrays.toString(e.getStackTrace()));
+    }
+
     public void handleDbError(String introMessage, String message) {
         showToast(introMessage + " " + message);
     }
@@ -75,19 +85,30 @@ public class PillTimeApplication extends Application {
         showToast(getString(introMessageID) + " " + getString(messageID));
     }
 
-    public void handleDbError(String introMessage, Exception e) {
+    public void handleDbError(int introMessageID, int messageID, Throwable e) {
+        showToast(getString(introMessageID) + " " + getString(messageID));
+        logException(e);
+    }
+
+    public void handleDbError(String introMessage, String message, Throwable e) {
+        showToast(introMessage + " " + message);
+        logException(e);
+    }
+
+    public void handleDbError(String introMessage, Throwable e) {
         Throwable cause = e.getCause();
         String message;
         if (cause != null) message = cause.getLocalizedMessage();
         else message = e.getLocalizedMessage();
         handleDbError(introMessage, message);
+        logException(e);
     }
 
     public void handleMedSaveError(String message) {
         handleDbError(getString(R.string.error_saving_med), message);
     }
 
-    public void handleMedSaveError(Exception e) {
+    public void handleMedSaveError(Throwable e) {
         handleDbError(getString(R.string.error_saving_med), e);
     }
 
@@ -95,7 +116,7 @@ public class PillTimeApplication extends Application {
         handleDbError(getString(R.string.error_saving_dose), message);
     }
 
-    public void handleDoseSaveError(Exception e) {
+    public void handleDoseSaveError(Throwable e) {
         handleDbError(getString(R.string.error_saving_dose), e);
     }
 
@@ -279,105 +300,6 @@ public class PillTimeApplication extends Application {
         loadMeds();
     }
 
-    public boolean addDose(Med med, Dose dose) {
-        int insertID;
-        try {
-            insertID = dbHelper.insertDose(dose);
-        } catch (InvalidDoseException | SQLException e) {
-            handleDoseSaveError(e);
-            return false;
-        }
-        if (insertID < 0) {
-            handleDoseSaveError(getString(R.string.error_saving_to_database));
-            return false;
-        }
-        dose.setId(insertID);
-
-        scheduleNotification(med, dose);
-
-        med.addDose(dose);
-        med.updateTimes(dbHelper);
-        repositionMed(med);
-        Intent intent = new Intent();
-        intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
-        intent.putExtra("medID", med.getId());
-        intent.putExtra("doseID", dose.getId());
-        sendBroadcast(intent);
-        showToast(R.string.dose_saved);
-        return true;
-    }
-
-    public void scheduleNotification(Med med, Dose dose) {
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
-        intent.putExtra("doseID", dose.getId());
-        intent.putExtra("medID", med.getId());
-        intent.putExtra("medName", med.getName());
-        intent.putExtra("setSilent", !dose.getNotifySound());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
-        am.cancel(pendingIntent);
-        if (!dose.getNotify()) return;
-        long now = System.currentTimeMillis();
-        long triggerAtMillis = (dose.getTakenAt() + med.getDoseDurationInSeconds()) * 1000L;
-        if (triggerAtMillis < now) return;
-
-        if (hasExactAlarmPermission(am)) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
-        } else {
-            am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
-        }
-    }
-
-    public void recordEnabledNotifications() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("has_enabled_notifications_once", true);
-        editor.apply();
-    }
-
-    public boolean hasEnabledNotificationsOnce() {
-        return prefs.getBoolean("has_enabled_notifications_once", false);
-    }
-
-    public boolean hasExactAlarmPermission() {
-        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.S
-                || hasExactAlarmPermission((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
-        );
-    }
-
-    public boolean hasExactAlarmPermission(AlarmManager am) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms();
-    }
-
-    @SuppressLint("InlinedApi")
-    public void requestExactAlarmPermission(Context activityContext) {
-        if (hasExactAlarmPermission() || prefs.getBoolean("ignore_exact_alarm_permission", false)) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
-        builder.setMessage(R.string.exact_alarm_permission_explanation)
-                .setTitle(R.string.permission_required)
-                .setPositiveButton(R.string.continue_option, (dialog, id) -> {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                })
-                .setNegativeButton(R.string.deny_permission, (dialog, id) -> {
-                    dialog.dismiss();
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("ignore_exact_alarm_permission", true);
-                    editor.apply();
-                });
-        builder.show();
-    }
-
-    public boolean isBatteryUnrestricted() {
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        return powerManager.isIgnoringBatteryOptimizations(getPackageName());
-    }
-
     public void repositionMed(Med med) {
         int currentPosition = -1;
         int medID = med.getId();
@@ -415,6 +337,53 @@ public class PillTimeApplication extends Application {
             intent.putExtra("medID", med.getId());
             sendBroadcast(intent);
         }
+    }
+
+    public void loadMoreDoses(Med med) {
+        List<Dose> moreDoses = dbHelper.getDoses(med);
+        med.setHasLoadedAllDoses(moreDoses.size() < 21);
+        List<Integer> doseIDs = new ArrayList<>();
+        for (Dose dose : moreDoses) {
+            med.addDose(dose);
+            doseIDs.add(dose.getId());
+            if (doseIDs.size() >= 20) break;
+        }
+        med.updateTimes(dbHelper);
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSES_LOADED");
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseIDs", (Serializable) doseIDs);
+        sendBroadcast(intent);
+        repositionMed(med);
+    }
+
+    public boolean addDose(Med med, Dose dose) {
+        int insertID;
+        try {
+            insertID = dbHelper.insertDose(dose);
+        } catch (InvalidDoseException | SQLException e) {
+            handleDoseSaveError(e);
+            return false;
+        }
+        if (insertID < 0) {
+            handleDoseSaveError(getString(R.string.error_saving_to_database));
+            return false;
+        }
+        dose.setId(insertID);
+
+        med.updateTimes(dbHelper);
+
+        dose.updateTimes(med);
+        scheduleNotification(med, dose);
+        med.addDose(dose);
+        repositionMed(med);
+        Intent intent = new Intent();
+        intent.setAction("com.cliambrown.broadcast.DOSE_ADDED");
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("doseID", dose.getId());
+        sendBroadcast(intent);
+        showToast(R.string.dose_saved);
+        return true;
     }
 
     public boolean setDose(Med med, Dose dose) {
@@ -503,22 +472,98 @@ public class PillTimeApplication extends Application {
         showToast(R.string.doses_deleted);
     }
 
-    public void loadMoreDoses(Med med) {
-        List<Dose> moreDoses = dbHelper.getDoses(med);
-        med.setHasLoadedAllDoses(moreDoses.size() < 21);
-        List<Integer> doseIDs = new ArrayList<>();
-        for (Dose dose : moreDoses) {
-            med.addDose(dose);
-            doseIDs.add(dose.getId());
-            if (doseIDs.size() >= 20) break;
-        }
+    public void removeDoseAndOlder(Med med, Dose dose) {
+        dbHelper.removeDoseAndOlder(med, dose);
+        med.removeDoseAndOlder(dose);
         med.updateTimes(dbHelper);
         Intent intent = new Intent();
-        intent.setAction("com.cliambrown.broadcast.DOSES_LOADED");
+        intent.setAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
         intent.putExtra("medID", med.getId());
-        intent.putExtra("doseIDs", (Serializable) doseIDs);
         sendBroadcast(intent);
         repositionMed(med);
+        showToast(R.string.doses_deleted);
+    }
+
+    public void scheduleNotification(Med med, Dose dose) {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+        intent.putExtra("doseID", dose.getId());
+        intent.putExtra("medID", med.getId());
+        intent.putExtra("medName", med.getName());
+        intent.putExtra("setSilent", !dose.getNotifySound());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dose.getId(), intent, FLAG_IMMUTABLE);
+        am.cancel(pendingIntent);
+        if (!dose.getNotify()) return;
+        long now = System.currentTimeMillis();
+        long triggerAtMillis = (dose.getTakenAt() + med.getDoseDurationInSeconds()) * 1000L;
+        if (triggerAtMillis < now) return;
+
+        if (hasExactAlarmPermission(am)) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+        } else {
+            am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 10 * 60 * 1000, pendingIntent);
+        }
+    }
+
+    public boolean areNotificationsDisabled() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!manager.areNotificationsEnabled()) return true;
+            NotificationChannel channel = manager.getNotificationChannel(CHANNEL_ID);
+            return channel.getImportance() == NotificationManager.IMPORTANCE_NONE;
+        } else {
+            return !NotificationManagerCompat.from(context).areNotificationsEnabled();
+        }
+    }
+
+    public void recordEnabledNotifications() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("has_enabled_notifications_once", true);
+        editor.apply();
+    }
+
+    public boolean hasEnabledNotificationsOnce() {
+        return prefs.getBoolean("has_enabled_notifications_once", false);
+    }
+
+    public boolean hasExactAlarmPermission() {
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                || hasExactAlarmPermission((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
+        );
+    }
+
+    public boolean hasExactAlarmPermission(AlarmManager am) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms();
+    }
+
+    @SuppressLint("InlinedApi")
+    public void requestExactAlarmPermission(Context activityContext) {
+        if (hasExactAlarmPermission() || prefs.getBoolean("ignore_exact_alarm_permission", false)) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
+        builder.setMessage(R.string.exact_alarm_permission_explanation)
+                .setTitle(R.string.permission_required)
+                .setPositiveButton(R.string.continue_option, (dialog, id) -> {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.deny_permission, (dialog, id) -> {
+                    dialog.dismiss();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("ignore_exact_alarm_permission", true);
+                    editor.apply();
+                });
+        builder.show();
+    }
+
+    public boolean isBatteryUnrestricted() {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager.isIgnoringBatteryOptimizations(getPackageName());
     }
 
     private void createNotificationChannel() {
@@ -537,29 +582,15 @@ public class PillTimeApplication extends Application {
         }
     }
 
-    public void removeDoseAndOlder(Med med, Dose dose) {
-        dbHelper.removeDoseAndOlder(med, dose);
-        med.removeDoseAndOlder(dose);
-        med.updateTimes(dbHelper);
-        Intent intent = new Intent();
-        intent.setAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
-        intent.putExtra("medID", med.getId());
-        sendBroadcast(intent);
-        repositionMed(med);
-        showToast(R.string.doses_deleted);
-    }
-
     public void importFromUri(Uri uri) {
         boolean imported = false;
         try (DbHelper dbHelper = new DbHelper(context)) {
             String jsonText = Utils.readTextFromUri(uri, context);
             imported = dbHelper.importFromString(jsonText);
         } catch (IOException e) {
-            e.printStackTrace();
-            handleDbError(R.string.error_importing_database, R.string.io_exception);
+            handleDbError(R.string.error_importing_database, R.string.io_exception, e);
         } catch (Exception e) {
-            e.printStackTrace();
-            handleDbError(getString(R.string.error_importing_database), e.getMessage());
+            handleDbError(getString(R.string.error_importing_database), e.getMessage(), e);
         }
         if (imported) {
             loadMeds();
@@ -567,17 +598,6 @@ public class PillTimeApplication extends Application {
             broadcastIntent.setAction("com.cliambrown.broadcast.DATA_IMPORTED");
             sendBroadcast(broadcastIntent);
             showToast(R.string.data_imported);
-        }
-    }
-
-    public boolean areNotificationsDisabled() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!manager.areNotificationsEnabled()) return true;
-            NotificationChannel channel = manager.getNotificationChannel(CHANNEL_ID);
-            return channel.getImportance() == NotificationManager.IMPORTANCE_NONE;
-        } else {
-            return !NotificationManagerCompat.from(context).areNotificationsEnabled();
         }
     }
 }

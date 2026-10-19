@@ -21,7 +21,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.PillTimeApplication;
@@ -37,17 +36,22 @@ import java.util.List;
 public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleViewAdapter.DoseViewHolder> {
 
     Med med;
-    List<Dose> doses;
+    List<Dose> doses = new ArrayList<>();
     final Context context;
     MedActivity medActivity;
     final PillTimeApplication mApp;
 
-    public DosesRecycleViewAdapter(Med med, List<Dose> doses, Context context, MedActivity medActivity, PillTimeApplication mApp) {
+    public DosesRecycleViewAdapter(Med med, Context context, MedActivity medActivity, PillTimeApplication mApp) {
         this.med = med;
-        this.doses = doses;
         this.context = context;
         this.medActivity = medActivity;
         this.mApp = mApp;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setDoses(List<Dose> doses) {
+        this.doses = doses;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -70,7 +74,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         holder.med = med;
 
         if (position == doses.size()) {
-            holder.updateLoadMore();
+            holder.onDoseCountChanged();
             holder.btn_med_loadMore.setOnClickListener(view -> mApp.loadMoreDoses(med));
             return;
         }
@@ -83,8 +87,8 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         long expiresAtUnix = holder.dose.getTakenAt() + med.getDoseDurationInSeconds();
         holder.tv_rvDose_expiresAt.setText(Utils.buildTimeOnDateString(context, expiresAtUnix));
 
-        holder.updateTimes();
-        holder.updateColor();
+        holder.onTimesChanged();
+        holder.onMedColorChanged();
 
         if (medActivity.isMultiSelectActive) {
             holder.btn_rvDose_more.setVisibility(View.GONE);
@@ -152,7 +156,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         switch (payloadStr) {
             case "multiselect_activated":
                 holder.btn_rvDose_more.setVisibility(View.GONE);
-                holder.toggleSelectedViews();
+                holder.onSelectChanged();
                 return;
             case "multiselect_deactivated":
                 holder.btn_rvDose_more.setVisibility(View.VISIBLE);
@@ -161,14 +165,14 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             case "dose_selected":
                 holder.toggleSelected(true);
                 return;
-            case "update_show_more_btn":
-                holder.updateLoadMore();
+            case "dose_count_changed":
+                holder.onDoseCountChanged();
                 return;
-            case "update_times":
-                holder.updateTimes();
+            case "times_changed":
+                holder.onTimesChanged();
                 return;
-            case "update_color":
-                holder.updateColor();
+            case "med_info_changed":
+                holder.onMedColorChanged();
                 return;
             default:
         }
@@ -222,10 +226,9 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             }
         }
 
-        public void updateTimes() {
+        public void onTimesChanged() {
             if (dose == null) return;
             if (med == null) return;
-            dose.updateTimes(med);
             if (dose.isActive()) {
                 iv_rvDose_expired.setVisibility(View.GONE);
                 iv_rvDose_active.setVisibility(View.VISIBLE);
@@ -258,7 +261,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             tv_rvDose_taken.setText(Utils.styleString(unformatted, spansList, dose.getTakenAtTimeAgo()));
         }
 
-        public void updateColor() {
+        public void onMedColorChanged() {
             int textColor = Utils.getTextColor(med.getColor(), context);
             iv_rvDose_active.setColorFilter(textColor);
             if (med == null || dose == null || !dose.isActive()) {
@@ -268,7 +271,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
                     new PorterDuffColorFilter(textColor, PorterDuff.Mode.SRC));
         }
 
-        public void updateLoadMore() {
+        public void onDoseCountChanged() {
             if (btn_med_loadMore == null || med == null) return;
             if (med.hasLoadedAllDoses()) {
                 btn_med_loadMore.setVisibility(View.GONE);
@@ -283,10 +286,10 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
 
         public void toggleSelected(boolean newIsSelected) {
             isSelected = newIsSelected;
-            toggleSelectedViews();
+            onSelectChanged();
         }
 
-        public void toggleSelectedViews() {
+        public void onSelectChanged() {
             if (!medActivity.isMultiSelectActive) {
                 layout_rvDose.setBackgroundColor(Color.TRANSPARENT);
                 iv_rvDose_unselected.setVisibility(View.GONE);

@@ -34,6 +34,7 @@ import com.cliambrown.pilltime.doses.EditDoseActivity;
 import com.cliambrown.pilltime.utilities.Utils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -54,12 +55,14 @@ public class MedActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private DosesRecycleViewAdapter mAdapter;
+    private BroadcastReceiver broadcastReceiver;
+    private IntentFilter broadcastReceiverFilter;
 
     PillTimeApplication mApp;
     Timer timer;
     int medID;
     Med med;
-    List<Dose> doses;
+    List<Dose> doses = new ArrayList<>();
 
     OnBackPressedCallback onBackPressedCallback;
     public boolean isMultiSelectActive = false;
@@ -67,9 +70,9 @@ public class MedActivity extends AppCompatActivity {
 
     protected void getDoses() {
         doses = med.getDoses();
+        onDoseCountChanged();
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -99,45 +102,30 @@ public class MedActivity extends AppCompatActivity {
             return;
         }
 
-        getDoses();
-
         recyclerView = findViewById(R.id.rv_med_doses);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DosesRecycleViewAdapter(med, doses, this, MedActivity.this, mApp);
+        mAdapter = new DosesRecycleViewAdapter(med, this, MedActivity.this, mApp);
         recyclerView.setAdapter(mAdapter);
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
         recyclerView.addItemDecoration(bottomOffsetDecoration);
 
         setTitle(getString(R.string.med));
-        updateInfo();
-        updateTimes();
-        toggleNoDosesMessages();
 
-        BroadcastReceiver br = new MedActivity.MedBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
-        filter.addAction("com.cliambrown.broadcast.MED_EDITED");
-        filter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
-        filter.addAction("com.cliambrown.broadcast.DOSES_LOADED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
-
-        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
-        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
-        // HOWEVER, the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
-        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            this.registerReceiver(br, filter, RECEIVER_EXPORTED);
-        } else {
-            this.registerReceiver(br, filter);
-        }
+        broadcastReceiver = new MedActivity.MedBroadcastReceiver();
+        broadcastReceiverFilter = new IntentFilter();
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DB_CLEARED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_EDITED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSES_LOADED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_MOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSES_REMOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
 
         btn_med_add_dose.setOnClickListener(view -> {
             Intent intent1 = new Intent(MedActivity.this, EditDoseActivity.class);
@@ -165,6 +153,45 @@ public class MedActivity extends AppCompatActivity {
         this.getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        onMedInfoChanged();
+
+        getDoses();
+        med.updateTimes(mApp.getDbHelper());
+        onMedTimesChanged();
+        for (Dose dose: doses) {
+            dose.updateTimes(med);
+        }
+        mAdapter.setDoses(doses);
+
+        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
+        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
+        // HOWEVER, the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
+        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, broadcastReceiverFilter, RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(broadcastReceiver, broadcastReceiverFilter);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        startUpdateTimer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (timer != null) timer.cancel();
+        if (broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
+    }
+
     public class MedBroadcastReceiver extends BroadcastReceiver {
         @SuppressWarnings({"UnnecessaryReturnStatement"})
         @Override
@@ -182,19 +209,17 @@ public class MedActivity extends AppCompatActivity {
             int intentMedID = intent.getIntExtra("medID", -1);
             if (intentMedID != medID) return;
 
-            Log.d("CLB_TAG", "" + intentMedID);
-
             switch (action) {
                 case "com.cliambrown.broadcast.MED_EDITED":
-                    updateInfo();
+                    onMedInfoChanged();
                     updateAllTimes();
                     return;
                 case "com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED":
-                    toggleArchiveButtons();
+                    onIsArchivedChanged();
                     return;
             }
 
-            doses = med.getDoses();
+            getDoses();
 
             if (action.equals("com.cliambrown.broadcast.DOSE_MOVED")) {
                 int fromPosition = intent.getIntExtra("fromPosition", -1);
@@ -216,8 +241,7 @@ public class MedActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        updateTimes();
-                        toggleNoDosesMessages();
+                        onMedTimesChanged();
                     } catch (Exception e) {
                         Log.w(MedActivity.class.getName(), e);
                     }
@@ -228,22 +252,19 @@ public class MedActivity extends AppCompatActivity {
                         for (int doseID : Objects.requireNonNull(doseIDs)) {
                             for (int i=0; i<doses.size(); ++i) {
                                 if (doses.get(i).getId() == doseID) {
-                                    Log.d("CLB_TAG", "found doseID = "+doseID);
                                     doses.remove(i);
                                     mAdapter.notifyItemRemoved(i);
                                     break;
                                 }
                             }
                         }
-                        updateTimes();
-                        toggleNoDosesMessages();
+                        onMedTimesChanged();
                     } catch (Exception e) {
                         Log.w(MedActivity.class.getName(), e);
                     }
                     return;
                 case "com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED":
-                    updateTimes();
-                    toggleNoDosesMessages();
+                    onMedTimesChanged();
                     return;
             }
 
@@ -258,8 +279,7 @@ public class MedActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    updateTimes();
-                    toggleNoDosesMessages();
+                    onMedTimesChanged();
                     return;
                 case "com.cliambrown.broadcast.DOSE_EDITED":
                     for (int i = 0; i < doses.size(); ++i) {
@@ -268,7 +288,7 @@ public class MedActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    updateTimes();
+                    onMedTimesChanged();
                     return;
                 case "com.cliambrown.broadcast.DOSE_REMOVED":
                     for (int i = 0; i < doses.size(); ++i) {
@@ -278,27 +298,26 @@ public class MedActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    updateTimes();
-                    toggleNoDosesMessages();
+                    onMedTimesChanged();
                     return;
             }
         }
     }
 
-    public void toggleNoDosesMessages() {
+    public void onDoseCountChanged() {
         if (ll_med_no_doses == null) return;
         if (doses.isEmpty()) {
             ll_med_no_doses.setVisibility(View.VISIBLE);
         } else {
             ll_med_no_doses.setVisibility(View.GONE);
             if (mAdapter != null) {
-                mAdapter.notifyItemChanged(mAdapter.getItemCount() - 1, "update_show_more_btn");
+                mAdapter.notifyItemChanged(mAdapter.getItemCount() - 1, "dose_count_changed");
             }
         }
     }
 
     // Update Med values that change only when modified
-    public void updateInfo() {
+    public void onMedInfoChanged() {
         if (med == null) return;
         tv_med_name.setText(med.getName());
         int textColor = Utils.getTextColor(med.getColor(), MedActivity.this);
@@ -306,14 +325,13 @@ public class MedActivity extends AppCompatActivity {
         tv_med_maxDoseInfo.setText(med.getMaxDoseInfoStr());
         btn_med_add_dose.setBackgroundColor(textColor);
         for (int i=0; i<doses.size(); ++i) {
-            mAdapter.notifyItemChanged(i, "update_color");
+            mAdapter.notifyItemChanged(i, "med_info_changed");
         }
     }
 
     // Update Med values that change over time
-    public void updateTimes() {
+    public void onMedTimesChanged() {
         if (med == null) return;
-        med.updateTimes(mApp.getDbHelper());
         if (mAdapter == null) return;
         if (med.getIsInventoryTracked()) {
             if (med.getIsInventoryLow()) {
@@ -342,15 +360,12 @@ public class MedActivity extends AppCompatActivity {
         }
     }
 
-    public void updateDoseTimes() {
-        for (int i=0; i<doses.size(); ++i) {
-            mAdapter.notifyItemChanged(i, "update_times");
-        }
-    }
-
     public void updateAllTimes() {
-        updateTimes();
-        updateDoseTimes();
+        onMedTimesChanged();
+        for (int i=0; i<doses.size(); ++i) {
+            doses.get(i).updateTimes(med);
+            mAdapter.notifyItemChanged(i, "times_changed");
+        }
     }
 
     private void startUpdateTimer() {
@@ -406,17 +421,9 @@ public class MedActivity extends AppCompatActivity {
         setTitle(this.getResources().getQuantityString(R.plurals.doses_selected, selectedDoseIDs.size(), selectedDoseIDs.size()));
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timer != null) timer.cancel();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        updateAllTimes();
-        startUpdateTimer();
+    protected void onIsArchivedChanged() {
+        optionsMenu.findItem(R.id.mi_med_archive).setVisible(!med.isArchived());
+        optionsMenu.findItem(R.id.mi_med_unarchive).setVisible(med.isArchived());
     }
 
     @Override
@@ -424,13 +431,8 @@ public class MedActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.med_menu, menu);
         optionsMenu = menu;
-        toggleArchiveButtons();
+        onIsArchivedChanged();
         return true;
-    }
-
-    protected void toggleArchiveButtons() {
-        optionsMenu.findItem(R.id.mi_med_archive).setVisible(!med.isArchived());
-        optionsMenu.findItem(R.id.mi_med_unarchive).setVisible(med.isArchived());
     }
 
     @Override

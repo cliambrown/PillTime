@@ -65,9 +65,9 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         holder.med = meds.get(position);
         int medID = holder.med.getId();
 
-        holder.updateInfo();
-        holder.updateTimes();
-        holder.updateInventory();
+        holder.onMedEdited();
+        holder.onTimesChanged();
+        holder.onInventoryChanged();
 
         holder.ll_rvMed_medInfo.setOnClickListener(view -> {
             Intent intent = new Intent(context, MedActivity.class);
@@ -170,20 +170,25 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             onBindViewHolder(holder, position);
             return;
         }
-        if (payloads.get(0) == "update_times") {
-            holder.updateTimes();
+        String payloadStr;
+        try {
+            payloadStr = String.valueOf(payloads.get(0));
+        } catch (Exception e) {
             return;
         }
-        if (payloads.get(0) == "med_edited") {
-            holder.updateInfo();
-            holder.updateTimes();
-            holder.updateInventory();
-            return;
-        }
-        if (payloads.get(0) == "doses_edited") {
-            holder.updateTimes();
-            holder.updateInventory();
-            return;
+        switch (payloadStr) {
+            case "times_changed":
+                holder.onTimesChanged();
+                return;
+            case "med_edited":
+                holder.onMedEdited();
+                holder.onTimesChanged();
+                holder.onInventoryChanged();
+                return;
+            case "doses_edited":
+                holder.onTimesChanged();
+                holder.onInventoryChanged();
+                return;
         }
     }
 
@@ -221,9 +226,8 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             btn_rvMed_more = itemView.findViewById(R.id.btn_rvMed_more);
         }
 
-        public void updateTimes() {
+        public void onTimesChanged() {
             if (med == null) return;
-            med.updateTimes(mApp.getDbHelper());
             double currentTotalDoseCount = med.getActiveDoseCount();
             Dose latestDose = med.getLatestDose();
             Dose nextExpiringDose = med.getNextExpiringDose();
@@ -268,7 +272,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
         }
 
         @SuppressLint("DefaultLocale")
-        public void updateInfo() {
+        public void onMedEdited() {
             tv_rvMed_name.setText(med.getName());
             btn_rvMed_add.setBackgroundResource(Utils.getRoundButton(med.getColor()));
             int textColor = Utils.getTextColor(med.getColor(), context);
@@ -277,7 +281,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
             tv_rvMed_maxDoseInfo.setText(med.getMaxDoseInfoStr());
         }
 
-        public void updateInventory() {
+        public void onInventoryChanged() {
             if (med.getIsInventoryTracked()) {
                 if (med.getIsInventoryLow()) {
                     tv_rvMed_inventory.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_warning, 0, 0, 0);

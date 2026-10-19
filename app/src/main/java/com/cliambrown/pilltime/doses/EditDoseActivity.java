@@ -53,16 +53,8 @@ public class EditDoseActivity extends SimpleMenuActivity {
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
+            onNotifyChanged(switch_editDose_notify.isChecked());
         });
-
-    private void toggleNotificationsDisabledNotice(boolean notify) {
-        if (notify && mApp.areNotificationsDisabled()) {
-            tv_editDose_notificationsDisabled.setVisibility(View.VISIBLE);
-        } else {
-            tv_editDose_notificationsDisabled.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,20 +117,20 @@ public class EditDoseActivity extends SimpleMenuActivity {
         switch_editDose_notifySound.setChecked(dose.getNotifySound());
         switch_editDose_notifySound.setVisibility(dose.getNotify() ? View.VISIBLE : View.GONE);
 
-        toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
+        onNotifyChanged(switch_editDose_notify.isChecked());
         requestNotificationPermission(switch_editDose_notify.isChecked());
 
         switch_editDose_notify.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             requestNotificationPermission(isChecked);
             mApp.requestExactAlarmPermission(this);
-            toggleNotificationsDisabledNotice(isChecked);
+            onNotifyChanged(isChecked);
             switch_editDose_notifySound.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             if (isChecked) mApp.recordEnabledNotifications();
         });
 
         et_editDose_count.setText(Utils.getStrFromDbl(dose.getCount()));
-        updateTimeField();
-        updateDateField();
+        onTimeChanged();
+        onDateChanged();
 
         btn_editDose_minusCount.setOnClickListener(view -> incrementCount(-1D));
 
@@ -184,7 +176,15 @@ public class EditDoseActivity extends SimpleMenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        toggleNotificationsDisabledNotice(switch_editDose_notify.isChecked());
+        onNotifyChanged(switch_editDose_notify.isChecked());
+    }
+
+    private void onNotifyChanged(boolean notify) {
+        if (notify && mApp.areNotificationsDisabled()) {
+            tv_editDose_notificationsDisabled.setVisibility(View.VISIBLE);
+        } else {
+            tv_editDose_notificationsDisabled.setVisibility(View.GONE);
+        }
     }
 
     private void requestNotificationPermission(boolean notify) {
@@ -208,7 +208,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         et_editDose_count.setText(Utils.getStrFromDbl(count));
     }
 
-    private void updateTimeField() {
+    private void onTimeChanged() {
         long unixTimeMs = selectedDatetime.getTimeInMillis();
         tv_editDose_takenAtTime.setText(DateUtils.formatDateTime(
                 this,
@@ -217,7 +217,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
         ));
     }
 
-    private void updateDateField() {
+    private void onDateChanged() {
         long unixTimeMs = selectedDatetime.getTimeInMillis();
         tv_editDose_takenAtDate.setText(DateUtils.formatDateTime(
                 this,
@@ -257,7 +257,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             if (activity == null) return;
             activity.selectedDatetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
             activity.selectedDatetime.set(Calendar.MINUTE, minute);
-            activity.updateTimeField();
+            activity.onTimeChanged();
             activity.hasManuallySelectedTime = true;
         }
     }
@@ -298,7 +298,7 @@ public class EditDoseActivity extends SimpleMenuActivity {
             activity.selectedDatetime.set(Calendar.YEAR, year);
             activity.selectedDatetime.set(Calendar.MONTH, month);
             activity.selectedDatetime.set(Calendar.DAY_OF_MONTH, day);
-            activity.updateDateField();
+            activity.onDateChanged();
             activity.hasManuallySelectedTime = true;
         }
     }

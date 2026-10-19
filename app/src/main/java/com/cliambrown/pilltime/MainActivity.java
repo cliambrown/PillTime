@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,16 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
     List<Med> meds = new ArrayList<>();
     private Menu optionsMenu;
+    private BroadcastReceiver broadcastReceiver;
+    private IntentFilter broadcastReceiverFilter;
 
     protected void getMeds() {
         meds.clear();
         for (Med med: mApp.getMeds()) {
             if (med.isArchived() == isArchives) meds.add(med);
         }
-        toggleNoMedsMessages();
+        onMedsCountChanged();
     }
 
-    @SuppressLint({"UnspecifiedRegisterReceiverFlag", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
         mApp = (PillTimeApplication) this.getApplication();
         prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        getMeds();
 
         recyclerView = findViewById(R.id.rv_main_meds);
         recyclerView.setHasFixedSize(true);
@@ -92,29 +93,19 @@ public class MainActivity extends AppCompatActivity {
         Utils.BottomOffsetDecoration bottomOffsetDecoration = new Utils.BottomOffsetDecoration((int) offsetPx);
         recyclerView.addItemDecoration(bottomOffsetDecoration);
 
-        BroadcastReceiver br = new MainBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.cliambrown.broadcast.DB_CLEARED");
-        filter.addAction("com.cliambrown.broadcast.DATA_IMPORTED");
-        filter.addAction("com.cliambrown.broadcast.MED_ADDED");
-        filter.addAction("com.cliambrown.broadcast.MED_EDITED");
-        filter.addAction("com.cliambrown.broadcast.MED_MOVED");
-        filter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
-        filter.addAction("com.cliambrown.broadcast.MED_REMOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
-        filter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
-
-        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
-        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
-        // HOWEVER, the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
-        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            this.registerReceiver(br, filter, RECEIVER_EXPORTED);
-        } else {
-            this.registerReceiver(br, filter);
-        }
+        broadcastReceiver = new MainBroadcastReceiver();
+        broadcastReceiverFilter = new IntentFilter();
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DB_CLEARED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DATA_IMPORTED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_ADDED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_EDITED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_MOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_ARCHIVED_OR_UNARCHIVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.MED_REMOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_ADDED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_EDITED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_REMOVED");
+        broadcastReceiverFilter.addAction("com.cliambrown.broadcast.DOSE_AND_OLDER_REMOVED");
 
         btn_main_add_med.setOnClickListener(view -> {
             Intent addMedIntent = new Intent(MainActivity.this, EditMedActivity.class);
@@ -130,13 +121,48 @@ public class MainActivity extends AppCompatActivity {
         this.getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
-    protected int getMedPosition(int medID) {
-        for (int i = 0; i < meds.size(); ++i) {
-            if (meds.get(i).getId() == medID) {
-                return i;
-            }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        boolean showWelcomeDialog = prefs.getBoolean("show_v22_dialog", true);
+        if (showWelcomeDialog) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            new welcomeDialogFragment().show(fragmentManager, "WELCOME_DIALOG");
         }
-        return -1;
+    }
+
+    @SuppressLint({"UnspecifiedRegisterReceiverFlag", "NotifyDataSetChanged"})
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getMeds();
+        updateTimes();
+        mAdapter.notifyDataSetChanged();
+
+        // As of Android 14, registerReceiver now requires a flag (RECEIVER_EXPORTED or _NOT_).
+        // No need to receive broadcasts from other apps, so this should be RECEIVER_NOT_EXPORTED.
+        // HOWEVER, the BR does not receive broadcasts unless RECEIVER_EXPORTED is used (??).
+        // Although not ideal, using RECEIVER_EXPORTED here does not present any obvious risks.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, broadcastReceiverFilter, RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(broadcastReceiver, broadcastReceiverFilter);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        startUpdateTimer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (timer != null) timer.cancel();
+        if (broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
     }
 
     public class MainBroadcastReceiver extends BroadcastReceiver {
@@ -144,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            Log.d("CLB_TAG", "onReceive");
+
             if (mAdapter == null) return;
             String action = intent.getAction();
             if (action == null) return;
@@ -193,7 +222,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void toggleNoMedsMessages() {
+    protected int getMedPosition(int medID) {
+        for (int i = 0; i < meds.size(); ++i) {
+            if (meds.get(i).getId() == medID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void onMedsCountChanged() {
         if (ll_main_no_meds == null) return;
         if (meds.isEmpty()) {
             if (isArchives) {
@@ -212,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
     public void updateTimes() {
         if (mAdapter == null) return;
         for (int i=0; i<meds.size(); ++i) {
-            mAdapter.notifyItemChanged(i, "update_times");
+            meds.get(i).updateTimes(mApp.getDbHelper());
+            mAdapter.notifyItemChanged(i, "times_changed");
         }
     }
 
@@ -226,12 +265,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.schedule(doAsynchronousTask, 60000, 60000); // once every minute
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timer != null) timer.cancel();
     }
 
     public static class welcomeDialogFragment extends DialogFragment {
@@ -257,21 +290,6 @@ public class MainActivity extends AppCompatActivity {
                     });
             }
             return builder.create();
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        updateTimes();
-        mAdapter.notifyDataSetChanged();
-        startUpdateTimer();
-
-        boolean showWelcomeDialog = prefs.getBoolean("show_v22_dialog", true);
-        if (showWelcomeDialog) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            new welcomeDialogFragment().show(fragmentManager, "WELCOME_DIALOG");
         }
     }
 

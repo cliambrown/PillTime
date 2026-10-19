@@ -90,16 +90,12 @@ public class SettingsActivity extends AppCompatActivity
                         fileOutputStream.close();
                         pfd.close();
                     } catch (NullPointerException e) {
-                        e.printStackTrace();
                         mApp.handleDbError(R.string.error_exporting_database, R.string.null_pointer_exception);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                         mApp.handleDbError(R.string.error_exporting_database, R.string.file_not_found);
                     } catch (IOException e) {
-                        e.printStackTrace();
                         mApp.handleDbError(R.string.error_exporting_database, R.string.io_exception);
                     } catch (JSONException e) {
-                        e.printStackTrace();
                         mApp.handleDbError(R.string.error_exporting_database, R.string.json_exception);
                     }
                 });
@@ -155,7 +151,7 @@ public class SettingsActivity extends AppCompatActivity
 
         private final ActivityResultLauncher<String> requestPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                    toggleNotificationsDisabledNotice();
+                    onNotificationsEnabledChanged();
                 });
 
         private void requestNotificationPermission() {
@@ -170,26 +166,26 @@ public class SettingsActivity extends AppCompatActivity
         public void onResume() {
             super.onResume();
             notifyDefaultVal = prefs.getBoolean("notify_default", false);
-            toggleNotificationsDisabledNotice();
-            toggleExactAlarmsDeniedNotice();
-            toggleBatteryOptimizationNotice();
+            onNotificationsEnabledChanged();
+            onExactAlarmsAllowedChanged();
+            onBatteryOptimizationChanged();
         }
 
-        private void toggleNotificationsDisabledNotice() {
+        private void onNotificationsEnabledChanged() {
             pref_notificationsDisabled.setVisible(
                     mApp.hasEnabledNotificationsOnce()
                             && mApp.areNotificationsDisabled()
             );
         }
 
-        private void toggleExactAlarmsDeniedNotice() {
+        private void onExactAlarmsAllowedChanged() {
             pref_exactAlarmsDenied.setVisible(
                     mApp.hasEnabledNotificationsOnce()
                             && !mApp.hasExactAlarmPermission()
             );
         }
 
-        private void toggleBatteryOptimizationNotice() {
+        private void onBatteryOptimizationChanged() {
             pref_batteryOptimized.setVisible(
                     mApp.hasEnabledNotificationsOnce()
                             && !mApp.isBatteryUnrestricted()
@@ -212,10 +208,10 @@ public class SettingsActivity extends AppCompatActivity
             pref_batteryOptimized = preferenceManager.findPreference("battery_optimized");
 
             if (pref_notifyDefault != null && pref_notifySoundDefault != null && pref_exactAlarmsDenied != null && pref_batteryOptimized != null) {
-                toggleNotificationsDisabledNotice();
+                onNotificationsEnabledChanged();
                 pref_notifySoundDefault.setVisible(notifyDefaultVal);
-                toggleExactAlarmsDeniedNotice();
-                toggleBatteryOptimizationNotice();
+                onExactAlarmsAllowedChanged();
+                onBatteryOptimizationChanged();
                 pref_notifyDefault.setOnPreferenceChangeListener((preference, isChecked) -> {
                     notifyDefaultVal = (Boolean) isChecked;
                     if (notifyDefaultVal) {
@@ -223,7 +219,7 @@ public class SettingsActivity extends AppCompatActivity
                         requestNotificationPermission();
                         mApp.requestExactAlarmPermission(context);
                     }
-                    toggleNotificationsDisabledNotice();
+                    onNotificationsEnabledChanged();
                     pref_notifySoundDefault.setVisible(notifyDefaultVal);
                     return true;
                 });
