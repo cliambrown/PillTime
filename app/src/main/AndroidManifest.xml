@@ -18,7 +18,7 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".notifications.RecreateNotificationsReceiver"
+            android:name=".notifications.RescheduleNotificationsReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

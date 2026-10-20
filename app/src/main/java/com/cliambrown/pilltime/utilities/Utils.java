@@ -18,7 +18,6 @@ import androidx.annotation.AttrRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cliambrown.pilltime.R;
-import com.cliambrown.pilltime.meds.Med;
 
 import org.jspecify.annotations.NonNull;
 
@@ -240,10 +239,6 @@ public class Utils {
         }
 
         return visited;
-    }
-
-    public static int getMedTextColor(Med med, Context context) {
-        return Utils.getTextColor(med.getColor(), context);
     }
 
     public static int getTextColor(String colorName, Context context) {
