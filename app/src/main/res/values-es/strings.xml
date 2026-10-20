@@ -38,7 +38,7 @@
     <string name="fuchsia">Fucsia</string>
     <string name="pink">Rosa</string>
     <string name="rose">Rosado</string>
-    <string name="welcome_dialog_content">NOVEDAD: Los medicamentos pueden archivarse para retirarlos de la pantalla principal.\n\nNOVEDAD: ¡Comprueba los permisos del dispositivo para obtener notificaciones puntuales (y no con 10 minutos de retraso)!</string>
+    <string name="welcome_dialog_content">"NOVEDAD: Los medicamentos pueden archivarse para retirarlos de la pantalla principal.           NOVEDAD: ¡Comprueba los permisos del dispositivo para obtener notificaciones puntuales (y no con 10 minutos de retraso)!     "</string>
     <string name="check_permissions">Comprobar Permisos</string>
     <string name="disclaimer_title">Descargo de responsabilidad</string>
     <string name="disclaimer_1">Esta app no proporciona ningún tipo de asesoramiento médico, implícito o explícito. Toda la información proporcionada por la app está basada exclusivamente en los datos introducidos por el usuario y no constituye una recomendación de ningún tipo. Toda decisión médica debe consultarse siempre con médicos profesionales.</string>
@@ -88,14 +88,14 @@
     <string name="new_med">Nuevo Medicamento</string>
     <string name="history">Histórico</string>
     <plurals name="taken_in_past_hours">
-        <item quantity="one">%1$s dosis tomadas en la última hora</item>
-        <item quantity="many">%1$s dosis tomadas en las últimas %2$d horas</item>
-        <item quantity="other">%1$s dosis tomadas en las últimas %2$d horas</item>
+        <item quantity="one">%1$s dosis en la última hora</item>
+        <item quantity="many">%1$s dosis en las últimas %2$d horas</item>
+        <item quantity="other">%1$s dosis en las últimas %2$d horas</item>
     </plurals>
     <plurals name="taken_in_past_days">
-        <item quantity="one">%1$s dosis tomadas en el último día</item>
-        <item quantity="many">%1$s dosis tomadas en los últimos %2$d días</item>
-        <item quantity="other">%1$s dosis tomadas en los últimos %2$d días</item>
+        <item quantity="one">%1$s dosis en el último día</item>
+        <item quantity="many">%1$s dosis en los últimos %2$d días</item>
+        <item quantity="other">%1$s dosis en los últimos %2$d días</item>
     </plurals>
     <string name="edit_dose_title">Editar dosis de %1$s</string>
     <string name="edit_med_title">Editar %1$s</string>
@@ -208,17 +208,27 @@
     <string name="tip_edit_med">Abre un medicamento y pulsa sobre el icono del lápiz para editar su dosis habitual, los valores por defecto de su notificación, color, inventario y más.</string>
     <string name="deny_permission">Ignorar</string>
     <string name="permission_required">Permiso Requerido</string>
-
     <string name="tip_no_notifications_title">Notificaciones Perdidas o Con Retardo</string>
     <string name="tip_archive_med">Archiva un medicamento pulsando el icono de la caja con la flecha hacia abajo en su página. Esto lo ocultará de la página principal (los ajustes y dosis del medicamento no se verán afectados).\nPuedes ver tus medicamentos archivados pulsando sobre el icono de la caja en la pantalla principal.</string>
-
     <string name="tip_delayed_notifications_3">Ajustes del Dispositivo &gt; Aplicaciones &gt; Pill Time &gt; Uso de la batería &gt; Permitir actividad en segundo plano &gt; Activado</string>
     <string name="continue_option">Ir a ajustes</string>
-
     <string name="tip_archive_med_title">Archivando Medicamentos</string>
-
     <string name="tip_edit_med_title">Opciones De Medicamento</string>
     <string name="exact_alarm_permission_explanation">Esta app requiere el permiso para programar alarmas exactas si quieres que las notificaciones se muestren tan pronto como expiren las dosis. (Las notificaciones exactas requieren un poco más de batería.) \n\nSin este permiso, las notificaciones pueden tardar hasta 10 minutos tras expirar una dosis.\n\n¿Quieres navegar a la página de permisos para recibir notificaciones puntuales, o ignorar esto y recibir notificaciones ligeramente tardías?</string>
-
     <string name="tip_delayed_notifications_5">Ajustes del Dispositivo &gt; Aplicaciones &gt; Acceso especial a aplicaciones &gt; Alarmas y recordatorios &gt; Pill Time &gt; Activado</string>
+    <string name="select_all">Seleccionar Todo</string>
+    <string name="selected">Seleccionadas</string>
+    <string name="unselected">No seleccionadas</string>
+    <string name="active">Activas</string>
+    <plurals name="doses_selected">
+        <item quantity="one">%1$d dosis seleccionada</item>
+        <item quantity="many">%1$d dosis seleccionadas</item>
+        <item quantity="other">%1$d dosis seleccionadas</item>
+    </plurals>
+    <plurals name="dialog_delete_selected_doses">
+        <item quantity="one">¿Seguro que quieres eliminar %1$d dosis seleccionada? Esto no puede deshacerse.</item>
+        <item quantity="many">¿Seguro que quieres eliminar %1$d dosis seleccionadas? Esto no puede deshacerse.</item>
+        <item quantity="other">¿Seguro que quieres eliminar %1$d dosis seleccionadas? Esto no puede deshacerse.</item>
+    </plurals>
+    <string name="delete_doses">Eliminar dosis</string>
 </resources>
