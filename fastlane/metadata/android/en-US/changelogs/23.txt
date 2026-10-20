@@ -1,2 +1,3 @@
 - Now you can long-press a dose on a med page to enable multi-select, with the option to delete multiple doses at once
 - The layout of the list of doses has been improved, and the med colour is applied to more elements
+- Minor bug fixes

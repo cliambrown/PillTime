@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import com.cliambrown.pilltime.PillTimeApplication;
 import com.cliambrown.pilltime.R;
 import com.cliambrown.pilltime.doses.Dose;
 import com.cliambrown.pilltime.utilities.DbHelper;
@@ -381,7 +382,7 @@ public class Med {
         this.hasLoadedAllDoses = hasLoadedAllDoses;
     }
 
-    public void removeDoseAndOlder(Dose dose) {
+    public void removeDoseAndOlder(Dose dose, PillTimeApplication mApp) {
         int position = -1;
         for (int i=0; i<doses.size(); ++i) {
             Dose listDose = doses.get(i);
@@ -392,7 +393,11 @@ public class Med {
         }
         if (position == -1) return;
         while (doses.size() > position) {
-            doses.remove(doses.size() - 1);
+            int i = doses.size() - 1;
+            Dose listDose = doses.get(i);
+            listDose.setNotify(false);
+            mApp.scheduleNotification(this, listDose);
+            doses.remove(i);
         }
         this.hasLoadedAllDoses = true;
     }
