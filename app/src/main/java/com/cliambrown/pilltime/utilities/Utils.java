@@ -179,7 +179,7 @@ public class Utils {
             int start = unformatted.indexOf(param) - correction;
             int argLength = String.valueOf(formatArgs[i]).length();
             int end = start + argLength;
-            correction += 4 - argLength;
+            correction += param.length() - argLength;
             for (ParcelableSpan span : spans) {
                 spannableString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }

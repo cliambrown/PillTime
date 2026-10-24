@@ -235,9 +235,13 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         public void onTimesChanged() {
             if (dose == null) return;
             if (med == null) return;
+
+            String unformattedExpires;
+
             if (dose.isActive()) {
                 iv_rvDose_expired.setVisibility(View.GONE);
                 iv_rvDose_active.setVisibility(View.VISIBLE);
+                unformattedExpires = context.getResources().getQuantityString(R.plurals.amount_expires_in_time, (int) dose.getCount());
                 if (dose.getNotify()) {
                     tv_rvDose_noNotification.setVisibility(View.GONE);
                     if (dose.getNotifySound()) {
@@ -255,6 +259,7 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             } else {
                 iv_rvDose_expired.setVisibility(View.VISIBLE);
                 iv_rvDose_active.setVisibility(View.GONE);
+                unformattedExpires = context.getResources().getQuantityString(R.plurals.amount_expired_time_ago, (int) dose.getCount());
                 tv_rvDose_notificationWithSound.setVisibility(View.GONE);
                 tv_rvDose_notificationWithoutSound.setVisibility(View.GONE);
                 tv_rvDose_noNotification.setVisibility(View.GONE);
@@ -268,20 +273,14 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             spans = new ArrayList<>();
             spans.add(new StyleSpan(Typeface.BOLD));
             spansList.add(spans);
-            String unformatted;
-            if (dose.getExpiresAt() > System.currentTimeMillis() / 1000L) {
-                unformatted = context.getResources().getQuantityString(R.plurals.expires, (int) dose.getCount());
-            } else {
-                unformatted = context.getResources().getQuantityString(R.plurals.expired, (int) dose.getCount());
-            }
-            tv_rvDose_expires.setText(Utils.styleString(unformatted, spansList, countString, dose.getExpiresAtTimeAgo()));
+            tv_rvDose_expires.setText(Utils.styleString(unformattedExpires, spansList, countString, dose.getExpiresAtTimeAgo()));
 
             spansList = new ArrayList<>();
             spans = new ArrayList<>();
             spans.add(new StyleSpan(Typeface.BOLD));
             spansList.add(spans);
-            unformatted = context.getString(R.string.taken);
-            tv_rvDose_taken.setText(Utils.styleString(unformatted, spansList, dose.getTakenAtTimeAgo()));
+            String unformattedTaken = context.getString(R.string.taken);
+            tv_rvDose_taken.setText(Utils.styleString(unformattedTaken, spansList, dose.getTakenAtTimeAgo()));
         }
 
         public void onMedColorChanged() {

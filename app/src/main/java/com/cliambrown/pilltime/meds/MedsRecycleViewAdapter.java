@@ -238,7 +238,7 @@ public class MedsRecycleViewAdapter extends RecyclerView.Adapter<MedsRecycleView
                 long expiresAtUnix = nextExpiringDose.getTakenAt() + med.getDoseDurationInSeconds();
                 String timeAgo = Utils.getRelativeTimeSpanString(context, expiresAtUnix, false);
                 String countStr = Utils.getStrFromDbl(nextExpiringDoseCount);
-                String unformatted = context.getResources().getQuantityString(R.plurals.expires,
+                String unformatted = context.getResources().getQuantityString(R.plurals.amount_expires_in_time,
                     (int) nextExpiringDoseCount);
                 List<List<ParcelableSpan>> spansList = new ArrayList<>();
                 List<ParcelableSpan> spans = new ArrayList<>();

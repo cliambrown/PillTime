@@ -77,11 +77,12 @@
     <string name="never">never</string>
 
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
-    <plurals name="expires">
+    <plurals name="amount_expires_in_time">
         <item quantity="one">%1$s expires %2$s</item>
         <item quantity="other">%1$s expire %2$s</item>
     </plurals>
-    <plurals name="expired">
+    <plurals name="amount_expired_time_ago">
+        <item quantity="one">%1$s expired %2$s</item>
         <item quantity="other">%1$s expired %2$s</item>
     </plurals>
     <string name="time_on_date">%1$s on %2$s</string>
