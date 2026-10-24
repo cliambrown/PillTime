@@ -40,11 +40,11 @@
     <string name="dose_taken_at_time">Zeitpunkt der Einnahme</string>
     <string name="dose_taken_on_date">Datum, an dem die Dosis eingenommen wurde</string>
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
-    <plurals name="expires">
+    <plurals name="amount_expires_in_time">
         <item quantity="one">%1$s läuft ab: %2$s</item>
         <item quantity="other">%1$s laufen ab: %2$s</item>
     </plurals>
-    <plurals name="expired">
+    <plurals name="amount_expired_time_ago">
         <item quantity="one">%1$s abgelaufen: %2$s</item>
         <item quantity="other">%1$s abgelaufen: %2$s</item>
     </plurals>

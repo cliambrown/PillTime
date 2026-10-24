@@ -50,11 +50,11 @@
     <string name="dose_taken_at_time">Heure prise</string>
     <string name="dose_taken_on_date">Date prise</string>
     <!-- Example: "expire(s/d) on DD/MM/YYYY at HH:MM" -->
-    <plurals name="expires" tools:ignore="MissingQuantity">
+    <plurals name="amount_expires_in_time" tools:ignore="MissingQuantity">
         <item quantity="one">%1$s expire %2$s</item>
         <item quantity="other">%1$s expirent %2$s</item>
     </plurals>
-    <plurals name="expired" tools:ignore="MissingQuantity">
+    <plurals name="amount_expired_time_ago" tools:ignore="MissingQuantity">
         <item quantity="one">%1$s expirée %2$s</item>
         <item quantity="other">%1$s expirées %2$s</item>
     </plurals>
