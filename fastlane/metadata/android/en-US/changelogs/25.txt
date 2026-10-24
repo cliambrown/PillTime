@@ -1,0 +1,2 @@
+- Show notification settings for active doses on med page
+- Fix some translation string names
