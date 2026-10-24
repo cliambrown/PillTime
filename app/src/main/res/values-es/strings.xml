@@ -108,11 +108,6 @@
     <string name="dose_taken_at">Tomada a las</string>
     <string name="dose_taken_at_time">Tomada en hora</string>
     <string name="dose_taken_on_date">Tomada en fecha</string>
-    <plurals name="expires">
-        <item quantity="one">%1$s expira %2$s</item>
-        <item quantity="many">%1$s expiran %2$s</item>
-        <item quantity="other">%1$s expiran %2$s</item>
-    </plurals>
     <plurals name="expired">
         <item quantity="one">%1$s ha expirado %2$s</item>
         <item quantity="many">%1$s han expirado %2$s</item>

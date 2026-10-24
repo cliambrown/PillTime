@@ -36,8 +36,4 @@
     <string name="dose_taken_at">Genomen op</string>
     <string name="dose_taken_at_time">Genomen op tijd</string>
     <string name="dose_taken_on_date">Genomen op datum</string>
-    <plurals name="expires">
-        <item quantity="one">%1$s verloopt %2$s</item>
-        <item quantity="other">%1$s verlopen %2$s</item>
-    </plurals>
 </resources>
