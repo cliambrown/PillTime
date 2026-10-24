@@ -31,8 +31,9 @@
             <ImageView
                 android:id="@+id/iv_rvDose_expired"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="24dp"
                 android:layout_weight="0"
+                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
                 android:visibility="gone"
                 android:contentDescription="@string/expired"
@@ -42,8 +43,9 @@
             <ImageView
                 android:id="@+id/iv_rvDose_active"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="24dp"
                 android:layout_weight="0"
+                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
                 android:contentDescription="@string/active"
                 app:srcCompat="@drawable/ic_baseline_access_time_filled_24"
@@ -67,8 +69,50 @@
                     android:id="@+id/tv_rvDose_expiresAt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:breakStrategy="balanced"
                     android:textColor="?attr/lightText" />
+
+                <TextView
+                    android:id="@+id/tv_rvDose_notificationWithSound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:drawableTint="?attr/lightText"
+                    app:drawableStartCompat="@drawable/baseline_notifications_active_24"
+                    android:drawablePadding="4dp"
+                    android:breakStrategy="balanced"
+                    android:textColor="?attr/lightText"
+                    android:textSize="12sp"
+                    android:text="@string/notification_with_sound" />
+
+                <TextView
+                    android:id="@+id/tv_rvDose_notificationWithoutSound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:drawableTint="?attr/lightText"
+                    app:drawableStartCompat="@drawable/baseline_notifications_24"
+                    android:drawablePadding="4dp"
+                    android:breakStrategy="balanced"
+                    android:textColor="?attr/lightText"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    android:text="@string/notification_without_sound" />
+
+                <TextView
+                    android:id="@+id/tv_rvDose_noNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:drawableTint="?attr/lightText"
+                    app:drawableStartCompat="@drawable/baseline_notifications_off_24"
+                    android:drawablePadding="4dp"
+                    android:breakStrategy="balanced"
+                    android:textColor="?attr/lightText"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    android:text="@string/no_notification" />
 
             </LinearLayout>
 
@@ -122,6 +166,7 @@
                 android:id="@+id/tv_rvDose_takenAt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:breakStrategy="balanced"
                 android:textColor="?attr/lightText"/>
 

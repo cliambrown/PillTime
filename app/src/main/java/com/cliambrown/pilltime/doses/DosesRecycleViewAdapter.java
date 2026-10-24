@@ -192,6 +192,9 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
         final ImageView iv_rvDose_active;
         final TextView tv_rvDose_expires;
         final TextView tv_rvDose_expiresAt;
+        final TextView tv_rvDose_notificationWithSound;
+        final TextView tv_rvDose_notificationWithoutSound;
+        final TextView tv_rvDose_noNotification;
         final TextView tv_rvDose_taken;
         final TextView tv_rvDose_takenAt;
         final ImageButton btn_rvDose_more;
@@ -213,6 +216,9 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             iv_rvDose_active = itemView.findViewById(R.id.iv_rvDose_active);
             tv_rvDose_expires = itemView.findViewById(R.id.tv_rvDose_expires);
             tv_rvDose_expiresAt = itemView.findViewById(R.id.tv_rvDose_expiresAt);
+            tv_rvDose_notificationWithSound = itemView.findViewById(R.id.tv_rvDose_notificationWithSound);
+            tv_rvDose_notificationWithoutSound = itemView.findViewById(R.id.tv_rvDose_notificationWithoutSound);
+            tv_rvDose_noNotification = itemView.findViewById(R.id.tv_rvDose_noNotification);
             tv_rvDose_taken = itemView.findViewById(R.id.tv_rvDose_taken);
             tv_rvDose_takenAt = itemView.findViewById(R.id.tv_rvDose_takenAt);
             btn_rvDose_more = itemView.findViewById(R.id.btn_rvDose_more);
@@ -232,9 +238,26 @@ public class DosesRecycleViewAdapter extends RecyclerView.Adapter<DosesRecycleVi
             if (dose.isActive()) {
                 iv_rvDose_expired.setVisibility(View.GONE);
                 iv_rvDose_active.setVisibility(View.VISIBLE);
+                if (dose.getNotify()) {
+                    tv_rvDose_noNotification.setVisibility(View.GONE);
+                    if (dose.getNotifySound()) {
+                        tv_rvDose_notificationWithSound.setVisibility(View.VISIBLE);
+                        tv_rvDose_notificationWithoutSound.setVisibility(View.GONE);
+                    } else {
+                        tv_rvDose_notificationWithSound.setVisibility(View.GONE);
+                        tv_rvDose_notificationWithoutSound.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    tv_rvDose_notificationWithSound.setVisibility(View.GONE);
+                    tv_rvDose_notificationWithoutSound.setVisibility(View.GONE);
+                    tv_rvDose_noNotification.setVisibility(View.VISIBLE);
+                }
             } else {
                 iv_rvDose_expired.setVisibility(View.VISIBLE);
                 iv_rvDose_active.setVisibility(View.GONE);
+                tv_rvDose_notificationWithSound.setVisibility(View.GONE);
+                tv_rvDose_notificationWithoutSound.setVisibility(View.GONE);
+                tv_rvDose_noNotification.setVisibility(View.GONE);
             }
 
             String countString = Utils.getStrFromDbl(dose.getCount());
